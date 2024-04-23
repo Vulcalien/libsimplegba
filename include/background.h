@@ -19,6 +19,11 @@
 
 #define BACKGROUND_COUNT (4)
 
+#define BG0 (0)
+#define BG1 (1)
+#define BG2 (2)
+#define BG3 (3)
+
 #define BG0_CONTROL ((vu16 *) 0x04000008)
 #define BG1_CONTROL ((vu16 *) 0x0400000a)
 #define BG2_CONTROL ((vu16 *) 0x0400000c)
