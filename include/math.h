@@ -20,6 +20,16 @@
 #define MATH_PI (0x8000)
 
 ALWAYS_INLINE
+inline i32 math_min(i32 a, i32 b) {
+    return (a < b ? a : b);
+}
+
+ALWAYS_INLINE
+inline i32 math_max(i32 a, i32 b) {
+    return (a > b ? a : b);
+}
+
+ALWAYS_INLINE
 inline i32 math_abs(i32 val) {
     return (val < 0 ? -val : val);
 }
