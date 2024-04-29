@@ -51,7 +51,7 @@ struct Sprite {
 };
 
 ALWAYS_INLINE
-inline void sprite_set(const struct Sprite *sprite, u32 id) {
+inline void sprite_config(u32 id, const struct Sprite *sprite) {
     if(id >= SPRITE_COUNT)
         return;
 
