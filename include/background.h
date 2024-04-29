@@ -59,7 +59,7 @@ struct Background {
 };
 
 ALWAYS_INLINE
-inline void background_config(const struct Background *config, u32 id) {
+inline void background_config(u32 id, const struct Background *config) {
     if(id >= BACKGROUND_COUNT)
         return;
 
@@ -77,7 +77,7 @@ inline void background_config(const struct Background *config, u32 id) {
 }
 
 ALWAYS_INLINE
-inline void background_set_offset(u16 x, u16 y, u32 id) {
+inline void background_set_offset(u32 id, u16 x, u16 y) {
     if(id >= BACKGROUND_COUNT)
         return;
 
