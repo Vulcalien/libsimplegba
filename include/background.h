@@ -42,20 +42,14 @@
 #define BG3_YOFFSET ((vu16 *) 0x0400001e)
 
 struct Background {
-    // Behavior
-    u32 priority : 2;
-    u32 overflow : 1; // (only BG2/BG3) 0 = transparent, 1 = wraparound
-
-    // Size
-    u32 size : 2;
-
-    // Tileset and Tilemap
-    u32 tileset : 2; // units of 16K
-    u32 tilemap : 5; // units of 2K
-
-    // Other
-    u32 mosaic     : 1;
-    u32 color_mode : 1; // 0 = 16/16 palettes, 1 = 256/1 palette
+    u16 priority : 2; // 0-3, 0=highest
+    u16 tileset  : 2; // 0-3, in units of 16 KB
+    u16 _unused  : 2;
+    u16 mosaic   : 1; // 0=disable, 1=enable
+    u16 colors   : 1; // 0=16 palettes of 16, 1=1 palette of 256
+    u16 tilemap  : 5; // 0-31, in units of 2 KB
+    u16 overflow : 1; // 0=transparent, 1=wraparound (only BG2/BG3)
+    u16 size     : 2; // 0-3
 };
 
 ALWAYS_INLINE
@@ -67,13 +61,14 @@ inline void background_config(u32 id, const struct Background *config) {
         BG0_CONTROL, BG1_CONTROL, BG2_CONTROL, BG3_CONTROL
     };
 
-    *control_registers[id] = config->priority   << 0  |
-                             config->tileset    << 2  |
-                             config->mosaic     << 6  |
-                             config->color_mode << 7  |
-                             config->tilemap    << 8  |
-                             config->overflow   << 13 |
-                             config->size       << 14;
+    *control_registers[id] = config->priority << 0  |
+                             config->tileset  << 2  |
+                             config->_unused  << 4  |
+                             config->mosaic   << 6  |
+                             config->colors   << 7  |
+                             config->tilemap  << 8  |
+                             config->overflow << 13 |
+                             config->size     << 14;
 }
 
 ALWAYS_INLINE
