@@ -80,19 +80,19 @@ timer_get_remaining:
     cmp     r0, #(TIMER_COUNT)
     bhs     255f @ exit
 
-    @ get address of timer's reload register
+    @ get address of timer's counter/reload register
     ldr     r2, =0x04000100
     lsl     r0, #2                      @ r0 = id * 4
 
-    @ read reload value
-    ldrh    r1, [r2, r0]                @ r1 = Timer reload
+    @ read counter value
+    ldrh    r1, [r2, r0]                @ r1 = Timer counter
 
-    @ calculate return value (= (0x10000 - reload) & 0xffff)
+    @ calculate return value (= (0x10000 - counter) & 0xffff)
     mov     r0, #1
     lsl     r0, #16                     @ r0 = 0x10000
     sub     r3, r0, #1                  @ r3 = 0xffff
-    sub     r0, r1                      @ r0 = 0x10000 - reload
-    and     r0, r3                  @ r0 = (0x10000 - reload & 0xffff)
+    sub     r0, r1                      @ r0 = 0x10000 - counter
+    and     r0, r3                  @ r0 = (0x10000 - counter & 0xffff)
 
 255: @ exit
     bx      lr
@@ -113,7 +113,7 @@ timer_set_remaining:
     cmp     r0, #(TIMER_COUNT)
     bhs     255f @ exit
 
-    @ get address of timer's reload register
+    @ get address of timer's counter/reload register
     ldr     r2, =0x04000100
     lsl     r0, #2                      @ r0 = id * 4
 
