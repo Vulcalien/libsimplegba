@@ -119,7 +119,7 @@ timer_set_remaining:
 
     @ calculate reload value (= 0x10000 - remaining)
     mov     r3, #1
-    mov     r3, #16                     @ r3 = 0x10000
+    lsl     r3, #16                     @ r3 = 0x10000
     sub     r3, r1                      @ r3 = 0x10000 - remaining
 
     @ store reload value (as 16-bit)
