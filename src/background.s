@@ -28,10 +28,8 @@ background_config:
     cmp     r0, #(BACKGROUND_COUNT)
     bhs     255f @ exit
 
-    @ calculate address of background's control register
-    mov     r2, #1
-    lsl     r2, #26
-    add     r2, #0x8                    @ r2 = 0x04000008
+    @ get address of background's control register
+    ldr     r2, =0x04000008
     lsl     r0, #1                      @ r0 = id * 2
 
     @ read and store config value
@@ -62,10 +60,8 @@ background_set_offset:
     lsl     r2, #16                     @ r2 = y << 16
     orr     r1, r2                      @ r1 = x | y << 16
 
-    @ calculate address of background's offset register
-    mov     r2, #1
-    lsl     r2, #26
-    add     r2, #0x10                   @ r2 = 0x04000010
+    @ get address of background's offset register
+    ldr     r2, =0x04000010
     lsl     r0, #2                      @ r0 = id * 4
 
     @ store offset value
