@@ -18,6 +18,7 @@
 #include "sound_p.h"
 
 #include "interrupt.h"
+#include "timer.h"
 
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 
@@ -32,13 +33,6 @@
 #define DMA2_SOURCE  ((vu32 *) 0x040000c8)
 #define DMA2_DEST    ((vu32 *) 0x040000cc)
 #define DMA2_CONTROL ((vu16 *) 0x040000d2)
-
-// Timers
-#define TIMER0_RELOAD  *((vu16 *) 0x04000100)
-#define TIMER0_CONTROL *((vu16 *) 0x04000102)
-
-#define TIMER1_RELOAD  *((vu16 *) 0x04000104)
-#define TIMER1_CONTROL *((vu16 *) 0x04000106)
 
 static const struct Channel {
     vu32 *fifo;
@@ -111,7 +105,7 @@ static inline void start_sound(const u8 *sound, u32 length,
     };
 }
 
-// schedule the next Timer 1 IRQ by setting the timer's reload value
+// schedule the next Timer 1 IRQ
 static inline void schedule_next_irq(void) {
     // determine how many samples should be played before stopping
     u32 next_stop = U16_MAX;
@@ -132,11 +126,14 @@ static inline void schedule_next_irq(void) {
     }
 
     // restart Timer 1
-    TIMER1_RELOAD  = (U16_MAX + 1) - next_stop;
-    TIMER1_CONTROL = 0;
-    TIMER1_CONTROL = 1 << 2 | // Enable Count-up Timing
-                     1 << 6 | // IRQ on Timer overflow
-                     1 << 7;  // Timer start
+    struct Timer timer = {
+        .cascade = 1,
+        .irq     = 1,
+        .enable  = 1
+    };
+    timer_set_remaining(TIMER1, next_stop);
+    timer_stop(TIMER1);
+    timer_config(TIMER1, &timer);
 }
 
 static inline void set_channel_outputs(bool channel, bool enable) {
@@ -162,14 +159,8 @@ void sound_play(const u8 *sound, u32 length,
 
     // add the samples that were not played back into the other
     // channel's count of remaining samples
-    {
-        u32 timer_counter = TIMER1_RELOAD;
-        if(timer_counter == 0)
-            timer_counter = U16_MAX + 1;
-
-        struct SoundData *other_data = &sound_data[channel ^ 1];
-        other_data->remaining += (U16_MAX + 1) - timer_counter;
-    }
+    struct SoundData *other_data = &sound_data[channel ^ 1];
+    other_data->remaining += timer_get_remaining(TIMER1);
 
     // reschedule the next IRQ
     schedule_next_irq();
@@ -216,6 +207,7 @@ void sound_direct_init(void) {
     interrupt_set_isr(IRQ_TIMER1, timer1_isr);
 
     // start Timer 0
-    TIMER0_RELOAD = (U16_MAX + 1) - CYCLES_PER_SAMPLE;
-    TIMER0_CONTROL = 1 << 7; // Timer start
+    struct Timer timer = { .enable = 1 };
+    timer_set_remaining(TIMER0, CYCLES_PER_SAMPLE);
+    timer_config(TIMER0, &timer);
 }
