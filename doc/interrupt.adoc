@@ -1,4 +1,4 @@
-= interrupt_init(3)
+= interrupt(3)
 :doctype: manpage
 :manmanual: GBA Base Library Manual
 :mansource: gba-base-library
