@@ -34,6 +34,15 @@ inline i32 math_abs(i32 val) {
     return (val < 0 ? -val : val);
 }
 
+ALWAYS_INLINE
+inline i32 math_sign(i32 val) {
+    if(val < 0)
+        return -1;
+    if(val > 0)
+        return +1;
+    return 0;
+}
+
 // Approximate 'sin' and 'cos' functions
 //
 // 'angle' in range [0, 0xffff]
