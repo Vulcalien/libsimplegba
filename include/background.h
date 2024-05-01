@@ -35,5 +35,27 @@ struct Background {
     u16 size     : 2; // 0-3
 };
 
-extern void background_config(u32 id, const struct Background *config);
-extern void background_set_offset(u32 id, u16 x, u16 y);
+ALWAYS_INLINE
+inline void background_config(u32 id, const struct Background *config) {
+    if(id >= BACKGROUND_COUNT)
+        return;
+
+    vu16 *control = &((vu16 *) 0x04000008)[id];
+    *control = config->priority << 0  |
+               config->tileset  << 2  |
+               config->_unused  << 4  |
+               config->mosaic   << 6  |
+               config->colors   << 7  |
+               config->tilemap  << 8  |
+               config->overflow << 13 |
+               config->size     << 14;
+}
+
+ALWAYS_INLINE
+inline void background_set_offset(u32 id, u16 x, u16 y) {
+    if(id >= BACKGROUND_COUNT)
+        return;
+
+    vu32 *offset = &((vu32 *) 0x04000010)[id];
+    *offset = (x | y << 16);
+}
