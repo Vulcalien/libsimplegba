@@ -1,0 +1,51 @@
+= input_tick(3)
+:doctype: manpage
+:manmanual: GBA Base Library Manual
+:mansource: gba-base-library
+:revdate: 2024-05-01
+:docdate: {revdate}
+
+== NAME
+input_tick, input_down, input_pressed, input_released - Input driver
+functions
+
+== SYNOPSIS
+[verse]
+____
+*#include "input.h"*
+
+*void input_tick(void);*
+
+**bool input_down(u16 **__key__**);**
+**bool input_pressed(u16 **__key__**);**
+**bool input_released(u16 **__key__**);**
+____
+
+== DESCRIPTION
+The *input_tick*() function updates the driver's internal state to match
+the one of the GBA buttons. This function should be called once at the
+beginning of every tick (i.e. game update), before any input processing
+is done.
+
+The *input_down*(), *input_pressed*() and *input_released*() functions
+return true if the specified _key_ is currently in the matching state
+(i.e. down, pressed, released). _key_ can be any of the constants listed
+below.
+
+.Key identifiers
+[cols="1,1,1,1"]
+|===
+
+|KEY_A     |KEY_B    |KEY_SELECT |KEY_START
+|KEY_RIGHT |KEY_LEFT |KEY_UP     |KEY_DOWN
+|KEY_R     |KEY_L    |           |
+|===
+
+== RETURN VALUE
+The *input_down*(), *input_pressed*() and *input_released*() functions
+return true if the specified _key_ is currently in the matching state,
+false otherwise.
+
+== AUTHORS
+The GBA Base Library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
