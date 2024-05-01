@@ -98,4 +98,4 @@ $(BIN_DIR) $(OBJ_DIRS):
 
 -include $(OBJ:.$(OBJ_EXT)=.d)
 
--include doc/man/manpages.mk
+-include doc/manpages.mk

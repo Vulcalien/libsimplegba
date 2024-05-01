@@ -1,4 +1,4 @@
-DOC_DIR := doc/man
+DOC_DIR := doc
 
 ADOC_TO_MANPAGES := asciidoctor -b manpage
 

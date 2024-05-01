@@ -3,7 +3,7 @@
 /bin
 
 # Converted manpages
-/doc/man/*.3
+/doc/*.3
 
 # vim
 *.swp
