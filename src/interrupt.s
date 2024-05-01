@@ -24,13 +24,14 @@
 
 .equ INTERRUPT_COUNT, 14
 
-@ --- VARIABLES --- @
+@ --- isr_table (32-bit array) --- @
 .bss
+.align 2
 
 @ a table of function pointers
+
 isr_table:
     .space (INTERRUPT_COUNT * 4)
-@ ----------------- @
 
 @ --- interrupt_handler --- @
 .section .iwram, "ax"
