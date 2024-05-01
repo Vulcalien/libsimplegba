@@ -23,5 +23,3 @@
     .arm
     .align 2
 .endm
-
-.end
