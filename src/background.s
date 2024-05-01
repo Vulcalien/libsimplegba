@@ -13,13 +13,14 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+.include "macros.inc"
+
 .equ BACKGROUND_COUNT, 4
 
 @ --- background_config --- @
 .global background_config
 .text
-.thumb
-.thumb_func
+THUMB_FUNC
 
 @ r0 = id
 @ r1 = pointer to config (16-bit)
@@ -45,8 +46,7 @@ background_config:
 @ --- background_set_offset --- @
 .global background_set_offset
 .text
-.thumb
-.thumb_func
+THUMB_FUNC
 
 @ r0 = id
 @ r1 = x (16-bit)

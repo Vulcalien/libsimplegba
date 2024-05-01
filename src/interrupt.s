@@ -13,6 +13,8 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+.include "macros.inc"
+
 .equ IME,               0x04000208  @ 32-bit
 .equ IE,                0x04000200  @ 16-bit
 .equ IF,                0x04000202  @ 16-bit
@@ -32,7 +34,7 @@ isr_table:
 
 @ --- interrupt_handler --- @
 .section .iwram, "ax"
-.arm
+ARM_FUNC
 
 @ Handle IRQs by calling the matching ISR.
 @ Tasks of this function:
@@ -114,8 +116,7 @@ interrupt_handler:
 @ --- interrupt_init --- @
 .global interrupt_init
 .text
-.thumb
-.thumb_func
+THUMB_FUNC
 
 interrupt_init:
     @ set interrupt vector
@@ -136,8 +137,7 @@ interrupt_init:
 @ --- interrupt_enable --- @
 .global interrupt_enable
 .text
-.thumb
-.thumb_func
+THUMB_FUNC
 
 @ r0 = irq
 interrupt_enable:
@@ -159,8 +159,7 @@ interrupt_enable:
 @ --- interrupt_disable --- @
 .global interrupt_disable
 .text
-.thumb
-.thumb_func
+THUMB_FUNC
 
 @ r0 = irq
 interrupt_disable:
@@ -182,7 +181,7 @@ interrupt_disable:
 @ --- interrupt_set_isr --- @
 .global interrupt_set_isr
 .text
-.arm
+ARM_FUNC
 
 @ r0 = irq
 @ r1 = isr

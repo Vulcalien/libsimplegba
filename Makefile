@@ -24,7 +24,7 @@ CPPFLAGS := -Iinclude -MMD -MP
 CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
             -Wall -pedantic
 
-ASFLAGS := -mcpu=arm7tdmi
+ASFLAGS := -mcpu=arm7tdmi -I$(SRC_DIR)
 
 ifeq ($(CURRENT_OS),UNIX)
     CC := arm-none-eabi-gcc

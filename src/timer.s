@@ -13,13 +13,14 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+.include "macros.inc"
+
 .equ TIMER_COUNT, 4
 
 @ --- timer_config --- @
 .global timer_config
 .text
-.thumb
-.thumb_func
+THUMB_FUNC
 
 @ r0 = id
 @ r1 = pointer to config (16-bit)
@@ -45,8 +46,7 @@ timer_config:
 @ --- timer_stop --- @
 .global timer_stop
 .text
-.thumb
-.thumb_func
+THUMB_FUNC
 
 @ r0 = id
 timer_stop:
@@ -71,8 +71,7 @@ timer_stop:
 @ --- timer_get_remaining --- @
 .global timer_get_remaining
 .text
-.thumb
-.thumb_func
+THUMB_FUNC
 
 @ r0 = id
 timer_get_remaining:
@@ -103,8 +102,7 @@ timer_get_remaining:
 @ --- timer_set_remaining --- @
 .global timer_set_remaining
 .text
-.thumb
-.thumb_func
+THUMB_FUNC
 
 @ r0 = id
 @ r1 = remaining (16-bit)
