@@ -29,7 +29,7 @@ any module that depends on the Interrupt driver (such as the sound
 driver).
 
 The *interrupt_enable*() and *interrupt_disable()* functions enable and
-disable the specified _irq_, identified by one of the macros listed
+disable the specified _irq_, identified by one of the constants listed
 below.
 
 .IRQ identifiers
@@ -76,3 +76,7 @@ int AgbMain(void) {
     interrupt_set_isr(IRQ_VBLANK, vblank_isr);
 }
 ____
+
+== AUTHORS
+The GBA Base Library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
