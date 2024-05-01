@@ -1,0 +1,78 @@
+= interrupt_init(3)
+:doctype: manpage
+:manmanual: GBA Base Library Manual
+:mansource: gba-base-library
+:revdate: 2024-05-01
+:docdate: {revdate}
+
+== NAME
+interrupt_init, interrupt_enable, interrupt_disable, interrupt_set_isr -
+Interrupt driver functions
+
+== SYNOPSIS
+[verse]
+____
+*#include "interrupt.h"*
+
+*void interrupt_init(void);*
+
+**void interrupt_enable(u8 **__irq__**);**
+**void interrupt_disable(u8 **__irq__**);**
+
+**void interrupt_set_isr(u8 **__irq__**, void (***__isr__**)(void));**
+____
+
+== DESCRIPTION
+The *interrupt_init*() function initializes the driver. This needs to be
+called once before calling other functions of the Interrupt driver or
+any module that depends on the Interrupt driver (such as the sound
+driver).
+
+The *interrupt_enable*() and *interrupt_disable()* functions enable and
+disable the specified _irq_, identified by one of the macros listed
+below.
+
+.IRQ identifiers
+[cols="1,1,1,1"]
+|===
+
+|IRQ_VBLANK |IRQ_HBLANK  |IRQ_VCOUNT |
+|IRQ_TIMER0 |IRQ_TIMER1  |IRQ_TIMER2 |IRQ_TIMER3
+|IRQ_DMA0   |IRQ_DMA1    |IRQ_DMA2   |IRQ_DMA3
+|IRQ_KEYPAD |IRQ_GAMEPAK |IRQ_SERIAL |
+|===
+
+The *interrupt_set_isr*() function maps the specified _irq_ to its _isr_
+(Interrupt Service Routine). _irq_ can be any of the interrupt
+identifiers listed above.
+
+If _irq_ is NULL, the driver will perform no action when that interrupt
+is detected. It is recommended (but not required) to also disable the
+interrupt by calling *interrupt_disable*().
+
+== NOTES
+Each IRQ can be mapped to just one ISR at a time, so calling
+*interrupt_set_isr*() will overwrite the previous association. If
+multiple ISRs are required, the recommended approach is to write a
+function that calls all the others:
+
+[verse]
+____
+void foo_isr(void) {
+    foo_isr_a();
+    foo_isr_b();
+}
+____
+
+== EXAMPLES
+Enable the VBLANK interrupt and map an ISR to it:
+
+[verse]
+____
+int AgbMain(void) {
+    interrupt_init();
+
+    interrupt_enable(IRQ_VBLANK);
+    interrupt_set_isr(IRQ_VBLANK, vblank_isr);
+}
+____

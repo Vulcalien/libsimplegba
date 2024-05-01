@@ -77,7 +77,7 @@ all: build
 
 build: $(OUT)
 
-clean:
+clean::
 	@$(RM) $(BIN_DIR) $(OBJ_DIR)
 
 # generate library file
@@ -97,3 +97,5 @@ $(BIN_DIR) $(OBJ_DIRS):
 	$(MKDIR) "$@"
 
 -include $(OBJ:.$(OBJ_EXT)=.d)
+
+-include doc/man/manpages.mk
