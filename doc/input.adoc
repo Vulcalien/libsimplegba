@@ -2,11 +2,11 @@
 :doctype: manpage
 :manmanual: GBA Base Library Manual
 :mansource: gba-base-library
-:revdate: 2024-05-01
+:revdate: 2024-05-02
 :docdate: {revdate}
 
 == NAME
-input_tick, input_down, input_pressed, input_released - Input driver
+input_tick, input_down, input_pressed, input_released - input driver
 functions
 
 == SYNOPSIS

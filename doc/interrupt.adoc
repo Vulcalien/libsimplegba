@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: GBA Base Library Manual
 :mansource: gba-base-library
-:revdate: 2024-05-01
+:revdate: 2024-05-02
 :docdate: {revdate}
 
 == NAME
 interrupt_init, interrupt_enable, interrupt_disable, interrupt_set_isr -
-Interrupt driver functions
+interrupt driver functions
 
 == SYNOPSIS
 [verse]
@@ -24,8 +24,8 @@ ____
 
 == DESCRIPTION
 The *interrupt_init*() function initializes the driver. This needs to be
-called once before calling other functions of the Interrupt driver or
-any module that depends on the Interrupt driver (such as the sound
+called once before calling other functions of the interrupt driver or
+any module that depends on the interrupt driver (such as the sound
 driver).
 
 The *interrupt_enable*() and *interrupt_disable()* functions enable and
