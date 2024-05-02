@@ -19,7 +19,7 @@ ____
 **void interrupt_enable(u8 **__irq__**);**
 **void interrupt_disable(u8 **__irq__**);**
 
-**void interrupt_set_isr(u8 **__irq__**, void (***__isr__**)(void));**
+**void interrupt_set_isr(u8 **__irq__**, void (+++*+++**__isr__**)(void));**
 ____
 
 == DESCRIPTION
