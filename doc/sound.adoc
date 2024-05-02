@@ -16,7 +16,7 @@ ____
 *void sound_init(void);*
 
 // direct sound
-#define SOUND_SAMPLE_RATE (16384) // 16.384 KHz
+#define SOUND_SAMPLE_RATE 16384 // 16.384 KHz
 
 **void sound_play(const u8 +++*+++**__sound__**, u32 **__length__**, bool **__loop__**, bool **__channel__**);**
 **void sound_stop(bool **__channel__**);**
