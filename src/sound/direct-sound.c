@@ -72,8 +72,8 @@ static struct SoundData {
     u32 remaining;
 } sound_data[2];
 
-static inline void start_sound(const u8 *sound, u32 length,
-                               bool channel, bool loop) {
+static inline void start_sound(const u8 *sound, u32 length, bool loop,
+                               bool channel) {
     const struct Channel *direct_channel = &channels[channel];
 
     // reset channel FIFO
@@ -149,12 +149,12 @@ static inline void set_channel_outputs(bool channel, bool enable) {
         DIRECT_SOUND_CONTROL &= ~(val << bits);
 }
 
-void sound_play(const u8 *sound, u32 length,
-                bool channel, bool loop) {
+void sound_play(const u8 *sound, u32 length, bool loop,
+                bool channel) {
     if(length == 0)
         return;
 
-    start_sound(sound, length, channel, loop);
+    start_sound(sound, length, loop, channel);
     set_channel_outputs(channel, true);
 
     // add the samples that were not played back into the other
@@ -184,7 +184,7 @@ static void timer1_isr(void) {
 
         if(data->playing && data->remaining == 0) {
             if(data->loop)
-                start_sound(data->sound, data->length, channel, true);
+                start_sound(data->sound, data->length, true, channel);
             else
                 sound_stop(channel);
         }

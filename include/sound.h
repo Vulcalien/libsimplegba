@@ -26,11 +26,11 @@ extern void sound_init(void);
 #define SOUND_CHANNEL_A (0)
 #define SOUND_CHANNEL_B (1)
 
-#define SOUND_PLAY(sound, channel, loop)\
-    sound_play((sound), sizeof(sound), (channel), (loop))
+#define SOUND_PLAY(sound, loop, channel)\
+    sound_play((sound), sizeof(sound), (loop), (channel))
 
-extern void sound_play(const u8 *sound, u32 length,
-                       bool channel, bool loop);
+extern void sound_play(const u8 *sound, u32 length, bool loop,
+                       bool channel);
 extern void sound_stop(bool channel);
 
 // ===== ===== =====
