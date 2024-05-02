@@ -1,0 +1,51 @@
+= sound(3)
+:doctype: manpage
+:manmanual: GBA Base Library Manual
+:mansource: gba-base-library
+:revdate: 2024-05-02
+:docdate: {revdate}
+
+== NAME
+sound_init, sound_play, sound_stop - sound driver functions
+
+== SYNOPSIS
+[verse]
+____
+*#include "sound.h"*
+
+*void sound_init(void);*
+
+// direct sound
+#define SOUND_SAMPLE_RATE (16384) // 16.384 KHz
+
+**void sound_play(const u8 +++*+++**__sound__**, u32 **__length__**, bool **__loop__**, bool **__channel__**);**
+**void sound_stop(bool **__channel__**);**
+____
+
+== DESCRIPTION
+The *sound_init*() function initializes the sound driver and its
+submodules. Currently, the only submodule is the direct sound driver.
+This function needs to be called once before calling other functions of
+the driver.
+
+=== Direct Sound
+The following functions make up a very simple direct sound driver
+capable of playing digital audio on the two digital-to-analog channels
+of the GBA. Sounds should be encoded as uncompressed signed 8-bit PCM
+with a sample rate of 16.384 KHz.
+
+The _channel_ parameter of these functions specifies which of the two
+direct sound channels to operate on. Possible values are
+*SOUND_CHANNEL_A* and *SOUND_CHANNEL_B*.
+
+The *sound_play*() function configures the specified _channel_ to play
+the sound having its _length_ samples stored at _sound_. If _loop_ is
+set to true, the sound will be repeatedly played until the channel is
+either reconfigured by another call to *sound_play*() or stopped by
+*sound_stop*().
+
+The *sound_stop*() function immediately stops the specified _channel_.
+
+== AUTHORS
+The GBA Base Library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
