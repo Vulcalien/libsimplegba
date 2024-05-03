@@ -126,14 +126,7 @@ static inline void schedule_next_irq(void) {
     }
 
     // restart Timer 1
-    struct Timer timer = {
-        .cascade = 1,
-        .irq     = 1,
-        .enable  = 1
-    };
-    timer_set_remaining(TIMER1, next_stop);
-    timer_stop(TIMER1);
-    timer_config(TIMER1, &timer);
+    timer_restart(TIMER1, next_stop);
 }
 
 static inline void set_channel_outputs(bool channel, bool enable) {
@@ -160,7 +153,7 @@ void sound_play(const u8 *sound, u32 length, bool loop,
     // add the samples that were not played back into the other
     // channel's count of remaining samples
     struct SoundData *other_data = &sound_data[channel ^ 1];
-    other_data->remaining += timer_get_remaining(TIMER1);
+    other_data->remaining += timer_get_counter(TIMER1);
 
     // reschedule the next IRQ
     schedule_next_irq();
@@ -206,8 +199,10 @@ void sound_direct_init(void) {
     interrupt_enable(IRQ_TIMER1);
     interrupt_set_isr(IRQ_TIMER1, timer1_isr);
 
+    // configure Timer 0 and Timer 1
+    timer_config(TIMER0, NULL);
+    timer_config(TIMER1, &(struct Timer) { .cascade = 1, .irq = 1 });
+
     // start Timer 0
-    struct Timer timer = { .enable = 1 };
-    timer_set_remaining(TIMER0, CYCLES_PER_SAMPLE);
-    timer_config(TIMER0, &timer);
+    timer_start(TIMER0, CYCLES_PER_SAMPLE);
 }

@@ -24,6 +24,9 @@
 #define TIMER2 (2)
 #define TIMER3 (3)
 
+#define _TIMER_GET_CONTROL(id) (&((vu16 *) 0x04000102)[(id) * 2])
+#define _TIMER_GET_RELOAD(id)  (&((vu16 *) 0x04000100)[(id) * 2])
+
 struct Timer {
     u16 prescaler : 2; // 0=1, 1=64, 2=256, 3=1024 (number of cycles)
     u16 cascade   : 1; // 0=disable, 1=enable
@@ -38,13 +41,29 @@ inline void timer_config(u32 id, const struct Timer *config) {
     if(id >= TIMER_COUNT)
         return;
 
-    vu16 *control = &((vu16 *) 0x04000102)[id * 2];
-    *control = config->prescaler << 0 |
-               config->cascade   << 2 |
-               config->_unused_0 << 3 |
-               config->irq       << 6 |
-               config->enable    << 7 |
-               config->_unused_1 << 8;
+    vu16 *control = _TIMER_GET_CONTROL(id);
+    if(config) {
+        *control = config->prescaler << 0 |
+                   config->cascade   << 2 |
+                   config->_unused_0 << 3 |
+                   config->irq       << 6 |
+                   config->enable    << 7 |
+                   config->_unused_1 << 8;
+    } else {
+        *control = 0;
+    }
+}
+
+ALWAYS_INLINE
+inline void timer_start(u32 id, u32 ticks) {
+    if(id >= TIMER_COUNT)
+        return;
+
+    vu16 *reload = _TIMER_GET_RELOAD(id);
+    *reload = (U16_MAX + 1 - ticks) & 0xffff;
+
+    vu16 *control = _TIMER_GET_CONTROL(id);
+    *control |= (1 << 7);
 }
 
 ALWAYS_INLINE
@@ -52,24 +71,24 @@ inline void timer_stop(u32 id) {
     if(id >= TIMER_COUNT)
         return;
 
-    vu16 *control = &((vu16 *) 0x04000102)[id * 2];
-    *control = 0;
+    vu16 *control = _TIMER_GET_CONTROL(id);
+    *control &= ~(1 << 7);
 }
 
 ALWAYS_INLINE
-inline u16 timer_get_remaining(u32 id) {
+inline void timer_restart(u32 id, u32 ticks) {
+    timer_stop(id);
+    timer_start(id, ticks);
+}
+
+ALWAYS_INLINE
+inline u16 timer_get_counter(u32 id) {
     if(id >= TIMER_COUNT)
         return 0;
 
-    vu16 *counter = &((vu16 *) 0x04000100)[id * 2];
-    return ((U16_MAX + 1) - *counter) & 0xffff;
+    vu16 *counter = _TIMER_GET_RELOAD(id);
+    return (U16_MAX + 1 - *counter) & 0xffff;
 }
 
-ALWAYS_INLINE
-inline void timer_set_remaining(u32 id, u16 remaining) {
-    if(id >= TIMER_COUNT)
-        return;
-
-    vu16 *reload = &((vu16 *) 0x04000100)[id * 2];
-    *reload = ((U16_MAX + 1) - remaining) & 0xffff;
-}
+#undef _TIMER_GET_CONTROL
+#undef _TIMER_GET_RELOAD
