@@ -1,0 +1,54 @@
+= profiler(3)
+:doctype: manpage
+:manmanual: GBA Base Library Manual
+:mansource: gba-base-library
+:revdate: 2024-05-05
+:docdate: {revdate}
+
+== NAME
+profiler_start, profiler_stop - profiling functions
+
+== SYNOPSIS
+[verse]
+____
+*#include "debug/profiler.h"*
+
+*void profiler_start(void);*
+*u32  profiler_stop(void);*
+____
+
+== DESCRIPTION
+The *profiler_start*() function must be called before the piece of code
+being examined is executed.
+
+The *profiler_stop*() function returns an indicative count of CPU clock
+cycles elapsed since the last call to *profiler_start*(). The returned
+value is not perfectly accurate because a few cycles necessary to
+execute the *profiler_start*() and *profiler_stop*() functions
+themselves will be counted as well.
+
+== RETURN VALUE
+The *profiler_stop*() function returns an indicative count of CPU clock
+cycles elapsed since the last call to *profiler_start*().
+
+== NOTES
+These profiler functions use two of the GBA's timers: Timer 2 and
+Timer 3. For the profiler to work, these two timers must not be in use
+while profiling.
+
+== EXAMPLES
+[verse]
+____
+int AgbMain(void) {
+    profiler_start();
+
+    foo();
+    bar();
+
+    u32 time = profiler_stop();
+}
+____
+
+== AUTHORS
+The GBA Base Library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
