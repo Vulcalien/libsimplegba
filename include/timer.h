@@ -75,13 +75,14 @@ inline void timer_restart(u32 id, u32 ticks) {
     timer_start(id, ticks);
 }
 
+// returns values in range [1, U16_MAX + 1]
 ALWAYS_INLINE
-inline u16 timer_get_counter(u32 id) {
+inline u32 timer_get_counter(u32 id) {
     if(id >= TIMER_COUNT)
         return 0;
 
     vu16 *counter = _TIMER_GET_RELOAD(id);
-    return (U16_MAX + 1 - *counter) & 0xffff;
+    return U16_MAX + 1 - *counter;
 }
 
 #undef _TIMER_GET_CONTROL
