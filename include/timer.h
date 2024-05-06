@@ -30,10 +30,7 @@
 struct Timer {
     u16 prescaler : 2; // 0=1, 1=64, 2=256, 3=1024 (number of cycles)
     u16 cascade   : 1; // 0=disable, 1=enable
-    u16 _unused_0 : 3;
     u16 irq       : 1; // 0=disable, 1=enable (IRQ on timer overflow)
-    u16 enable    : 1; // 0=disable, 1=enable
-    u16 _unused_1 : 8;
 };
 
 ALWAYS_INLINE
@@ -45,10 +42,7 @@ inline void timer_config(u32 id, const struct Timer *config) {
     if(config) {
         *control = config->prescaler << 0 |
                    config->cascade   << 2 |
-                   config->_unused_0 << 3 |
-                   config->irq       << 6 |
-                   config->enable    << 7 |
-                   config->_unused_1 << 8;
+                   config->irq       << 6;
     } else {
         *control = 0;
     }
