@@ -37,8 +37,8 @@ Timer 3. For the profiler to work, these two timers must not be in use
 while profiling.
 
 == EXAMPLES
-[verse]
-____
+[source,c]
+----
 int AgbMain(void) {
     profiler_start();
 
@@ -47,7 +47,7 @@ int AgbMain(void) {
 
     u32 time = profiler_stop();
 }
-____
+----
 
 == AUTHORS
 The GBA Base Library was written by Vulcalien
