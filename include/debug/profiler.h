@@ -39,8 +39,8 @@ ALWAYS_INLINE
 inline u32 profiler_stop(void) {
     timer_stop(TIMER2); // no need to also stop timer 3
 
-    u16 t2 = (U16_MAX + 1 - timer_get_counter(TIMER2)) & 0xffff;
-    u16 t3 = (U16_MAX + 1 - timer_get_counter(TIMER3)) & 0xffff;
+    u16 t2 = U16_MAX + 1 - timer_get_counter(TIMER2);
+    u16 t3 = U16_MAX + 1 - timer_get_counter(TIMER3);
 
     return t3 << 16 | t2;
 }
