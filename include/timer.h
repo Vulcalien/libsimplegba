@@ -17,6 +17,20 @@
 
 #include "base.h"
 
+// This is how timers are considered to work by this driver.
+//
+// Each timer has its own counter, which can have values in range
+// [1, U16_MAX + 1]. When started, a timer is given a counter value.
+// Timers decrement their counter when ticking until it reaches zero.
+// When that happens, the timer immediately loads the counter's next
+// value (the same value specified when started, unless changed).
+//
+// 'prescaler' is the number of CPU cycles it takes a timer to tick.
+// If cascade=1, Timer X will tick only when the counter of Timer X-1
+// reaches zero and 'prescaler' will be ignored.
+// If irq=1, an interrupt request is raised when the counter
+// reaches zero.
+
 #define TIMER_COUNT (4)
 
 #define TIMER0 (0)
@@ -30,7 +44,7 @@
 struct Timer {
     u16 prescaler : 2; // 0=1, 1=64, 2=256, 3=1024 (number of cycles)
     u16 cascade   : 1; // 0=disable, 1=enable
-    u16 irq       : 1; // 0=disable, 1=enable (IRQ on timer overflow)
+    u16 irq       : 1; // 0=disable, 1=enable
 };
 
 ALWAYS_INLINE
