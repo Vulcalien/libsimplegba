@@ -31,16 +31,16 @@ inline void profiler_start(void) {
     timer_config(TIMER3, &(struct Timer) { .cascade = 1 });
 
     // the timer in cascade (timer 3) should be started first
-    timer_start(TIMER3, (U16_MAX + 1) & 0xffff);
-    timer_start(TIMER2, (U16_MAX + 1) & 0xffff);
+    timer_start(TIMER3, TIMER_COUNTER_MAX);
+    timer_start(TIMER2, TIMER_COUNTER_MAX);
 }
 
 ALWAYS_INLINE
 inline u32 profiler_stop(void) {
     timer_stop(TIMER2); // no need to also stop timer 3
 
-    u16 t2 = U16_MAX + 1 - timer_get_counter(TIMER2);
-    u16 t3 = U16_MAX + 1 - timer_get_counter(TIMER3);
+    u32 t2 = TIMER_COUNTER_MAX - timer_get_counter(TIMER2);
+    u32 t3 = TIMER_COUNTER_MAX - timer_get_counter(TIMER3);
 
     return t3 << 16 | t2;
 }

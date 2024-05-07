@@ -20,10 +20,10 @@
 // This is how timers are considered to work by this driver.
 //
 // Each timer has its own counter, which can have values in range
-// [1, U16_MAX + 1]. When started, a timer is given a counter value.
-// Timers decrement their counter when ticking until it reaches zero.
-// When that happens, the timer immediately loads the counter's next
-// value (the same value specified when started, unless changed).
+// [1, TIMER_COUNTER_MAX]. When started, a timer is given a counter
+// value. Timers decrement their counter when ticking until it reaches
+// zero. When that happens, the timer immediately loads the counter's
+// next value (the same value specified when started, unless changed).
 //
 // 'prescaler' is the number of CPU cycles it takes a timer to tick.
 // If cascade=1, Timer X will tick only when the counter of Timer X-1
@@ -37,6 +37,8 @@
 #define TIMER1 (1)
 #define TIMER2 (2)
 #define TIMER3 (3)
+
+#define TIMER_COUNTER_MAX (U16_MAX + 1)
 
 #define _TIMER_GET_CONTROL(id) (&((vu16 *) 0x04000102)[(id) * 2])
 #define _TIMER_GET_RELOAD(id)  (&((vu16 *) 0x04000100)[(id) * 2])
@@ -68,7 +70,7 @@ inline void timer_start(u32 id, u32 ticks) {
         return;
 
     vu16 *reload = _TIMER_GET_RELOAD(id);
-    *reload = (U16_MAX + 1 - ticks) & 0xffff;
+    *reload = (TIMER_COUNTER_MAX - ticks) & 0xffff;
 
     vu16 *control = _TIMER_GET_CONTROL(id);
     *control |= (1 << 7);
@@ -89,14 +91,14 @@ inline void timer_restart(u32 id, u32 ticks) {
     timer_start(id, ticks);
 }
 
-// returns values in range [1, U16_MAX + 1]
+// returns values in range [1, TIMER_COUNTER_MAX]
 ALWAYS_INLINE
 inline u32 timer_get_counter(u32 id) {
     if(id >= TIMER_COUNT)
         return 0;
 
     vu16 *counter = _TIMER_GET_RELOAD(id);
-    return U16_MAX + 1 - *counter;
+    return TIMER_COUNTER_MAX - *counter;
 }
 
 #undef _TIMER_GET_CONTROL
