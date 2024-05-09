@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: GBA Base Library Manual
 :mansource: gba-base-library
-:revdate: 2024-05-06
+:revdate: 2024-05-09
 :docdate: {revdate}
 
 == NAME
@@ -15,6 +15,7 @@ ____
 *#include "timer.h"*
 
 *#define TIMER_COUNT 4*
+*#define TIMER_COUNTER_MAX 65536*
 
 **void timer_config(u32 **__id__**, const struct Timer +++*+++**__config__**);**
 
@@ -22,7 +23,7 @@ ____
 **void timer_stop(u32 **__id__**);**
 **void timer_restart(u32 **__id__**, u32 **__ticks__**);**
 
-**u16 timer_get_counter(u32 **__id__**);**
+**u32 timer_get_counter(u32 **__id__**);**
 ____
 
 == DESCRIPTION
@@ -30,15 +31,19 @@ All of these functions take the _id_ parameter, used to identify the
 timers. This can be an integer between 0 and 3 or one of these
 constants: *TIMER0*, *TIMER1*, *TIMER2*, *TIMER3*.
 
-Each timer has its own counter, which is decremented until zero is
-reached. Once that happens, the counter will be reloaded and the timer
-will continue running.
+Each timer has its decrementing counter, with values between 1 and
+*TIMER_COUNTER_MAX* (defined as 65536 = 2^16). When starting a timer, an
+initial counter value has to be provided. Every time a timer ticks, its
+counter is decremented until it reaches zero. Once that happens, the
+counter will be immediately reset to the provided initial value and the
+timer will continue running.
 
+=== timer configuration
 The *timer_config*() function configures the specified timer with the
 configuration specified in the _config_ structure. If currently running,
-the specified timer will be stopped. Passing NULL as _config_ is
-equivalent to passing the structure with all fields set to zero. The
-structure is defined as follows:
+the timer will be stopped. Passing NULL as _config_ is equivalent to
+passing the structure with all fields set to zero. The structure is
+defined as follows:
 
 [source,c]
 ----
@@ -57,15 +62,15 @@ used for Timer 0. The _irq_ field, if set to one, makes the timer raise
 an interrupt request when its counter reaches zero. For the interrupt to
 be acknowledged, it must also be enabled by *interrupt_enable*(3).
 
+=== timer operation
 The *timer_start*() function starts the specified timer and sets its
-counter value to _ticks_. Before being started, the timer should be
-properly configured by calling *timer_config*(). If the timer is already
-running, this function will set the counter's next value without
-overwriting the current value.
+initial counter value to _ticks_. Before being started, the timer should
+be properly configured by calling *timer_config*(). If the timer is
+already running, this function will change the counter's initial value
+without overwriting its current value.
 
-The *timer_stop*() function stops the specified timer without affecting
-its configuration. Note that stopping a timer does not reset its
-counter.
+The *timer_stop*() function stops the specified timer. Stopping a timer
+does not reset its counter, nor does it affect its configuration.
 
 The *timer_restart*() function does the same thing as *timer_start*(),
 but first stops the specified timer. It is recommended to use this
@@ -77,14 +82,11 @@ value. Since stopping a timer does not reset its counter, it is safe to
 call this function on stopped timers.
 
 == NOTES
-This driver makes it look as if the timers decrement their counters. In
-the GBA hardware, and thus in documentation regarding it, these timers
-actually increment their counters. When using this driver and reading
-other GBA documentation, be aware of this difference.
-
-Passing the value zero as _ticks_ argument of the *timer_start*() and
-*timer_restart*() functions means that the timer's counter will be set
-to 65536 (i.e., 0x10000).
+This drivers considers the timers to be decrementing (i.e., their
+counters are decremented). In GBA hardware, and thus in documentation
+regarding it, the timers are considered to be incrementing. When using
+this driver and reading other GBA documentation, be aware of this
+difference.
 
 == AUTHORS
 The GBA Base Library was written by Vulcalien
