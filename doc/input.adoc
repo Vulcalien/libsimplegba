@@ -1,7 +1,7 @@
 = input(3)
 :doctype: manpage
-:manmanual: GBA Base Library Manual
-:mansource: gba-base-library
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
 :revdate: 2024-05-02
 :docdate: {revdate}
 
@@ -47,5 +47,5 @@ return true if the specified _key_ is currently in the matching state,
 false otherwise.
 
 == AUTHORS
-The GBA Base Library was written by Vulcalien
+The *libsimplegba* library was written by Vulcalien
 <\vulcalien@vulcalien.net>.

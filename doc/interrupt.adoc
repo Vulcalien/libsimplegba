@@ -1,7 +1,7 @@
 = interrupt(3)
 :doctype: manpage
-:manmanual: GBA Base Library Manual
-:mansource: gba-base-library
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
 :revdate: 2024-05-02
 :docdate: {revdate}
 
@@ -78,5 +78,5 @@ int AgbMain(void) {
 ----
 
 == AUTHORS
-The GBA Base Library was written by Vulcalien
+The *libsimplegba* library was written by Vulcalien
 <\vulcalien@vulcalien.net>.

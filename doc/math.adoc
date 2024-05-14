@@ -1,7 +1,7 @@
 = math(3)
 :doctype: manpage
-:manmanual: GBA Base Library Manual
-:mansource: gba-base-library
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
 :revdate: 2024-05-02
 :docdate: {revdate}
 
@@ -52,5 +52,5 @@ functions is an unsigned 16-bit integer, in practice these functions can
 also take negative angles and work as expected due to integer overflow.
 
 == AUTHORS
-The GBA Base Library was written by Vulcalien
+The *libsimplegba* library was written by Vulcalien
 <\vulcalien@vulcalien.net>.

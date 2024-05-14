@@ -1,7 +1,7 @@
 = timer(3)
 :doctype: manpage
-:manmanual: GBA Base Library Manual
-:mansource: gba-base-library
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
 :revdate: 2024-05-09
 :docdate: {revdate}
 
@@ -89,5 +89,5 @@ this driver and reading other GBA documentation, be aware of this
 difference.
 
 == AUTHORS
-The GBA Base Library was written by Vulcalien
+The *libsimplegba* library was written by Vulcalien
 <\vulcalien@vulcalien.net>.

@@ -1,7 +1,7 @@
 = sound(3)
 :doctype: manpage
-:manmanual: GBA Base Library Manual
-:mansource: gba-base-library
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
 :revdate: 2024-05-02
 :docdate: {revdate}
 
@@ -47,5 +47,5 @@ either reconfigured by another call to *sound_play*() or stopped by
 The *sound_stop*() function immediately stops the specified _channel_.
 
 == AUTHORS
-The GBA Base Library was written by Vulcalien
+The *libsimplegba* library was written by Vulcalien
 <\vulcalien@vulcalien.net>.
