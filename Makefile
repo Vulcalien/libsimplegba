@@ -11,7 +11,7 @@ else
 endif
 
 # === Basic Info ===
-OUT_FILENAME := base
+OUT_FILENAME := libsimplegba
 
 SRC_DIR := src
 OBJ_DIR := obj
