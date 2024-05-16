@@ -49,8 +49,7 @@ struct Timer {
     u16 irq       : 1; // 0=disable, 1=enable
 };
 
-ALWAYS_INLINE
-inline void timer_config(u32 id, const struct Timer *config) {
+INLINE void timer_config(u32 id, const struct Timer *config) {
     if(id >= TIMER_COUNT)
         return;
 
@@ -64,8 +63,7 @@ inline void timer_config(u32 id, const struct Timer *config) {
     }
 }
 
-ALWAYS_INLINE
-inline void timer_start(u32 id, u32 ticks) {
+INLINE void timer_start(u32 id, u32 ticks) {
     if(id >= TIMER_COUNT)
         return;
 
@@ -76,8 +74,7 @@ inline void timer_start(u32 id, u32 ticks) {
     *control |= (1 << 7);
 }
 
-ALWAYS_INLINE
-inline void timer_stop(u32 id) {
+INLINE void timer_stop(u32 id) {
     if(id >= TIMER_COUNT)
         return;
 
@@ -85,15 +82,13 @@ inline void timer_stop(u32 id) {
     *control &= ~(1 << 7);
 }
 
-ALWAYS_INLINE
-inline void timer_restart(u32 id, u32 ticks) {
+INLINE void timer_restart(u32 id, u32 ticks) {
     timer_stop(id);
     timer_start(id, ticks);
 }
 
 // returns values in range [1, TIMER_COUNTER_MAX]
-ALWAYS_INLINE
-inline u32 timer_get_counter(u32 id) {
+INLINE u32 timer_get_counter(u32 id) {
     if(id >= TIMER_COUNT)
         return 0;
 

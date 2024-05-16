@@ -74,7 +74,7 @@ typedef volatile int32_t  vi32;
 #define NOINLINE __attribute__((noinline))
 #define NOCLONE  __attribute__((noclone))
 
-#define ALWAYS_INLINE __attribute__((always_inline))
+#define INLINE inline __attribute__((always_inline))
 
 // Constants
 #define CLOCK_FREQUENCY (16 * 1024 * 1024)

@@ -35,8 +35,7 @@ struct Background {
     u16 size     : 2; // 0-3
 };
 
-ALWAYS_INLINE
-inline void background_config(u32 id, const struct Background *config) {
+INLINE void background_config(u32 id, const struct Background *config) {
     if(id >= BACKGROUND_COUNT)
         return;
 
@@ -51,8 +50,7 @@ inline void background_config(u32 id, const struct Background *config) {
                config->size     << 14;
 }
 
-ALWAYS_INLINE
-inline void background_set_offset(u32 id, u16 x, u16 y) {
+INLINE void background_set_offset(u32 id, u16 x, u16 y) {
     if(id >= BACKGROUND_COUNT)
         return;
 

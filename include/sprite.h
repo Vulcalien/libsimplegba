@@ -50,8 +50,7 @@ struct Sprite {
     u32 color_mode : 1; // 0 = 16/16 palettes, 1 = 256/1 palette
 };
 
-ALWAYS_INLINE
-inline void sprite_config(u32 id, const struct Sprite *sprite) {
+INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
     if(id >= SPRITE_COUNT)
         return;
 
@@ -85,8 +84,7 @@ inline void sprite_config(u32 id, const struct Sprite *sprite) {
                  sprite->palette  << 12;
 }
 
-ALWAYS_INLINE
-inline void sprite_hide(u32 id) {
+INLINE void sprite_hide(u32 id) {
     if(id >= SPRITE_COUNT)
         return;
 

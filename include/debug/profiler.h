@@ -25,8 +25,7 @@
 // 100% accurate) number of cycles elapsed since the last call to
 // 'profiler_start'. The timers can count up to 256 seconds.
 
-ALWAYS_INLINE
-inline void profiler_start(void) {
+INLINE void profiler_start(void) {
     timer_config(TIMER2, NULL);
     timer_config(TIMER3, &(struct Timer) { .cascade = 1 });
 
@@ -35,8 +34,7 @@ inline void profiler_start(void) {
     timer_start(TIMER2, TIMER_COUNTER_MAX);
 }
 
-ALWAYS_INLINE
-inline u32 profiler_stop(void) {
+INLINE u32 profiler_stop(void) {
     timer_stop(TIMER2); // no need to also stop timer 3
 
     u32 t2 = TIMER_COUNTER_MAX - timer_get_counter(TIMER2);

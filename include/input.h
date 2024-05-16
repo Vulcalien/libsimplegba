@@ -35,23 +35,20 @@ extern u16 input_keys_was_down;
 
 extern void input_tick(void);
 
-ALWAYS_INLINE
-inline bool input_down(u16 key) {
+INLINE bool input_down(u16 key) {
     bool is_down = (input_keys_is_down & key);
 
     return is_down;
 }
 
-ALWAYS_INLINE
-inline bool input_pressed(u16 key) {
+INLINE bool input_pressed(u16 key) {
     bool is_down  = (input_keys_is_down  & key);
     bool was_down = (input_keys_was_down & key);
 
     return is_down && !was_down;
 }
 
-ALWAYS_INLINE
-inline bool input_released(u16 key) {
+INLINE bool input_released(u16 key) {
     bool is_down  = (input_keys_is_down  & key);
     bool was_down = (input_keys_was_down & key);
 
