@@ -28,7 +28,3 @@ i16 math_sin(u16 angle) {
 
     return result;
 }
-
-i16 math_cos(u16 angle) {
-    return math_sin(angle + MATH_PI / 2);
-}

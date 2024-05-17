@@ -44,4 +44,7 @@ INLINE i32 math_sign(i32 val) {
 // 'angle' in range [0, 0xffff]
 // Output in range [-0x4000, 0x4000]
 extern i16 math_sin(u16 angle);
-extern i16 math_cos(u16 angle);
+
+INLINE i16 math_cos(u16 angle) {
+    return math_sin(angle + MATH_PI / 2);
+}
