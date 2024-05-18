@@ -19,22 +19,23 @@
 
 // === Data Types ===
 
-#include <stdbool.h>
-#include <stdint.h>
+typedef _Bool bool;
+#define true  (1)
+#define false (0)
 
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef int8_t   i8;
-typedef int16_t  i16;
-typedef int32_t  i32;
+typedef unsigned char   u8;
+typedef unsigned short  u16;
+typedef unsigned int    u32;
+typedef   signed char   i8;
+typedef   signed short  i16;
+typedef   signed int    i32;
 
-typedef volatile uint8_t  vu8;
-typedef volatile uint16_t vu16;
-typedef volatile uint32_t vu32;
-typedef volatile int8_t   vi8;
-typedef volatile int16_t  vi16;
-typedef volatile int32_t  vi32;
+typedef volatile u8     vu8;
+typedef volatile u16    vu16;
+typedef volatile u32    vu32;
+typedef volatile i8     vi8;
+typedef volatile i16    vi16;
+typedef volatile i32    vi32;
 
 // Limits
 #define  U8_MAX (255)
