@@ -20,7 +20,7 @@ BIN_DIR := bin
 SRC_SUBDIRS := sound debug
 
 # === Compilation ===
-CPPFLAGS := -Iinclude -MMD -MP
+CPPFLAGS := -MMD -MP -nostdinc -Iinclude
 CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
             -Wall -pedantic
 
