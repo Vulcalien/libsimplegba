@@ -17,7 +17,7 @@ SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
 
-SRC_SUBDIRS := sound
+SRC_SUBDIRS := sound debug
 
 # === Compilation ===
 CPPFLAGS := -Iinclude -MMD -MP
