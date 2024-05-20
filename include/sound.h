@@ -34,6 +34,9 @@ extern void sound_play(const u8 *sound, u32 length, bool loop,
 extern void sound_stop(bool channel);
 
 INLINE void sound_set_sample_rate(u32 sample_rate) {
+    if(sample_rate == 0)
+        sample_rate = 16384;
+
     const u32 cycles_per_sample = CLOCK_FREQUENCY / sample_rate;
     timer_start(TIMER0, cycles_per_sample);
 }

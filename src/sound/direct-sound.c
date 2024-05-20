@@ -201,7 +201,6 @@ void sound_direct_init(void) {
     timer_config(TIMER0, NULL);
     timer_config(TIMER1, &(struct Timer) { .cascade = 1, .irq = 1 });
 
-    // Set sample rate to the default: 16.384 KHz.
-    // This operation also starts Timer 0.
-    sound_set_sample_rate(16384);
+    // Set sample rate to the default value. This also starts Timer 0.
+    sound_set_sample_rate(0);
 }
