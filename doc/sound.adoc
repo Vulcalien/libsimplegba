@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-05-02
+:revdate: 2024-05-20
 :docdate: {revdate}
 
 == NAME
@@ -15,11 +15,10 @@ ____
 
 *void sound_init(void);*
 
-// direct sound
-#define SOUND_SAMPLE_RATE 16384 // 16.384 KHz
-
 **void sound_play(const u8 +++*+++**__sound__**, u32 **__length__**, bool **__loop__**, bool **__channel__**);**
 **void sound_stop(bool **__channel__**);**
+
+**void sound_set_sample_rate(u32 **__sample_rate__**);**
 ____
 
 == DESCRIPTION
@@ -31,8 +30,8 @@ the driver.
 === Direct Sound
 The following functions make up a very simple direct sound driver
 capable of playing digital audio on the two digital-to-analog channels
-of the GBA. Sounds should be encoded as uncompressed signed 8-bit PCM
-with a sample rate of 16.384 KHz.
+of the GBA. Sounds should be encoded as uncompressed signed 8-bit PCM.
+The default sample rate is 16.384 KHz.
 
 The _channel_ parameter of these functions specifies which of the two
 direct sound channels to operate on. Possible values are
@@ -45,6 +44,11 @@ either reconfigured by another call to *sound_play*() or stopped by
 *sound_stop*().
 
 The *sound_stop*() function immediately stops the specified _channel_.
+
+The *sound_set_sample_rate*() function sets the sample rate (i.e., the
+number of samples played in a second) to the specified __sample_rate__
+value. If __sample_rate__ is zero, the default value (16.384 KHz) will
+be used instead. Recommended values are 32768, 16384 and 8192.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
