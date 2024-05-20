@@ -187,8 +187,6 @@ static void timer1_isr(void) {
     schedule_next_irq();
 }
 
-#define CYCLES_PER_SAMPLE (CLOCK_FREQUENCY / SOUND_SAMPLE_RATE)
-
 void sound_direct_init(void) {
     DIRECT_SOUND_CONTROL = 1 << 2  | // Channel A Volume (1 = 100%)
                            1 << 3  | // Channel B Volume (1 = 100%)
@@ -203,6 +201,7 @@ void sound_direct_init(void) {
     timer_config(TIMER0, NULL);
     timer_config(TIMER1, &(struct Timer) { .cascade = 1, .irq = 1 });
 
-    // start Timer 0
-    timer_start(TIMER0, CYCLES_PER_SAMPLE);
+    // Set sample rate to the default: 16.384 KHz.
+    // This operation also starts Timer 0.
+    sound_set_sample_rate(16384);
 }

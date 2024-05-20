@@ -17,11 +17,11 @@
 
 #include "base.h"
 
+#include "timer.h"
+
 extern void sound_init(void);
 
 // === Direct Sound ===
-
-#define SOUND_SAMPLE_RATE (16 * 1024)
 
 #define SOUND_CHANNEL_A (0)
 #define SOUND_CHANNEL_B (1)
@@ -32,5 +32,10 @@ extern void sound_init(void);
 extern void sound_play(const u8 *sound, u32 length, bool loop,
                        bool channel);
 extern void sound_stop(bool channel);
+
+INLINE void sound_set_sample_rate(u32 sample_rate) {
+    const u32 cycles_per_sample = CLOCK_FREQUENCY / sample_rate;
+    timer_start(TIMER0, cycles_per_sample);
+}
 
 // ===== ===== =====
