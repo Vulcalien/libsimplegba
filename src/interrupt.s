@@ -135,50 +135,6 @@ interrupt_init:
 .align
 .pool
 
-@ --- interrupt_enable --- @
-.global interrupt_enable
-.text
-THUMB_FUNC
-
-@ r0 = irq
-interrupt_enable:
-    @ calculate (1 << irq)
-    mov     r1, #1
-    lsl     r1, r0
-
-    @ set the IRQ bit in IE
-    ldr     r2, =IE
-    ldrh    r3, [r2]
-    orr     r3, r1
-    strh    r3, [r2]
-
-    bx      lr
-
-.align
-.pool
-
-@ --- interrupt_disable --- @
-.global interrupt_disable
-.text
-THUMB_FUNC
-
-@ r0 = irq
-interrupt_disable:
-    @ calculate (1 << irq)
-    mov     r1, #1
-    lsl     r1, r0
-
-    @ clear the IRQ bit in IE
-    ldr     r2, =IE
-    ldrh    r3, [r2]
-    bic     r3, r1
-    strh    r3, [r2]
-
-    bx      lr
-
-.align
-.pool
-
 @ --- interrupt_set_isr --- @
 .global interrupt_set_isr
 .text

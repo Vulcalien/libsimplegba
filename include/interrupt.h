@@ -36,9 +36,18 @@
 #define IRQ_KEYPAD  (12)
 #define IRQ_GAMEPAK (13)
 
+#define _INTERRUPT_IE *((vu16 *) 0x04000200)
+
 extern void interrupt_init(void);
 
-extern void interrupt_enable(u8 irq);
-extern void interrupt_disable(u8 irq);
+INLINE void interrupt_enable(u8 irq) {
+    _INTERRUPT_IE |= (1 << irq);
+}
+
+INLINE void interrupt_disable(u8 irq) {
+    _INTERRUPT_IE &= ~(1 << irq);
+}
 
 extern void interrupt_set_isr(u8 irq, void (*isr)(void));
+
+#undef _INTERRUPT_IE
