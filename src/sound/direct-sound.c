@@ -35,8 +35,6 @@
 #define DMA2_CONTROL ((vu16 *) 0x040000d2)
 
 static const struct Channel {
-    vu32 *fifo;
-
     struct {
         vu32 *source;
         vu32 *dest;
@@ -50,14 +48,12 @@ static const struct Channel {
 } channels[2] = {
     // Channel A
     {
-        .fifo = FIFO_A,
         .dma = { DMA1_SOURCE, DMA1_DEST, DMA1_CONTROL },
         .outputs = { true, true }
     },
 
     // Channel B
     {
-        .fifo = FIFO_B,
         .dma = { DMA2_SOURCE, DMA2_DEST, DMA2_CONTROL },
         .outputs = { true, true }
     }
@@ -89,8 +85,10 @@ static inline void start_sound(const u8 *sound, u32 length, bool loop,
                       3 << 12 | // Start timing (3 = Sound FIFO)
                       1 << 15;  // DMA enable
 
+    vu32 *fifo = (channel == SOUND_DMA_A ? FIFO_A : FIFO_B);
+
     *(direct_channel->dma.source)  = (u32) sound;
-    *(direct_channel->dma.dest)    = (u32) direct_channel->fifo;
+    *(direct_channel->dma.dest)    = (u32) fifo;
     *(direct_channel->dma.control) = 0;
     *(direct_channel->dma.control) = dma_control;
 
