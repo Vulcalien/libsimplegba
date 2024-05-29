@@ -40,24 +40,19 @@ static const struct Channel {
         vu32 *dest;
         vu16 *control;
     } dma;
-
-    struct {
-        bool left;
-        bool right;
-    } outputs;
 } channels[2] = {
     // Channel A
     {
-        .dma = { DMA1_SOURCE, DMA1_DEST, DMA1_CONTROL },
-        .outputs = { true, true }
+        .dma = { DMA1_SOURCE, DMA1_DEST, DMA1_CONTROL }
     },
 
     // Channel B
     {
-        .dma = { DMA2_SOURCE, DMA2_DEST, DMA2_CONTROL },
-        .outputs = { true, true }
+        .dma = { DMA2_SOURCE, DMA2_DEST, DMA2_CONTROL }
     }
 };
+
+static u8 panning[2];
 
 static struct SoundData {
     const u8 *sound;
@@ -127,18 +122,16 @@ static inline void schedule_next_irq(void) {
     timer_restart(TIMER1, next_stop);
 }
 
-static inline void set_channel_outputs(sound_dma_Channel channel,
-                                       bool enable) {
-    const struct Channel *direct_channel = &channels[channel];
+static inline void update_enable_bits(sound_dma_Channel channel) {
+    const u32 enable_bits = (channel == SOUND_DMA_A ? 8 : 12);
+    struct SoundData *data = &sound_data[channel];
 
-    u32 bits = (channel == SOUND_DMA_A ? 8 : 12);
-    u32 val = direct_channel->outputs.left << 1 |
-              direct_channel->outputs.right;
+    // clear enable bits
+    DIRECT_SOUND_CONTROL &= ~(3 << enable_bits);
 
-    if(enable)
-        DIRECT_SOUND_CONTROL |= (val << bits);
-    else
-        DIRECT_SOUND_CONTROL &= ~(val << bits);
+    // if playing, set enable bits
+    if(data->playing)
+        DIRECT_SOUND_CONTROL |= (panning[channel] << enable_bits);
 }
 
 void sound_dma_play(const u8 *sound, u32 length, bool loop,
@@ -147,7 +140,7 @@ void sound_dma_play(const u8 *sound, u32 length, bool loop,
         return;
 
     start_sound(sound, length, loop, channel);
-    set_channel_outputs(channel, true);
+    update_enable_bits(channel);
 
     // add the samples that were not played back into the other
     // channel's count of remaining samples
@@ -162,10 +155,10 @@ void sound_dma_stop(sound_dma_Channel channel) {
     const struct Channel *direct_channel = &channels[channel];
     struct SoundData *data = &sound_data[channel];
 
-    *(direct_channel->dma.control) = 0;
-    set_channel_outputs(channel, false);
-
     data->playing = false;
+
+    *(direct_channel->dma.control) = 0;
+    update_enable_bits(channel);
 }
 
 void sound_dma_volume(sound_dma_Channel channel, u32 volume) {
@@ -175,6 +168,12 @@ void sound_dma_volume(sound_dma_Channel channel, u32 volume) {
         DIRECT_SOUND_CONTROL |= (1 << volume_bit);
     else // 50%
         DIRECT_SOUND_CONTROL &= ~(1 << volume_bit);
+}
+
+void sound_dma_panning(sound_dma_Channel channel,
+                       bool left, bool right) {
+    panning[channel] = left << 1 | right;
+    update_enable_bits(channel);
 }
 
 IWRAM_SECTION
@@ -210,6 +209,10 @@ void sound_dma_init(void) {
     // set volume to 100% on both channels
     sound_dma_volume(SOUND_DMA_A, 1);
     sound_dma_volume(SOUND_DMA_B, 1);
+
+    // enable left and right on both channels
+    sound_dma_panning(SOUND_DMA_A, true, true);
+    sound_dma_panning(SOUND_DMA_B, true, true);
 
     // Set sample rate to the default value. This also starts Timer 0.
     sound_dma_sample_rate(0);
