@@ -22,5 +22,5 @@
 void sound_init(void) {
     MASTER_SOUND_CONTROL = 1 << 7; // Enable sound
 
-    sound_direct_init();
+    sound_dma_init();
 }

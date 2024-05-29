@@ -15,4 +15,4 @@
  */
 #pragma once
 
-extern void sound_direct_init(void);
+extern void sound_dma_init(void);

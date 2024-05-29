@@ -73,11 +73,11 @@ static struct SoundData {
 } sound_data[2];
 
 static inline void start_sound(const u8 *sound, u32 length, bool loop,
-                               bool channel) {
+                               sound_dma_Channel channel) {
     const struct Channel *direct_channel = &channels[channel];
 
     // reset channel FIFO
-    if(channel == SOUND_CHANNEL_A)
+    if(channel == SOUND_DMA_A)
         DIRECT_SOUND_CONTROL |= (1 << 11);
     else
         DIRECT_SOUND_CONTROL |= (1 << 15);
@@ -129,10 +129,11 @@ static inline void schedule_next_irq(void) {
     timer_restart(TIMER1, next_stop);
 }
 
-static inline void set_channel_outputs(bool channel, bool enable) {
+static inline void set_channel_outputs(sound_dma_Channel channel,
+                                       bool enable) {
     const struct Channel *direct_channel = &channels[channel];
 
-    u32 bits = (channel == SOUND_CHANNEL_A ? 8 : 12);
+    u32 bits = (channel == SOUND_DMA_A ? 8 : 12);
     u32 val = direct_channel->outputs.left << 1 |
               direct_channel->outputs.right;
 
@@ -142,8 +143,8 @@ static inline void set_channel_outputs(bool channel, bool enable) {
         DIRECT_SOUND_CONTROL &= ~(val << bits);
 }
 
-void sound_play(const u8 *sound, u32 length, bool loop,
-                bool channel) {
+void sound_dma_play(const u8 *sound, u32 length, bool loop,
+                    sound_dma_Channel channel) {
     if(length == 0)
         return;
 
@@ -159,7 +160,7 @@ void sound_play(const u8 *sound, u32 length, bool loop,
     schedule_next_irq();
 }
 
-void sound_stop(bool channel) {
+void sound_dma_stop(sound_dma_Channel channel) {
     const struct Channel *direct_channel = &channels[channel];
     struct SoundData *data = &sound_data[channel];
 
@@ -179,7 +180,7 @@ static void timer1_isr(void) {
             if(data->loop)
                 start_sound(data->sound, data->length, true, channel);
             else
-                sound_stop(channel);
+                sound_dma_stop(channel);
         }
     }
 
@@ -187,7 +188,7 @@ static void timer1_isr(void) {
     schedule_next_irq();
 }
 
-void sound_direct_init(void) {
+void sound_dma_init(void) {
     DIRECT_SOUND_CONTROL = 1 << 2  | // Channel A Volume (1 = 100%)
                            1 << 3  | // Channel B Volume (1 = 100%)
                            0 << 10 | // Channel A Timer (0 = Timer 0)
@@ -202,5 +203,5 @@ void sound_direct_init(void) {
     timer_config(TIMER1, &(struct Timer) { .cascade = 1, .irq = 1 });
 
     // Set sample rate to the default value. This also starts Timer 0.
-    sound_set_sample_rate(0);
+    sound_dma_sample_rate(0);
 }
