@@ -2,11 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-05-20
+:revdate: 2024-05-29
 :docdate: {revdate}
 
 == NAME
-sound_init, sound_play, sound_stop - sound driver functions
+sound_init, sound_dma_play, sound_dma_stop, sound_dma_volume,
+sound_dma_directions, sound_dma_sample_rate - sound driver functions
 
 == SYNOPSIS
 [verse]
@@ -15,10 +16,15 @@ ____
 
 *void sound_init(void);*
 
-**void sound_play(const u8 +++*+++**__sound__**, u32 **__length__**, bool **__loop__**, bool **__channel__**);**
-**void sound_stop(bool **__channel__**);**
+**void sound_dma_play(const u8 +++*+++**__sound__**, u32 **__length__**, bool **__loop__**,**
+                    **sound_dma_Channel **__channel__**);**
+**void sound_dma_stop(sound_dma_Channel **__channel__**);**
 
-**void sound_set_sample_rate(u32 **__sample_rate__**);**
+**void sound_dma_volume(sound_dma_Channel **__channel__**, u32 **__volume__**);**
+**void sound_dma_directions(sound_dma_Channel **__channel__**,**
+                          **bool **__left__**, bool **__right__**);**
+
+**void sound_dma_sample_rate(u32 **__sample_rate__**);**
 ____
 
 == DESCRIPTION
@@ -28,22 +34,32 @@ This function needs to be called once before calling other functions of
 the driver.
 
 === Direct Sound
-The following functions make up a very simple direct sound driver
-capable of playing digital audio on the two digital-to-analog channels
-of the GBA. Sounds should be encoded as uncompressed signed 8-bit PCM.
-The default sample rate is 16.384 KHz.
+The following functions make up a simple direct sound driver capable of
+playing digital audio on the two digital-to-analog channels of the GBA.
+Sounds should be encoded as uncompressed signed 8-bit PCM. By default,
+the sample rate is set to 16.384 KHz and both channels have volume set
+to 100% and play sound from left and right.
 
 The _channel_ parameter of these functions specifies which of the two
-direct sound channels to operate on. Possible values are
-*SOUND_CHANNEL_A* and *SOUND_CHANNEL_B*.
+direct sound channels to operate on. Possible values are *SOUND_DMA_A*
+and *SOUND_DMA_B*.
 
-The *sound_play*() function configures the specified _channel_ to play
-the sound having its _length_ samples stored at _sound_. If _loop_ is
-set to true, the sound will be repeatedly played until the channel is
-either reconfigured by another call to *sound_play*() or stopped by
-*sound_stop*().
+The *sound_dma_play*() function makes the specified _channel_ play the
+sound having its _length_ samples stored at _sound_. If _loop_ is set to
+true, the sound will be repeatedly played until the channel is either
+used by another call to *sound_dma_play*() or stopped by
+*sound_dma_stop*().
 
-The *sound_stop*() function immediately stops the specified _channel_.
+The *sound_dma_stop*() function immediately stops the specified
+_channel_.
+
+The *sound_dma_volume*() function sets the volume of the specified
+_channel_. A value of 0 in _volume_ represents 50%, while a value of 1
+(or any other nonzero value) represents 100%.
+
+The *sound_dma_directions*() function sets the directions from which
+sounds are played by the specified _channel_. If _left_ and _right_ are
+both true, sounds will be played from both directions.
 
 The *sound_set_sample_rate*() function sets the sample rate (i.e., the
 number of samples played in a second) to the specified __sample_rate__
