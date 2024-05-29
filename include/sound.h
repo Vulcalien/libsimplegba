@@ -34,6 +34,9 @@ extern void sound_dma_play(const u8 *sound, u32 length, bool loop,
                            sound_dma_Channel channel);
 extern void sound_dma_stop(sound_dma_Channel channel);
 
+// volume: 0=50%, 1=100% (default=100%)
+extern void sound_dma_volume(sound_dma_Channel channel, u32 volume);
+
 INLINE void sound_dma_sample_rate(u32 sample_rate) {
     if(sample_rate == 0)
         sample_rate = 16384;

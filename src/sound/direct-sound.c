@@ -170,6 +170,15 @@ void sound_dma_stop(sound_dma_Channel channel) {
     data->playing = false;
 }
 
+void sound_dma_volume(sound_dma_Channel channel, u32 volume) {
+    const u32 volume_bit = (channel == SOUND_DMA_A ? 2 : 3);
+
+    if(volume != 0) // 100%
+        DIRECT_SOUND_CONTROL |= (1 << volume_bit);
+    else // 50%
+        DIRECT_SOUND_CONTROL &= ~(1 << volume_bit);
+}
+
 IWRAM_SECTION
 static void timer1_isr(void) {
     // stop or loop the channels
@@ -189,9 +198,7 @@ static void timer1_isr(void) {
 }
 
 void sound_dma_init(void) {
-    DIRECT_SOUND_CONTROL = 1 << 2  | // Channel A Volume (1 = 100%)
-                           1 << 3  | // Channel B Volume (1 = 100%)
-                           0 << 10 | // Channel A Timer (0 = Timer 0)
+    DIRECT_SOUND_CONTROL = 0 << 10 | // Channel A Timer (0 = Timer 0)
                            0 << 14;  // Channel B Timer (0 = Timer 0)
 
     // enable Timer 1 IRQ
@@ -201,6 +208,10 @@ void sound_dma_init(void) {
     // configure Timer 0 and Timer 1
     timer_config(TIMER0, NULL);
     timer_config(TIMER1, &(struct Timer) { .cascade = 1, .irq = 1 });
+
+    // set volume to 100% on both channels
+    sound_dma_volume(SOUND_DMA_A, 1);
+    sound_dma_volume(SOUND_DMA_B, 1);
 
     // Set sample rate to the default value. This also starts Timer 0.
     sound_dma_sample_rate(0);
