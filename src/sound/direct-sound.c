@@ -52,7 +52,7 @@ static const struct Channel {
     }
 };
 
-static u8 panning[2];
+static u8 directions[2];
 
 static struct SoundData {
     const u8 *sound;
@@ -131,7 +131,7 @@ static inline void update_enable_bits(sound_dma_Channel channel) {
 
     // if playing, set enable bits
     if(data->playing)
-        DIRECT_SOUND_CONTROL |= (panning[channel] << enable_bits);
+        DIRECT_SOUND_CONTROL |= (directions[channel] << enable_bits);
 }
 
 void sound_dma_play(const u8 *sound, u32 length, bool loop,
@@ -170,9 +170,9 @@ void sound_dma_volume(sound_dma_Channel channel, u32 volume) {
         DIRECT_SOUND_CONTROL &= ~(1 << volume_bit);
 }
 
-void sound_dma_panning(sound_dma_Channel channel,
-                       bool left, bool right) {
-    panning[channel] = left << 1 | right;
+void sound_dma_directions(sound_dma_Channel channel,
+                          bool left, bool right) {
+    directions[channel] = left << 1 | right;
     update_enable_bits(channel);
 }
 
@@ -211,8 +211,8 @@ void sound_dma_init(void) {
     sound_dma_volume(SOUND_DMA_B, 1);
 
     // enable left and right on both channels
-    sound_dma_panning(SOUND_DMA_A, true, true);
-    sound_dma_panning(SOUND_DMA_B, true, true);
+    sound_dma_directions(SOUND_DMA_A, true, true);
+    sound_dma_directions(SOUND_DMA_B, true, true);
 
     // Set sample rate to the default value. This also starts Timer 0.
     sound_dma_sample_rate(0);

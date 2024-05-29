@@ -37,8 +37,8 @@ extern void sound_dma_stop(sound_dma_Channel channel);
 // volume: 0=50%, 1=100% (default=100%)
 extern void sound_dma_volume(sound_dma_Channel channel, u32 volume);
 
-extern void sound_dma_panning(sound_dma_Channel channel,
-                              bool left, bool right);
+extern void sound_dma_directions(sound_dma_Channel channel,
+                                 bool left, bool right);
 
 INLINE void sound_dma_sample_rate(u32 sample_rate) {
     if(sample_rate == 0)
