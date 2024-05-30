@@ -26,6 +26,19 @@
 
 #define _DMA_GET_CONTROL(id) ((vu16 *) (0x040000ba + id * 12))
 
+#define DMA_ADDR_INCREMENT 0
+#define DMA_ADDR_DECREMENT 1
+#define DMA_ADDR_FIXED     2
+#define DMA_ADDR_RELOAD    3
+
+#define DMA_SIZE_16_BIT 0
+#define DMA_SIZE_32_BIT 1
+
+#define DMA_START_IMMEDIATELY 0
+#define DMA_START_VBLANK      1
+#define DMA_START_HBLANK      2
+#define DMA_START_SPECIAL     3
+
 struct DMA {
     u16 dest_control : 2; // 0=increment, 1=decrement, 2=fixed, 3=reload
     u16 src_control  : 2; // 0=increment, 1=decrement, 2=fixed
