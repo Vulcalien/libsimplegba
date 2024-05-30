@@ -50,6 +50,10 @@ typedef volatile i32    vi32;
 #define I16_MAX (32767)
 #define I32_MAX (2147483647)
 
+// === Macros ===
+
+#define BIT(x) (1 << (x))
+
 // ===== ===== =====
 
 #ifndef NULL
