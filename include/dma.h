@@ -52,7 +52,9 @@ INLINE void dma_config(u32 id, struct DMA *config) {
     }
 }
 
-INLINE void dma_transfer(u32 id, void *src, void *dest, u32 n) {
+INLINE void dma_transfer(u32 id,
+                         volatile void *dest, volatile const void *src,
+                         u32 n) {
     if(id >= DMA_COUNT)
         return;
 
