@@ -24,7 +24,7 @@
 #define DMA2 2
 #define DMA3 3
 
-#define _DMA_GET_CONTROL(id) (&((vu16 *) 0x040000ba)[(id) * 12])
+#define _DMA_GET_CONTROL(id) ((vu16 *) (0x040000ba + id * 12))
 
 struct DMA {
     u16 dest_control : 2; // 0=increment, 1=decrement, 2=fixed, 3=reload
@@ -56,9 +56,9 @@ INLINE void dma_transfer(u32 id, void *src, void *dest, u32 n) {
     if(id >= DMA_COUNT)
         return;
 
-    vu32 *src_addr   = ((vu32 *) 0x040000b0 + id * 12);
-    vu32 *dest_addr  = ((vu32 *) 0x040000b4 + id * 12);
-    vu16 *word_count = ((vu16 *) 0x040000b8 + id * 12);
+    vu32 *src_addr   = (vu32 *) (0x040000b0 + id * 12);
+    vu32 *dest_addr  = (vu32 *) (0x040000b4 + id * 12);
+    vu16 *word_count = (vu16 *) (0x040000b8 + id * 12);
 
     *src_addr   = (u32) src;
     *dest_addr  = (u32) dest;
