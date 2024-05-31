@@ -19,8 +19,6 @@ BIN_DIR := bin
 
 SRC_SUBDIRS := sound debug
 
-DOC_DIR := doc
-
 # === Compilation ===
 CPPFLAGS := -MMD -MP -nostdinc -Iinclude
 CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
@@ -79,7 +77,7 @@ all: build
 
 build: $(OUT)
 
-clean::
+clean:
 	@$(RM) $(BIN_DIR) $(OBJ_DIR)
 
 # generate library file
@@ -99,5 +97,3 @@ $(BIN_DIR) $(OBJ_DIRS):
 	$(MKDIR) "$@"
 
 -include $(OBJ:.$(OBJ_EXT)=.d)
-
--include $(DOC_DIR)/manpages.mk
