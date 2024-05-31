@@ -19,6 +19,8 @@ BIN_DIR := bin
 
 SRC_SUBDIRS := sound debug
 
+DOC_DIR := doc
+
 # === Compilation ===
 CPPFLAGS := -MMD -MP -nostdinc -Iinclude
 CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
@@ -98,4 +100,4 @@ $(BIN_DIR) $(OBJ_DIRS):
 
 -include $(OBJ:.$(OBJ_EXT)=.d)
 
--include doc/manpages.mk
+-include $(DOC_DIR)/manpages.mk
