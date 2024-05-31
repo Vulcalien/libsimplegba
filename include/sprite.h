@@ -17,7 +17,7 @@
 
 #include "base.h"
 
-#define SPRITE_COUNT (128)
+#define SPRITE_COUNT 128
 
 #define OAM ((vu16 *) 0x07000000)
 

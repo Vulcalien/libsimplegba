@@ -17,12 +17,12 @@
 
 #include "base.h"
 
-#define BACKGROUND_COUNT (4)
+#define BACKGROUND_COUNT 4
 
-#define BG0 (0)
-#define BG1 (1)
-#define BG2 (2)
-#define BG3 (3)
+#define BG0 0
+#define BG1 1
+#define BG2 2
+#define BG3 3
 
 struct Background {
     u16 priority : 2; // 0-3, 0=highest

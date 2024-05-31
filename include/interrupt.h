@@ -17,24 +17,24 @@
 
 #include "base.h"
 
-#define IRQ_VBLANK  (0)
-#define IRQ_HBLANK  (1)
-#define IRQ_VCOUNT  (2)
+#define IRQ_VBLANK  0
+#define IRQ_HBLANK  1
+#define IRQ_VCOUNT  2
 
-#define IRQ_TIMER0  (3)
-#define IRQ_TIMER1  (4)
-#define IRQ_TIMER2  (5)
-#define IRQ_TIMER3  (6)
+#define IRQ_TIMER0  3
+#define IRQ_TIMER1  4
+#define IRQ_TIMER2  5
+#define IRQ_TIMER3  6
 
-#define IRQ_SERIAL  (7)
+#define IRQ_SERIAL  7
 
-#define IRQ_DMA0    (8)
-#define IRQ_DMA1    (9)
-#define IRQ_DMA2    (10)
-#define IRQ_DMA3    (11)
+#define IRQ_DMA0    8
+#define IRQ_DMA1    9
+#define IRQ_DMA2    10
+#define IRQ_DMA3    11
 
-#define IRQ_KEYPAD  (12)
-#define IRQ_GAMEPAK (13)
+#define IRQ_KEYPAD  12
+#define IRQ_GAMEPAK 13
 
 #define _INTERRUPT_IE *((vu16 *) 0x04000200)
 

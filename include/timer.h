@@ -31,12 +31,12 @@
 // If irq=1, an interrupt request is raised when the counter
 // reaches zero.
 
-#define TIMER_COUNT (4)
+#define TIMER_COUNT 4
 
-#define TIMER0 (0)
-#define TIMER1 (1)
-#define TIMER2 (2)
-#define TIMER3 (3)
+#define TIMER0 0
+#define TIMER1 1
+#define TIMER2 2
+#define TIMER3 3
 
 #define TIMER_COUNTER_MAX (U16_MAX + 1)
 

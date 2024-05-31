@@ -24,8 +24,8 @@ extern void sound_init(void);
 // === Direct Sound ===
 
 typedef bool sound_dma_Channel;
-#define SOUND_DMA_A (0)
-#define SOUND_DMA_B (1)
+#define SOUND_DMA_A 0
+#define SOUND_DMA_B 1
 
 #define SOUND_DMA_PLAY(sound, loop, channel)\
     sound_dma_play((sound), sizeof(sound), (loop), (channel))

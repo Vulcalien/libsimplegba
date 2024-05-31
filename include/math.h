@@ -17,7 +17,7 @@
 
 #include "base.h"
 
-#define MATH_PI (0x8000)
+#define MATH_PI 0x8000
 
 INLINE i32 math_min(i32 a, i32 b) {
     return (a < b ? a : b);

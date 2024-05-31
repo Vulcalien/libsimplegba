@@ -19,11 +19,11 @@
 
 // This module makes it possible to use the debug registers of mGBA.
 
-#define MGBA_LOG_FATAL (0)
-#define MGBA_LOG_ERROR (1)
-#define MGBA_LOG_WARN  (2)
-#define MGBA_LOG_INFO  (3)
-#define MGBA_LOG_DEBUG (4)
+#define MGBA_LOG_FATAL 0
+#define MGBA_LOG_ERROR 1
+#define MGBA_LOG_WARN  2
+#define MGBA_LOG_INFO  3
+#define MGBA_LOG_DEBUG 4
 
 extern bool mgba_open(void);
 extern void mgba_close(void);
