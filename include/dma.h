@@ -42,9 +42,9 @@
 struct DMA {
     u16 dest_control : 2; // 0=increment, 1=decrement, 2=fixed, 3=reload
     u16 src_control  : 2; // 0=increment, 1=decrement, 2=fixed
-    u16 repeat       : 1; // 0=disable, 1=enable
     u16 size         : 1; // 0=16-bit, 1=32-bit
     u16 start_timing : 2; // 0=immediately, 1=VBlank, 2=HBlank, 3=special
+    u16 repeat       : 1; // 0=disable, 1=enable
     u16 irq          : 1; // 0=disable, 1=enable
 };
 
@@ -65,9 +65,8 @@ INLINE void dma_config(u32 id, struct DMA *config) {
     }
 }
 
-INLINE void dma_transfer(u32 id,
-                         volatile void *dest, volatile const void *src,
-                         u32 n) {
+INLINE void dma_transfer(u32 id, volatile void *dest,
+                         volatile const void *src, u32 n) {
     if(id >= DMA_COUNT)
         return;
 
