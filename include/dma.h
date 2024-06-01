@@ -31,8 +31,8 @@
 #define DMA_ADDR_FIXED     2
 #define DMA_ADDR_RELOAD    3
 
-#define DMA_SIZE_16_BIT 0
-#define DMA_SIZE_32_BIT 1
+#define DMA_CHUNK_16_BIT 0
+#define DMA_CHUNK_32_BIT 1
 
 #define DMA_START_IMMEDIATELY 0
 #define DMA_START_VBLANK      1
@@ -42,7 +42,7 @@
 struct DMA {
     u16 dest_control : 2; // 0=increment, 1=decrement, 2=fixed, 3=reload
     u16 src_control  : 2; // 0=increment, 1=decrement, 2=fixed
-    u16 size         : 1; // 0=16-bit, 1=32-bit
+    u16 chunk        : 1; // 0=16-bit, 1=32-bit
     u16 start_timing : 2; // 0=immediately, 1=VBlank, 2=HBlank, 3=special
     u16 repeat       : 1; // 0=disable, 1=enable
     u16 irq          : 1; // 0=disable, 1=enable
@@ -57,7 +57,7 @@ INLINE void dma_config(u32 id, struct DMA *config) {
         *control = config->dest_control << 5  |
                    config->src_control  << 7  |
                    config->repeat       << 9  |
-                   config->size         << 10 |
+                   config->chunk        << 10 |
                    config->start_timing << 12 |
                    config->irq          << 14;
     } else {
