@@ -1,0 +1,101 @@
+= dma(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2024-06-01
+:docdate: {revdate}
+
+== NAME
+dma_config, dma_transfer, dma_stop - DMA functions
+
+== SYNOPSIS
+[verse]
+____
+*#include "dma.h"*
+
+*#define DMA_COUNT 4*
+
+**void dma_config(u32 **__id__**, struct DMA +++*+++**__config__**);**
+
+**void dma_transfer(u32 **__id__**, volatile void +++*+++**__dest__**,**
+                  **volatile const void +++*+++**__src__**, u32 **__n__**);**
+
+**void dma_stop(u32 **__id__**);**
+____
+
+== DESCRIPTION
+All of these functions take the _id_ parameter, used to identify the DMA
+channel to operate on. This can be an integer between 0 and 3 or one of
+these constants: *DMA0*, *DMA1*, *DMA2*, *DMA3*.
+
+=== DMA configuration
+The *dma_config*() function configures the DMA channel with the settings
+specified in the _config_ structure. If currently enabled, the DMA
+channel will be disabled. Passing NULL as _config_ is equivalent to
+passing the structure with all fields set to zero. The structure is
+defined as follows:
+
+[source,c]
+----
+struct DMA {
+    u16 dest_control : 2; // 0=increment, 1=decrement, 2=fixed, 3=reload
+    u16 src_control  : 2; // 0=increment, 1=decrement, 2=fixed
+    u16 chunk        : 1; // 0=16-bit, 1=32-bit
+    u16 start_timing : 2; // 0=immediately, 1=VBlank, 2=HBlank, 3=special
+    u16 repeat       : 1; // 0=disable, 1=enable
+    u16 irq          : 1; // 0=disable, 1=enable
+};
+----
+
+The __dest_control__ and __src_control__ fields specify how the
+destination and source addresses should be modified during DMA
+transfers. The addresses can be incremented, decremented or be fixed.
+The destination address can also be incremented/reloaded, meaning that
+it will be incremented during a DMA transfer and reset to its initial
+value when the transfer repeats. These constants can be used to set the
+two fields: *DMA_ADDR_INCREMENT*, *DMA_ADDR_DECREMENT*,
+*DMA_ADDR_FIXED*, *DMA_ADDR_RELOAD* (__dest_control__ only).
+
+The _chunk_ fields specifies whether the DMA transfer should use 16-bit
+or 32-bit chunks. These constants can be used to set the field:
+*DMA_CHUNK_16_BIT*, *DMA_CHUNK_32_BIT*.
+
+The __start_timing__ field specifies when the DMA transfer should start.
+This can be immediately or when an event occurs: VBlank, HBlank or a
+special event. The special event depends on the DMA channel: for DMA 0,
+not allowed; for DMA 1 and DMA 2, a request to fill the sound buffer;
+for DMA 3, the so-called 'Video Capture'. These constants can be used to
+set the field: *DMA_START_IMMEDIATELY*, *DMA_START_VBLANK*,
+*DMA_START_HBLANK*, *DMA_START_SPECIAL*.
+
+The _repeat_ field specifies whether or not the DMA channel should
+remain enabled after completing a DMA transfer. If set to one, a DMA
+transfer will be made every time the start event occurs. This bit is
+ignored if the start timing is 'immediately'.
+
+The _irq_ field, if set to one, causes the interrupt request of the DMA
+channel to be raised when completing a DMA transfer. For the interrupt
+to be acknowledged, it must also be enabled by *interrupt_enable*(3).
+
+=== DMA operation
+The *dma_transfer*() function enables the DMA channel identified by _id_
+and sets the initial destination address to _dest_, the initial source
+address to _source_ and the number of chunks (not bytes) to transfer to
+_n_. Before being enabled, The DMA channel should be properly configured
+by calling *dma_config*().
+
+The *dma_stop*() function disables the DMA channel identified by _id_.
+This operation does not affect the channel's configuration.
+
+== NOTES
+The source and destination addresses should be properly aligned to match
+the chunk size: 2-aligned for 16-bit chunks, 4-aligned for 32-bit
+chunks.
+
+The DMA 0 channel can only read from internal memory. Meanwhile, the DMA
+3 channel can also write to the cartridge, but for that to have any
+effect there would need to be compatible hardware.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
