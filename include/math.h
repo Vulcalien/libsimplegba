@@ -39,6 +39,8 @@ INLINE i32 math_sign(i32 val) {
     return 0;
 }
 
+extern u16 math_sqrt(u32 val);
+
 // Approximate 'sin' and 'cos' functions
 //
 // 'angle' in range [0, 0xffff]

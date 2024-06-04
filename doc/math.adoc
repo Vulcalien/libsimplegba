@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-05-02
+:revdate: 2024-06-04
 :docdate: {revdate}
 
 == NAME
@@ -20,6 +20,8 @@ ____
 **i32 math_abs(i32 **__val__**);**
 **i32 math_sign(i32 **__val__**);**
 
+**u16 math_sqrt(u32 **__val__**);**
+
 *#define MATH_PI 0x8000*
 
 **i16 math_sin(u16 **__angle__**);**
@@ -36,6 +38,9 @@ function is undefined.
 
 The *math_sign*() functions returns +1 if _val_ is positive, -1 if _val_
 is negative and 0 if _val_ is zero.
+
+The *math_sqrt*() functions returns the integral part (i.e., floor) of
+the square root of _val_.
 
 === Trigonometry
 The trigonometric functions in this module use binary radians (brad) to
