@@ -24,8 +24,6 @@
 #define DMA2 2
 #define DMA3 3
 
-#define _DMA_GET_CONTROL(id) ((vu16 *) (0x040000ba + id * 12))
-
 #define DMA_ADDR_INCREMENT 0
 #define DMA_ADDR_DECREMENT 1
 #define DMA_ADDR_FIXED     2
@@ -47,6 +45,8 @@ struct DMA {
     u16 repeat       : 1; // 0=disable, 1=enable
     u16 irq          : 1; // 0=disable, 1=enable
 };
+
+#define _DMA_GET_CONTROL(id) ((vu16 *) (0x040000ba + id * 12))
 
 INLINE void dma_config(u32 id, struct DMA *config) {
     if(id >= DMA_COUNT)

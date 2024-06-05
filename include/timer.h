@@ -40,14 +40,14 @@
 
 #define TIMER_COUNTER_MAX (U16_MAX + 1)
 
-#define _TIMER_GET_CONTROL(id) ((vu16 *) (0x04000102 + id * 4))
-#define _TIMER_GET_RELOAD(id)  ((vu16 *) (0x04000100 + id * 4))
-
 struct Timer {
     u16 prescaler : 2; // 0=1, 1=64, 2=256, 3=1024 (number of cycles)
     u16 cascade   : 1; // 0=disable, 1=enable
     u16 irq       : 1; // 0=disable, 1=enable
 };
+
+#define _TIMER_GET_CONTROL(id) ((vu16 *) (0x04000102 + id * 4))
+#define _TIMER_GET_RELOAD(id)  ((vu16 *) (0x04000100 + id * 4))
 
 INLINE void timer_config(u32 id, const struct Timer *config) {
     if(id >= TIMER_COUNT)
