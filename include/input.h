@@ -30,6 +30,8 @@
 #define KEY_R      BIT(8)
 #define KEY_L      BIT(9)
 
+#define _INPUT_KEY_CONTROL *((vu16 *) 0x04000132)
+
 extern u16 input_keys_is_down;
 extern u16 input_keys_was_down;
 
@@ -53,4 +55,16 @@ INLINE bool input_released(u16 key) {
     bool was_down = (input_keys_was_down & key);
 
     return !is_down && was_down;
+}
+
+// all_keys: if true, all specified keys must be pressed at the same
+//           time to raise the interrupt; if false, any of the specified
+//           keys will raise the interrupt.
+// keys: list of keys joined using logical OR (e.g. KEY_A | KEY_START).
+INLINE void input_irq_enable(bool all_keys, u16 keys) {
+    _INPUT_KEY_CONTROL = keys | BIT(14) | (all_keys ? BIT(15) : 0);
+}
+
+INLINE void input_irq_disable(void) {
+    _INPUT_KEY_CONTROL = 0;
 }
