@@ -15,12 +15,5 @@
  */
 #include "input.h"
 
-#define KEY_INPUT *((vu16 *) 0x04000130)
-
-u16 input_keys_is_down  = 0;
-u16 input_keys_was_down = 0;
-
-void input_tick(void) {
-    input_keys_was_down = input_keys_is_down;
-    input_keys_is_down  = KEY_INPUT ^ 0x3ff;
-}
+u16 _input_is_down  = 0;
+u16 _input_was_down = 0;

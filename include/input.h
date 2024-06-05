@@ -30,29 +30,33 @@
 #define KEY_R      BIT(8)
 #define KEY_L      BIT(9)
 
+#define _INPUT_KEY_INPUT   *((vu16 *) 0x04000130)
 #define _INPUT_KEY_CONTROL *((vu16 *) 0x04000132)
 
-extern u16 input_keys_is_down;
-extern u16 input_keys_was_down;
+extern u16 _input_is_down;
+extern u16 _input_was_down;
 
-extern void input_tick(void);
+INLINE void input_tick(void) {
+    _input_was_down = _input_is_down;
+    _input_is_down  = _INPUT_KEY_INPUT ^ 0x3ff;
+}
 
 INLINE bool input_down(u16 key) {
-    bool is_down = (input_keys_is_down & key);
+    bool is_down = (_input_is_down & key);
 
     return is_down;
 }
 
 INLINE bool input_pressed(u16 key) {
-    bool is_down  = (input_keys_is_down  & key);
-    bool was_down = (input_keys_was_down & key);
+    bool is_down  = (_input_is_down  & key);
+    bool was_down = (_input_was_down & key);
 
     return is_down && !was_down;
 }
 
 INLINE bool input_released(u16 key) {
-    bool is_down  = (input_keys_is_down  & key);
-    bool was_down = (input_keys_was_down & key);
+    bool is_down  = (_input_is_down  & key);
+    bool was_down = (_input_was_down & key);
 
     return !is_down && was_down;
 }
@@ -68,3 +72,6 @@ INLINE void input_irq_enable(bool all_keys, u16 keys) {
 INLINE void input_irq_disable(void) {
     _INPUT_KEY_CONTROL = 0;
 }
+
+#undef _INPUT_KEY_INPUT
+#undef _INPUT_KEY_CONTROL
