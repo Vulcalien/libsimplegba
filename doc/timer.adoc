@@ -17,7 +17,7 @@ ____
 *#define TIMER_COUNT 4*
 *#define TIMER_COUNTER_MAX 65536*
 
-**void timer_config(u32 **__id__**, u8 **__prescaler__**, bool **__cascade__**);**
+**void timer_config(u32 **__id__**, u16 **__config__**);**
 
 **void timer_start(u32 **__id__**, u32 **__ticks__**);**
 **void timer_stop(u32 **__id__**);**
@@ -39,12 +39,13 @@ counter will be immediately reset to the provided initial value and the
 timer will continue running.
 
 The *timer_config*() function configures the specified timer. The
-_prescaler_ argument specifies how many CPU cycles are needed for the
-timer to tick. Possible values are: *TIMER_PRESCALER_1*,
-*TIMER_PRESCALER_64*, *TIMER_PRESCALER_256*, *TIMER_PRESCALER_1024*. +
-The _cascade_ argument, if true, makes the timer tick only when the
-counter of the previous timer (_id_ - 1) reaches zero. If _cascade_ is
-true, _prescaler_ will be ignored.
+_config_ argument can be any of these constants: *TIMER_PRESCALER_1*,
+*TIMER_PRESCALER_64*, *TIMER_PRESCALER_256*, *TIMER_PRESCALER_1024*,
+*TIMER_CASCADE*. If _config_ is one of the prescaler constants, the
+timer will tick every 1, 64, 256 or 1024 CPU cycles. If _config_ is
+*TIMER_CASCADE*, the timer will tick only when the counter of the
+previous timer (_id_ - 1) reaches zero. Timer 0 cannot be configured to
+run in cascade mode.
 
 The *timer_start*() function starts the specified timer and sets its
 initial counter value to _ticks_. Before being started, the timer should

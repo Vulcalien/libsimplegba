@@ -40,10 +40,12 @@
 
 #define TIMER_COUNTER_MAX (U16_MAX + 1)
 
-#define TIMER_PRESCALER_1    0
-#define TIMER_PRESCALER_64   1
-#define TIMER_PRESCALER_256  2
-#define TIMER_PRESCALER_1024 3
+#define TIMER_PRESCALER_1    (0 << 0)
+#define TIMER_PRESCALER_64   (1 << 0)
+#define TIMER_PRESCALER_256  (2 << 0)
+#define TIMER_PRESCALER_1024 (3 << 0)
+
+#define TIMER_CASCADE BIT(2)
 
 #define _TIMER_GET_CONTROL(id) ((vu16 *) (0x04000102 + id * 4))
 #define _TIMER_GET_RELOAD(id)  ((vu16 *) (0x04000100 + id * 4))
@@ -51,17 +53,14 @@
 #define _TIMER_IRQ_BIT    BIT(6)
 #define _TIMER_ENABLE_BIT BIT(7)
 
-INLINE void timer_config(u32 id, u8 prescaler, bool cascade) {
+INLINE void timer_config(u32 id, u16 config) {
     if(id >= TIMER_COUNT)
         return;
 
     vu16 *control = _TIMER_GET_CONTROL(id);
 
-    // clear all bits, except IRQ enable
-    u16 val = *control & _TIMER_IRQ_BIT;
-
-    val |= prescaler << 0 | cascade << 2;
-    *control = val;
+    // clear all bits except IRQ enable, then write config flags
+    *control = (*control & _TIMER_IRQ_BIT) | config;
 }
 
 INLINE void timer_start(u32 id, u32 ticks) {
