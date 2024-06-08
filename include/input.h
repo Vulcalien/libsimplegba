@@ -33,6 +33,8 @@
 #define _INPUT_KEY_INPUT   *((vu16 *) 0x04000130)
 #define _INPUT_KEY_CONTROL *((vu16 *) 0x04000132)
 
+#define _INPUT_IRQ_BIT BIT(14)
+
 extern u16 _input_is_down;
 extern u16 _input_was_down;
 
@@ -67,11 +69,14 @@ INLINE bool input_released(u16 key) {
 // keys: list of keys joined using logical OR (e.g. KEY_A | KEY_START).
 INLINE void input_irq_config(bool all_keys, u16 keys) {
     // clear all bits, except IRQ enable
-    u16 val = _INPUT_KEY_CONTROL & BIT(14);
+    u16 val = _INPUT_KEY_CONTROL & _INPUT_IRQ_BIT;
 
-    val |= keys | (all_keys ? BIT(15) : 0);
+    val |= keys     << 0 |
+           all_keys << 15;
     _INPUT_KEY_CONTROL = val;
 }
 
 #undef _INPUT_KEY_INPUT
 #undef _INPUT_KEY_CONTROL
+
+#undef _INPUT_IRQ_BIT
