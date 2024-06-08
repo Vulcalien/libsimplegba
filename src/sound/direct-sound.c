@@ -171,7 +171,7 @@ void sound_dma_init(void) {
 
     // configure Timer 0 and Timer 1
     timer_config(TIMER0, TIMER_PRESCALER_1, false);
-    timer_config(TIMER1, TIMER_PRESCALER_1, true);
+    timer_config(TIMER1, 0, true);
 
     // set volume to 100% on both channels
     sound_dma_volume(SOUND_DMA_A, 1);
