@@ -26,8 +26,8 @@
 // 'profiler_start'. The timers can count up to 256 seconds.
 
 INLINE void profiler_start(void) {
-    timer_config(TIMER2, NULL);
-    timer_config(TIMER3, &(struct Timer) { .cascade = 1 });
+    timer_config(TIMER2, TIMER_PRESCALER_1, false);
+    timer_config(TIMER3, TIMER_PRESCALER_1, true);
 
     // the timer in cascade (timer 3) should be started first
     timer_start(TIMER3, TIMER_COUNTER_MAX);

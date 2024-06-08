@@ -40,10 +40,10 @@
 
 #define TIMER_COUNTER_MAX (U16_MAX + 1)
 
-struct Timer {
-    u16 prescaler : 2; // 0=1, 1=64, 2=256, 3=1024 (number of cycles)
-    u16 cascade   : 1; // 0=disable, 1=enable
-};
+#define TIMER_PRESCALER_1    0
+#define TIMER_PRESCALER_64   1
+#define TIMER_PRESCALER_256  2
+#define TIMER_PRESCALER_1024 3
 
 #define _TIMER_GET_CONTROL(id) ((vu16 *) (0x04000102 + id * 4))
 #define _TIMER_GET_RELOAD(id)  ((vu16 *) (0x04000100 + id * 4))
@@ -51,7 +51,7 @@ struct Timer {
 #define _TIMER_IRQ_BIT    BIT(6)
 #define _TIMER_ENABLE_BIT BIT(7)
 
-INLINE void timer_config(u32 id, const struct Timer *config) {
+INLINE void timer_config(u32 id, u8 prescaler, bool cascade) {
     if(id >= TIMER_COUNT)
         return;
 
@@ -60,10 +60,7 @@ INLINE void timer_config(u32 id, const struct Timer *config) {
     // clear all bits, except IRQ enable
     u16 val = *control & _TIMER_IRQ_BIT;
 
-    if(config) {
-        val |= config->prescaler << 0 |
-               config->cascade   << 2;
-    }
+    val |= prescaler << 0 | cascade << 2;
     *control = val;
 }
 
