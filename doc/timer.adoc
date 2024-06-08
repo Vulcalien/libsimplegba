@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-05-09
+:revdate: 2024-06-08
 :docdate: {revdate}
 
 == NAME
@@ -17,7 +17,7 @@ ____
 *#define TIMER_COUNT 4*
 *#define TIMER_COUNTER_MAX 65536*
 
-**void timer_config(u32 **__id__**, const struct Timer +++*+++**__config__**);**
+**void timer_config(u32 **__id__**, u8 **__prescaler__**, bool **__cascade__**);**
 
 **void timer_start(u32 **__id__**, u32 **__ticks__**);**
 **void timer_stop(u32 **__id__**);**
@@ -27,7 +27,7 @@ ____
 ____
 
 == DESCRIPTION
-All of these functions take the _id_ parameter, used to identify the
+All of these functions take the _id_ argument, used to identify the
 timers. This can be an integer between 0 and 3 or one of these
 constants: *TIMER0*, *TIMER1*, *TIMER2*, *TIMER3*.
 
@@ -38,31 +38,14 @@ counter is decremented until it reaches zero. Once that happens, the
 counter will be immediately reset to the provided initial value and the
 timer will continue running.
 
-=== timer configuration
-The *timer_config*() function configures the specified timer with the
-configuration specified in the _config_ structure. If currently running,
-the timer will be stopped. Passing NULL as _config_ is equivalent to
-passing the structure with all fields set to zero. The structure is
-defined as follows:
+The *timer_config*() function configures the specified timer. The
+_prescaler_ argument specifies how many CPU cycles are needed for the
+timer to tick. Possible values are: *TIMER_PRESCALER_1*,
+*TIMER_PRESCALER_64*, *TIMER_PRESCALER_256*, *TIMER_PRESCALER_1024*. +
+The _cascade_ argument, if true, makes the timer tick only when the
+counter of the previous timer (_id_ - 1) reaches zero. If _cascade_ is
+true, _prescaler_ will be ignored.
 
-[source,c]
-----
-struct Timer {
-    u16 prescaler : 2; // 0=1, 1=64, 2=256, 3=1024 (number of cycles)
-    u16 cascade   : 1; // 0=disable, 1=enable
-    u16 irq       : 1; // 0=disable, 1=enable
-};
-----
-
-The _prescaler_ field specifies how many CPU cycles are needed for the
-timer to tick. The _cascade_ field, if set to one, makes the timer tick
-only when the counter of the previous timer (_id_ - 1) reaches zero.
-This option makes the timer ignore the _prescaler_ value and cannot be
-used for Timer 0. The _irq_ field, if set to one, makes the timer raise
-an interrupt request when its counter reaches zero. For the interrupt to
-be acknowledged, it must also be enabled by *interrupt_enable*(3).
-
-=== timer operation
 The *timer_start*() function starts the specified timer and sets its
 initial counter value to _ticks_. Before being started, the timer should
 be properly configured by calling *timer_config*(). If the timer is
@@ -82,7 +65,7 @@ value. Since stopping a timer does not reset its counter, it is safe to
 call this function on stopped timers.
 
 == NOTES
-This drivers considers the timers to be decrementing (i.e., their
+This library considers the timers to be decrementing (i.e., their
 counters are decremented). In GBA hardware, and thus in documentation
 regarding it, the timers are considered to be incrementing. When using
 this driver and reading other GBA documentation, be aware of this
