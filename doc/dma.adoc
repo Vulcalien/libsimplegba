@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-01
+:revdate: 2024-06-08
 :docdate: {revdate}
 
 == NAME
@@ -43,7 +43,6 @@ struct DMA {
     u16 chunk        : 1; // 0=16-bit, 1=32-bit
     u16 start_timing : 2; // 0=immediately, 1=VBlank, 2=HBlank, 3=special
     u16 repeat       : 1; // 0=disable, 1=enable
-    u16 irq          : 1; // 0=disable, 1=enable
 };
 ----
 
@@ -72,10 +71,6 @@ The _repeat_ field specifies whether or not the DMA channel should
 remain enabled after completing a DMA transfer. If set to one, a DMA
 transfer will be made every time the start event occurs. This bit is
 ignored if the start timing is 'immediately'.
-
-The _irq_ field, if set to one, causes the interrupt request of the DMA
-channel to be raised when completing a DMA transfer. For the interrupt
-to be acknowledged, it must also be enabled by *interrupt_enable*(3).
 
 === DMA operation
 The *dma_transfer*() function enables the DMA channel identified by _id_
