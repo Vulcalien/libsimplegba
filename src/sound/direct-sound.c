@@ -171,7 +171,7 @@ void sound_dma_init(void) {
 
     // configure Timer 0 and Timer 1
     timer_config(TIMER0, NULL);
-    timer_config(TIMER1, &(struct Timer) { .cascade = 1, .irq = 1 });
+    timer_config(TIMER1, &(struct Timer) { .cascade = 1 });
 
     // set volume to 100% on both channels
     sound_dma_volume(SOUND_DMA_A, 1);

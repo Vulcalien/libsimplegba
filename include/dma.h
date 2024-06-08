@@ -43,26 +43,30 @@ struct DMA {
     u16 chunk        : 1; // 0=16-bit, 1=32-bit
     u16 start_timing : 2; // 0=immediately, 1=VBlank, 2=HBlank, 3=special
     u16 repeat       : 1; // 0=disable, 1=enable
-    u16 irq          : 1; // 0=disable, 1=enable
 };
 
 #define _DMA_GET_CONTROL(id) ((vu16 *) (0x040000ba + id * 12))
+
+#define _DMA_IRQ_BIT    BIT(14)
+#define _DMA_ENABLE_BIT BIT(15)
 
 INLINE void dma_config(u32 id, struct DMA *config) {
     if(id >= DMA_COUNT)
         return;
 
     vu16 *control = _DMA_GET_CONTROL(id);
+
+    // clear all bits, except IRQ enable
+    u16 val = *control & _DMA_IRQ_BIT;
+
     if(config) {
-        *control = config->dest_control << 5  |
-                   config->src_control  << 7  |
-                   config->repeat       << 9  |
-                   config->chunk        << 10 |
-                   config->start_timing << 12 |
-                   config->irq          << 14;
-    } else {
-        *control = 0;
+        val |= config->dest_control << 5  |
+               config->src_control  << 7  |
+               config->repeat       << 9  |
+               config->chunk        << 10 |
+               config->start_timing << 12;
     }
+    *control = val;
 }
 
 INLINE void dma_transfer(u32 id, volatile void *dest,
@@ -79,7 +83,7 @@ INLINE void dma_transfer(u32 id, volatile void *dest,
     *word_count = n;
 
     vu16 *control = _DMA_GET_CONTROL(id);
-    *control |= (1 << 15);
+    *control |= _DMA_ENABLE_BIT;
 }
 
 INLINE void dma_stop(u32 id) {
@@ -87,7 +91,10 @@ INLINE void dma_stop(u32 id) {
         return;
 
     vu16 *control = _DMA_GET_CONTROL(id);
-    *control &= ~(1 << 15);
+    *control &= ~_DMA_ENABLE_BIT;
 }
 
 #undef _DMA_GET_CONTROL
+
+#undef _DMA_IRQ_BIT
+#undef _DMA_ENABLE_BIT

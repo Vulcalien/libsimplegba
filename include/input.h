@@ -61,6 +61,9 @@ INLINE bool input_released(u16 key) {
     return !is_down && was_down;
 }
 
+// TODO adapt the functions below to the new interface of the interrupt
+// module, which already sets the IRQ bit of the key control register.
+
 // all_keys: if true, all specified keys must be pressed at the same
 //           time to raise the interrupt; if false, any of the specified
 //           keys will raise the interrupt.
