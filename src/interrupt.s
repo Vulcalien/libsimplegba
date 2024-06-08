@@ -15,13 +15,6 @@
 
 .include "macros.inc"
 
-.equ IME,               0x04000208  @ 32-bit
-.equ IE,                0x04000200  @ 16-bit
-.equ IF,                0x04000202  @ 16-bit
-.equ IF_BIOS,           0x03007ff8  @ 16-bit
-
-.equ INTERRUPT_HANDLER, 0x03007ffc  @ 32-bit
-
 .equ INTERRUPT_COUNT, 14
 
 @ --- isr_table (32-bit array) --- @
@@ -39,7 +32,7 @@ ARM_FUNC
 
 @ Handle IRQs by calling the matching ISR.
 @ Tasks of this function:
-@   - read IF and determine which IRQ was raised
+@   - read IE & IF and determine which IRQ was raised
 @   - acknowledge that IRQ (both in IF and IF_BIOS)
 @   - check if that IRQ has a matching ISR
 @       - if not, return
@@ -54,41 +47,40 @@ ARM_FUNC
 @ function again.
 
 interrupt_handler:
-    @ load IF
-    ldr     r0, =IF                     @ r0 = pointer to IF
-    ldrh    r1, [r0]                    @ r1 = IF value
+    @ load (IE & IF)
+    ldr     r0, =0x04000200             @ r0 = pointer to IE_IF
+    ldr     r1, [r0]                    @ r1 = IE_IF
+    and     r1, r1, lsr #16             @ r1 = IE & IF
 
-    @ find the IRQ bit
-    mov     r2, #0                      @ r2 = loop counter (0)
+    @ find the IRQ bit in (IE & IF)
+    mov     r2, #0                      @ r2 = IRQ id  (0)
+    mov     r3, #1                      @ r3 = IRQ bit (1)
 1: @ loop
-    @ if loop counter >= INTERRUPT_COUNT, return
+    @ if IRQ id >= INTERRUPT_COUNT, return
     cmp     r2, #(INTERRUPT_COUNT)
     bxge    lr
 
-    @ calculate (1 << loop counter)
-    mov     r3, #1
-    lsl     r3, r2                      @ r3 = (1 << loop counter)
-
-    @ check if the IRQ bit in IF is set
-    tst     r1, r3                      @ test IF & (1 << irq)
+    @ check if the IRQ bit in (IE & IF) is set
+    tst     r1, r3                      @ test (IE & IF) & (IRQ bit)
 
     @ if the bit is clear, continue
-    addeq   r2, #1                      @ loop counter += 1
+    addeq   r2, #1                      @ IRQ id += 1
+    lsleq   r3, #1                      @ IRQ bit <<= 1
     beq     1b @ loop
 
     @ --- the IRQ bit was found --- @
 
     @ acknowledge the IRQ
-    strh    r3, [r0]                    @ IF = (1 << loop counter)
+    strh    r3, [r0, #0x2]              @ IF = IRQ bit
 
-    ldr     r0, =IF_BIOS                @ r0 = pointer to IF_BIOS
-    ldrh    r1, [r0]                    @ r1 = IF_BIOS value
-    orr     r1, r3
-    strh    r1, [r0]                    @ IF_BIOS |= (1 << loop counter)
+    ldr     r0, =0x03007ff8             @ r0 = pointer to IF_BIOS
+    ldrh    r1, [r0]                    @ r1 = IF_BIOS
+    orr     r1, r3                      @ r1 = IF_BIOS | IRQ bit
+    strh    r1, [r0]                    @ IF_BIOS = (IF_BIOS | IRQ bit)
 
     @ get the ISR
     ldr     r0, =isr_table              @ r0 = pointer to isr_table
-    ldr     r0, [r0, r2, lsl #2]        @ r0 = isr_table[loop counter]
+    ldr     r0, [r0, r2, lsl #2]        @ r0 = isr_table[IRQ id]
 
     @ if the ISR is NULL, return
     cmp     r0, #0
@@ -121,12 +113,12 @@ THUMB_FUNC
 
 interrupt_init:
     @ set interrupt vector
-    ldr     r0, =INTERRUPT_HANDLER
+    ldr     r0, =0x03007ffc             @ r0 = pointer to master ISR
     ldr     r1, =interrupt_handler
     str     r1, [r0]
 
     @ IME = 1
-    ldr     r0, =IME
+    ldr     r0, =0x04000208             @ r0 = pointer to IME
     mov     r1, #1
     str     r1, [r0]
 
