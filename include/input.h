@@ -61,19 +61,16 @@ INLINE bool input_released(u16 key) {
     return !is_down && was_down;
 }
 
-// TODO adapt the functions below to the new interface of the interrupt
-// module, which already sets the IRQ bit of the key control register.
-
 // all_keys: if true, all specified keys must be pressed at the same
 //           time to raise the interrupt; if false, any of the specified
 //           keys will raise the interrupt.
 // keys: list of keys joined using logical OR (e.g. KEY_A | KEY_START).
-INLINE void input_irq_enable(bool all_keys, u16 keys) {
-    _INPUT_KEY_CONTROL = keys | BIT(14) | (all_keys ? BIT(15) : 0);
-}
+INLINE void input_irq_config(bool all_keys, u16 keys) {
+    // clear all bits, except IRQ enable
+    u16 val = _INPUT_KEY_CONTROL & BIT(14);
 
-INLINE void input_irq_disable(void) {
-    _INPUT_KEY_CONTROL = 0;
+    val |= keys | (all_keys ? BIT(15) : 0);
+    _INPUT_KEY_CONTROL = val;
 }
 
 #undef _INPUT_KEY_INPUT
