@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-05-02
+:revdate: 2024-06-08
 :docdate: {revdate}
 
 == NAME
@@ -19,6 +19,8 @@ ____
 **bool input_down(u16 **__key__**);**
 **bool input_pressed(u16 **__key__**);**
 **bool input_released(u16 **__key__**);**
+
+**void input_irq_config(bool **__all_keys__**, u16 **__keys__**);**
 ____
 
 == DESCRIPTION
@@ -41,6 +43,15 @@ below.
 |KEY_R     |KEY_L    |           |
 |===
 
+The *input_irq_config*() function configures the keypad interrupt
+condition. If __all_keys__ is true, the interrupt is raised if all of
+the specified keys are down at the same time; if __all_keys__ is false,
+the interrupt is raised if any of those keys is down. The _keys_
+argument is the list of keys joined together using the bitwise OR
+operator (e.g., KEY_A | KEY_START). For the interrupt to be
+acknowledged, it must also be enabled by calling the
+*interrupt_enable*(3) function passing *IRQ_KEYPAD* as argument.
+
 == RETURN VALUE
 The *input_down*(), *input_pressed*() and *input_released*() functions
 return true if the specified _key_ is currently in the matching state,
@@ -49,3 +60,7 @@ false otherwise.
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
 <\vulcalien@vulcalien.net>.
+
+== SEE ALSO
+*interrupt_enable*(3),
+*interrupt_set_isr*(3)
