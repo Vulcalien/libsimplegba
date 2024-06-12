@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-04
+:revdate: 2024-06-12
 :docdate: {revdate}
 
 == NAME
-math_min, math_max, math_abs, math_sign, math_sin, math_cos - various
-mathematical functions
+math_min, math_max, math_abs, math_sign, math_pow, math_sqrt, math_sin,
+math_cos - various mathematical functions
 
 == SYNOPSIS
 [verse]
@@ -20,6 +20,7 @@ ____
 **i32 math_abs(i32 **__val__**);**
 **i32 math_sign(i32 **__val__**);**
 
+**i32 math_pow(i32 **__base__**, u32 **__exp__**);**
 **u16 math_sqrt(u32 **__val__**);**
 
 *#define MATH_PI 0x8000*
@@ -36,10 +37,16 @@ The *math_abs*() function returns the absolute value of _val_. If _val_
 is the most negative 32-bit integer (*I32_MIN*), the result of this
 function is undefined.
 
-The *math_sign*() functions returns +1 if _val_ is positive, -1 if _val_
+The *math_sign*() function returns +1 if _val_ is positive, -1 if _val_
 is negative and 0 if _val_ is zero.
 
-The *math_sqrt*() functions returns the integral part (i.e., floor) of
+The *math_pow*() function returns the value of _base_ to the power of
+_exp_. If _exp_ is 0, the result is always 1. Since this function
+calculates an integer power, _base_ is allowed to be negative. If _base_
+to the power of _exp_ does not fit within a signed 32-bit integer, the
+result is undefined.
+
+The *math_sqrt*() function returns the integral part (i.e., floor) of
 the square root of _val_.
 
 === Trigonometry
@@ -52,6 +59,8 @@ an integer in the range [-0x4000, 0x4000], with the lower and upper
 bounds (both included) representing -1 and +1.
 
 == NOTES
+The result of *math_pow*(0, 0) is 1.
+
 While the _angle_ parameter of the *math_sin*() and *math_cos*()
 functions is an unsigned 16-bit integer, in practice these functions can
 also take negative angles and work as expected due to integer overflow.

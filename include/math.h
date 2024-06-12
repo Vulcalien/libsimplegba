@@ -39,6 +39,17 @@ INLINE i32 math_sign(i32 val) {
     return 0;
 }
 
+INLINE i32 math_pow(i32 base, u32 exp) {
+    i32 result = 1;
+    while(exp > 0) {
+        if(exp & 1)
+            result *= base;
+        base *= base;
+        exp >>= 1;
+    }
+    return result;
+}
+
 extern u16 math_sqrt(u32 val);
 
 // Approximate 'sin' and 'cos' functions
