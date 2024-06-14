@@ -17,7 +17,7 @@ SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
 
-SRC_SUBDIRS := math sound debug
+SRC_SUBDIRS := math memory sound debug
 
 # === Compilation ===
 CPPFLAGS := -MMD -MP -nostdinc -Iinclude
