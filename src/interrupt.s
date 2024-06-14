@@ -103,6 +103,8 @@ interrupt_handler:
 
     bx      lr
 
+.size interrupt_handler, .-interrupt_handler
+
 .align
 .pool
 
@@ -124,6 +126,8 @@ interrupt_init:
 
     bx      lr
 
+.size interrupt_init, .-interrupt_init
+
 .align
 .pool
 
@@ -143,5 +147,7 @@ interrupt_set_isr:
     strlo   r1, [r2, r0, lsl #2]
 
     bx      lr
+
+.size interrupt_set_isr, .-interrupt_set_isr
 
 .end
