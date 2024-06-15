@@ -55,7 +55,7 @@ misaligned_start_return:
 
     @ store 4 words per iteration (to reduce loop overhead)
 1: @ 4 words loop
-    @ if n >= 16, store 4 words
+    @ while n >= 16, store 4 words
     cmp     r2, #16
     strhs   r1, [r3], #4                @ dest += 4
     strhs   r1, [r3], #4                @ dest += 4
@@ -66,7 +66,7 @@ misaligned_start_return:
 
     @ store 1 word per iteration
 2: @ 1 word loop
-    @ if n >= 4, store a word
+    @ while n >= 4, store a word
     cmp     r2, #4
     strhs   r1, [r3], #4                @ dest += 4
     subhs   r2, #4                      @ n    -= 4
@@ -74,7 +74,7 @@ misaligned_start_return:
 
     @ if (dest + n) is not aligned to 4, handle that special case
     tst     r2, #3
-    bne     misaligned_end              @ if called, this returns
+    bne     misaligned_end              @ if called, does not return
 
     bx      lr
 

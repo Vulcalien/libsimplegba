@@ -18,3 +18,8 @@
 #include "base.h"
 
 extern void *memset(void *dest, i32 byte, u32 n);
+
+// alignment-specific versions of 'memcpy'
+extern void *memcpy8 (vu8  *dest, const vu8  *src, u32 n);
+extern void *memcpy16(vu16 *dest, const vu16 *src, u32 n);
+extern void *memcpy32(vu32 *dest, const vu32 *src, u32 n);
