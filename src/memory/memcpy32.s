@@ -15,12 +15,10 @@
 
 .include "macros.inc"
 
-@ TODO: add memcpy8, memcpy16
-
 @ --- memcpy32 --- @
 .global memcpy32
 .text
-ARM_FUNC
+THUMB_FUNC
 
 @ This function copies data from one memory area to another.
 @
@@ -39,25 +37,35 @@ ARM_FUNC
 memcpy32:
     push    {r0, r4-r6}
 
-1: @ multi-copy loop
-    @ while n >= 16, copy multiple words
-    cmp     r2, #16
+    @ calculate number of 32-bit words
+    lsr     r2, #2                      @ n /= 2
 
-    ldmhsia r1!, {r3-r6}                @ src  += 16
-    stmhsia r0!, {r3-r6}                @ dest += 16
-
-    subhs   r2, #16                     @ n -= 16
-    bhs     1b @ multi-copy loop
-
-2: @ single-copy loop
-    @ while n >= 4, copy a single word
+    @ if n < 4, skip the multi-copy loop
     cmp     r2, #4
+    blo     2f @ exit multi-copy loop
 
-    ldmhsia r1!, {r3}                   @ src  += 4
-    stmhsia r0!, {r3}                   @ dest += 4
+1: @ multi-copy loop
+    ldmia   r1!, {r3-r6}                @ src  += 16
+    stmia   r0!, {r3-r6}                @ dest += 16
 
-    subhs   r2, #4                      @ n -= 4
-    bhs     2b @ single-copy loop
+    sub     r2, #4                      @ n -= 4
+
+    @ if n >= 4, repeat loop
+    cmp     r2, #4
+    bhs     1b @ multi-copy loop
+2: @ exit multi-copy loop
+
+    @ if n == 0, skip the single-copy loop
+    cmp     r2, #0
+    beq     4f @ exit single-copy loop
+
+3: @ single-copy loop
+    ldmia   r1!, {r3}                   @ src  += 4
+    stmia   r0!, {r3}                   @ dest += 4
+
+    sub     r2, #1                      @ n -= 1
+    bne     3b @ sigle-copy loop        @ if n != 0, repeat loop
+4: @ exit single-copy loop
 
     @ return dest
     pop     {r0, r4-r6}
