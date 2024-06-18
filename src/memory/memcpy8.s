@@ -15,18 +15,14 @@
 
 .include "macros.inc"
 
-@ --- memcpy32 --- @
-.global memcpy32
+@ --- memcpy8 --- @
+.global memcpy8
 .text
 THUMB_FUNC
 
-@ Copy data from one memory area to another: 32-bit version.
+@ Copy data from one memory area to another: 8-bit version.
 @
-@ The two areas must not overlap. All parameters (dest, src, n) must be
-@ properly aligned to 4.
-@
-@ By using the 'ldm' and 'stm' instructions, it is able to copy blocks
-@ of 4 words (16 bytes) efficiently.
+@ The two areas must not overlap. Any alignment is allowed.
 
 @ input:
 @   r0 = dest : pointer
@@ -34,19 +30,30 @@ THUMB_FUNC
 @   r2 = n    : unsigned 32-bit
 @ output:
 @   r0 = dest : pointer
-memcpy32:
-    push    {r0, r4-r7}
+memcpy8:
+    push    {r0, r4}
 
-    @ calculate number of words and 4-word blocks
-    lsr     r2, #2                      @ (r2) n /= 4
+    @ calculate number of 4-byte blocks
     lsr     r3, r2, #2                  @ (r3) blocks = n / 4
 
     @ if blocks == 0, skip the multi-copy loop
     beq     2f @ exit multi-copy loop
 
 1: @ multi-copy loop
-    ldmia   r1!, {r4-r7}                @ (r1) src  += 16
-    stmia   r0!, {r4-r7}                @ (r0) dest += 16
+    ldrb    r4, [r1, #0]
+    strb    r4, [r0, #0]
+
+    ldrb    r4, [r1, #1]
+    strb    r4, [r0, #1]
+
+    ldrb    r4, [r1, #2]
+    strb    r4, [r0, #2]
+
+    ldrb    r4, [r1, #3]
+    strb    r4, [r0, #3]
+
+    add     r1, #4                      @ (r1) src  += 4
+    add     r0, #4                      @ (r0) dest += 4
 
     sub     r3, #1                      @ (r3) blocks -= 1
     bne     1b @ multi-copy loop        @ if blocks != 0, repeat loop
@@ -60,17 +67,20 @@ memcpy32:
     beq     4f @ exit single-copy loop
 
 3: @ single-copy loop
-    ldmia   r1!, {r4}                   @ (r1) src  += 4
-    stmia   r0!, {r4}                   @ (r0) dest += 4
+    ldrb    r4, [r1]
+    strb    r4, [r0]
+
+    add     r1, #1                      @ (r1) src  += 1
+    add     r0, #1                      @ (r0) dest += 1
 
     sub     r2, #1                      @ (r2) n -= 1
     bne     3b @ sigle-copy loop        @ if n != 0, repeat loop
 4: @ exit single-copy loop
 
     @ return dest
-    pop     {r0, r4-r7}
+    pop     {r0, r4}
     bx      lr
 
-.size memcpy32, .-memcpy32
+.size memcpy8, .-memcpy8
 
 .end
