@@ -47,22 +47,22 @@ start_vector:
         bl      ClearMem
 
         @ Copy .data section
-        ldr     r0, =__data_lma
-        ldr     r1, =__data_start
+        ldr     r0, =__data_start
+        ldr     r1, =__data_lma
         ldr     r2, =__data_size
-        bl      CopyMem
+        bl      memcpy32
 
         @ Copy .ewram section
-        ldr     r0, =__ewram_lma
-        ldr     r1, =__ewram_start
+        ldr     r0, =__ewram_start
+        ldr     r1, =__ewram_lma
         ldr     r2, =__ewram_size
-        bl      CopyMem
+        bl      memcpy32
 
         @ Copy .iwram section
-        ldr     r0, =__iwram_lma
-        ldr     r1, =__iwram_start
+        ldr     r0, =__iwram_start
+        ldr     r1, =__iwram_lma
         ldr     r2, =__iwram_size
-        bl      CopyMem
+        bl      memcpy32
 
         @ Call AgbMain
         mov     r0, #0                  @ int argc
@@ -89,24 +89,6 @@ ClearMem:
 1: @ loop
         stmia   r0!, {r2}
         sub     r1, #4
-        bgt     1b                      @ 'bgt' in case Length % 4 != 0
-
-2: @ exit
-        bx      lr
-
-@ r0 = Source Address
-@ r1 = Dest Address
-@ r2 = Length
-.thumb_func
-CopyMem:
-        @ Return if Length is 0
-        cmp     r2, #0
-        beq     2f
-
-1: @ loop
-        ldmia   r0!, {r3}
-        stmia   r1!, {r3}
-        sub     r2, #4
         bgt     1b                      @ 'bgt' in case Length % 4 != 0
 
 2: @ exit
