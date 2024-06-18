@@ -73,7 +73,4 @@ memcpy32:
 
 .size memcpy32, .-memcpy32
 
-.align
-.pool
-
 .end
