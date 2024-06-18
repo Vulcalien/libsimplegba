@@ -35,40 +35,40 @@ THUMB_FUNC
 @ output:
 @   r0 = dest : pointer
 memcpy32:
-    push    {r0, r4-r6}
+    push    {r0, r4-r7}
 
-    @ calculate number of 32-bit words
-    lsr     r2, #2                      @ n /= 2
+    @ calculate number of words and 4-word blocks
+    lsr     r2, #2                      @ (r2) n /= 4
+    lsr     r3, r2, #2                  @ (r3) blocks = n / 4
 
-    @ if n < 4, skip the multi-copy loop
-    cmp     r2, #4
-    blo     2f @ exit multi-copy loop
+    @ if blocks == 0, skip the multi-copy loop
+    beq     2f @ exit multi-copy loop
 
 1: @ multi-copy loop
-    ldmia   r1!, {r3-r6}                @ src  += 16
-    stmia   r0!, {r3-r6}                @ dest += 16
+    ldmia   r1!, {r4-r7}                @ (r1) src  += 16
+    stmia   r0!, {r4-r7}                @ (r0) dest += 16
 
-    sub     r2, #4                      @ n -= 4
-
-    @ if n >= 4, repeat loop
-    cmp     r2, #4
-    bhs     1b @ multi-copy loop
+    sub     r3, #1                      @ (r3) blocks -= 1
+    bne     1b @ multi-copy loop        @ if blocks != 0, repeat loop
 2: @ exit multi-copy loop
 
+    @ calculate n % 4
+    lsl     r2, #30
+    lsr     r2, #30
+
     @ if n == 0, skip the single-copy loop
-    cmp     r2, #0
     beq     4f @ exit single-copy loop
 
 3: @ single-copy loop
-    ldmia   r1!, {r3}                   @ src  += 4
-    stmia   r0!, {r3}                   @ dest += 4
+    ldmia   r1!, {r4}                   @ (r1) src  += 4
+    stmia   r0!, {r4}                   @ (r0) dest += 4
 
-    sub     r2, #1                      @ n -= 1
+    sub     r2, #1                      @ (r2) n -= 1
     bne     3b @ sigle-copy loop        @ if n != 0, repeat loop
 4: @ exit single-copy loop
 
     @ return dest
-    pop     {r0, r4-r6}
+    pop     {r0, r4-r7}
     bx      lr
 
 .size memcpy32, .-memcpy32
