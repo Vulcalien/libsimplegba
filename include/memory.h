@@ -19,6 +19,11 @@
 
 extern void *memset(void *dest, i32 byte, u32 n);
 
+// alignment-specific versions of 'memset'
+extern void *memset8 (vu8  *dest, i32 byte, u32 n);
+extern void *memset16(vu16 *dest, i32 byte, u32 n);
+extern void *memset32(vu32 *dest, i32 byte, u32 n);
+
 // alignment-specific versions of 'memcpy'
 extern void *memcpy8 (vu8  *dest, const vu8  *src, u32 n);
 extern void *memcpy16(vu16 *dest, const vu16 *src, u32 n);
