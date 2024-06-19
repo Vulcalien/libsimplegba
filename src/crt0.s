@@ -38,13 +38,15 @@ start_vector:
 
         @ Clear .sbss section
         ldr     r0, =__sbss_start
-        ldr     r1, =__sbss_size
-        bl      ClearMem
+        mov     r1, #0
+        ldr     r2, =__sbss_size
+        bl      memset32
 
         @ Clear .bss section
         ldr     r0, =__bss_start
-        ldr     r1, =__bss_size
-        bl      ClearMem
+        mov     r1, #0
+        ldr     r2, =__bss_size
+        bl      memset32
 
         @ Copy .data section
         ldr     r0, =__data_start
@@ -73,25 +75,5 @@ start_vector:
 
         ldr     r2, =AgbMain
         bx      r2
-
-.align
-.pool
-
-@ r0 = Start Address
-@ r1 = Length
-.thumb_func
-ClearMem:
-        @ Return if Length is 0
-        cmp     r1, #0
-        beq     2f
-
-        mov     r2, #0
-1: @ loop
-        stmia   r0!, {r2}
-        sub     r1, #4
-        bgt     1b                      @ 'bgt' in case Length % 4 != 0
-
-2: @ exit
-        bx      lr
 
 .end
