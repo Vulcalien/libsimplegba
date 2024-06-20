@@ -66,7 +66,7 @@ memset32:
     bne     3b @ single-store loop      @ if n != 0, repeat loop
 4: @ exit single-store loop
 
-    @ return dest
+    @ return original value of dest
     pop     {r0, r4-r6}
     bx      lr
 

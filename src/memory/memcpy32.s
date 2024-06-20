@@ -67,7 +67,7 @@ memcpy32:
     bne     3b @ sigle-copy loop        @ if n != 0, repeat loop
 4: @ exit single-copy loop
 
-    @ return dest
+    @ return original value of dest
     pop     {r0, r4-r7}
     bx      lr
 
