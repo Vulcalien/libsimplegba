@@ -18,21 +18,20 @@
 @ --- memset --- @
 .global memset
 .text
-ARM_FUNC
+THUMB_FUNC
 
-@ This is an implementation of the C standard function 'memset'.
+@ Fill a memory area with a given byte value. This is an implementation
+@ of the C standard function 'memset'.
 @
-@ It can handle any alignment, both at the beginning (with 'dest') and
-@ at the end ('dest' + n). These special alignment cases are handled by
-@ the 'misaligned_start' and 'misaligned_end' pseudo-functions.
-@ The function will write using the largest alignment possible at any
-@ time, making it safe to use for VRAM (where 8-bits writes are not
-@ supported).
+@ Only the lowest 8-bits of 'byte' will be considered. The other 24-bits
+@ will be overwritten.
 @
-@ The highest 24-bits of 'byte' are ignored and overwritten.
+@ Any alignment for 'dest' and 'n' is allowed. The function relies on
+@ 'memset32' for writing to memory aligned to 4. The rest of the code
+@ handles unaligned writes at the start or end.
 @
-@ To improve performance, the function writes in blocks of 16 bytes
-@ whenever possible.
+@ Writes will be always of the highest size allowed by the alignment of
+@ 'dest' and remaining 'n' bytes.
 
 @ input:
 @   r0 = dest : pointer
@@ -41,77 +40,95 @@ ARM_FUNC
 @ output:
 @   r0 = dest : pointer
 memset:
-    @ copy dest into r3 to preserve the value of r0 (to be returned)
-    mov     r3, r0                      @ r3 = dest
+    mov     r3, lr                      @ r3 = lr
+    push    {r0, r3}
 
-    @ duplicate 'byte' to fill 32-bits
-    orr     r1, r1, lsl #8              @ r1 = content (16-bit)
-    orr     r1, r1, lsl #16             @ r1 = content (32-bit)
+    @ if dest is unaligned, handle that case
+    mov     r3, #3                      @ (r3) mask = 3
+    tst     r0, r3
+    bne     16f @ unaligned start
+1: @ unaligned start return
 
-    @ if dest is not aligned to 4, handle that special case
-    tst     r3, #3
-    bne     misaligned_start
-misaligned_start_return:
+    @ if n % 4 != 0, handle that case
+    mov     r3, #3
+    tst     r2, r3
+    bne     32f @ unaligned end
+2: @ unaligned end return
 
-    @ store 4 words per iteration (to reduce loop overhead)
-1: @ 4 words loop
-    @ while n >= 16, store 4 words
-    cmp     r2, #16
-    strhs   r1, [r3], #4                @ dest += 4
-    strhs   r1, [r3], #4                @ dest += 4
-    strhs   r1, [r3], #4                @ dest += 4
-    strhs   r1, [r3], #4                @ dest += 4
-    subhs   r2, #16                     @ n    -= 16
-    bhs     1b @ 4 words loop
+    bl      memset32
 
-    @ store 1 word per iteration
-2: @ 1 word loop
-    @ while n >= 4, store a word
-    cmp     r2, #4
-    strhs   r1, [r3], #4                @ dest += 4
-    subhs   r2, #4                      @ n    -= 4
-    bhs     2b @ 1 word loop
-
-    @ if (dest + n) is not aligned to 4, handle that special case
-    tst     r2, #3
-    bne     misaligned_end              @ if called, does not return
-
+    @ return original value of dest
+    pop     {r0, r3}
+    mov     lr, r3                      @ lr = r3
     bx      lr
 
-@ handle cases where the first bytes are not aligned to 4
-misaligned_start:
-    @ if n == 0, return
-    cmp     r2, #0
-    bxeq    lr
+@ - unaligned start - @
+@ handle cases where the first bytes are unaligned
+16: @ unaligned start
+    @ if n < 1, return
+    cmp     r2, #1
+    blo     1b @ unaligned start return
 
-    @ if dest is aligned to 1, store a byte
-    tst     r3, #1
-    strneb  r1, [r3], #1                @ dest += 1
-    subne   r2, #1                      @ n    -= 1
+    @ check if (dest & 1) != 0
+    mov     r3, #1                      @ (r3) mask = 1
+    tst     r0, r3
+    beq     17f @ after byte-store
 
-    @ if n == 0, return
-    cmp     r2, #0
-    bxeq    lr
+    @ store a byte
+    strb    r1, [r0]
+    add     r0, #1                      @ (r0) dest += 1
+    sub     r2, #1                      @ (r2) n -= 1
+17: @ after byte-store
 
-    @ if dest is aligned to 2, store an halfword
-    tst     r3, #2
-    strneh  r1, [r3], #2                @ dest += 2
-    subne   r2, #2                      @ n    -= 2
+    @ if n < 2, return
+    cmp     r2, #2
+    blo     1b @ unaligned start return
 
-    b       misaligned_start_return
+    @ check if (dest & 2) != 0
+    mov     r3, #2                      @ (r3) mask = 2
+    tst     r0, r3
+    beq     1b @ unaligned start return
 
-@ handle cases where the last bytes are not aligned to 4
-misaligned_end:
-    @ if (n & 2) != 0, store an halfword
-    tst     r2, #2
-    strneh  r1, [r3], #2                @ dest += 2
+    @ duplicate 'byte' to fill 16-bits
+    lsl     r3, r1, #8                  @ r3 = xx 00
+    orr     r1, r3                      @ r1 = xx xx
 
-    @ (n & 1) != 0, store a byte
-    tst     r2, #1
-    strneb  r1, [r3], #1                @ dest += 1
+    @ store an halfword
+    strh    r1, [r0]
+    add     r0, #2                      @ (r0) dest += 2
+    sub     r2, #2                      @ (r2) n -= 2
 
-    @ return directly
-    bx      lr
+    @ return
+    b       1b @ unaligned start return
+
+@ - unaligned end - @
+@ handle cases where the last bytes are unaligned
+32: @ unaligned end
+    @ check if (n & 1) != 0
+    mov     r3, #1
+    tst     r2, r3
+    beq     33f @ after byte-store
+
+    @ store a byte
+    sub     r2, #1
+    strb    r1, [r0, r2]
+33: @ after byte-store
+
+    @ check if (n & 2) != 0
+    mov     r3, #2
+    tst     r2, r3
+    beq     2b @ unaligned end return
+
+    @ duplicate 'byte' to fill 16-bits
+    lsl     r3, r1, #8                  @ r3 = xx 00
+    orr     r1, r3                      @ r1 = xx xx
+
+    @ store an halfword
+    sub     r2, #2                      @ (r2) n -= 2
+    strh    r1, [r0, r2]                @ dest[n] = content
+
+    @ return
+    b       2b @ unaligned end return
 
 .size memset, .-memset
 
