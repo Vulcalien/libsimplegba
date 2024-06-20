@@ -23,8 +23,8 @@ THUMB_FUNC
 @ Fill a memory area with a given byte value. This is an implementation
 @ of the C standard function 'memset'.
 @
-@ Only the lowest 8-bits of 'byte' will be considered. The other 24-bits
-@ will be overwritten.
+@ Only the lowest 8 bits of 'byte' will be considered. The highest
+@ 24 bits will be ignored.
 @
 @ Any alignment for 'dest' and 'n' is allowed. The function relies on
 @ 'memset32' for writing to memory aligned to 4. The rest of the code
@@ -89,7 +89,7 @@ memset:
     tst     r0, r3
     beq     1b @ unaligned start return
 
-    @ duplicate 'byte' to fill 16-bits
+    @ duplicate 'byte' to fill 16 bits
     lsl     r3, r1, #8                  @ r3 = xx 00
     orr     r1, r3                      @ r1 = xx xx
 
@@ -119,7 +119,7 @@ memset:
     tst     r2, r3
     beq     2b @ unaligned end return
 
-    @ duplicate 'byte' to fill 16-bits
+    @ duplicate 'byte' to fill 16 bits
     lsl     r3, r1, #8                  @ r3 = xx 00
     orr     r1, r3                      @ r1 = xx xx
 

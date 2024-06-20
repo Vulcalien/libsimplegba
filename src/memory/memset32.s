@@ -20,6 +20,14 @@
 .text
 THUMB_FUNC
 
+@ Fill a memory area with a given byte value: 32-bit version.
+@
+@ Only the lowest 8 bits of 'byte' will be considered. The highest
+@ 24 bits will be ignored.
+@
+@ 'dest' must be aligned to 4.
+@ 'n' should be a multiple of 4, but its lowest 2 bits are ignored.
+
 @ input:
 @   r0 = dest : pointer
 @   r1 = byte : signed 32-bit
@@ -29,7 +37,7 @@ THUMB_FUNC
 memset32:
     push    {r0, r4-r6}
 
-    @ duplicate 'byte' to fill 32-bits
+    @ duplicate 'byte' to fill 32 bits
     lsl     r3, r1, #8                  @ r3 = 00 00 xx 00
     orr     r1, r3                      @ r1 = 00 00 xx xx
     lsl     r3, r1, #16                 @ r3 = xx xx 00 00
