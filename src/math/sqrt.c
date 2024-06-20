@@ -25,7 +25,7 @@ u16 math_sqrt(u32 val) {
     if(val == 0)
         return 0;
 
-    // If 'val' is greater than 'U16_MAX ^ 2', 32-bits are not enough to
+    // If 'val' is greater than 'U16_MAX ^ 2', 32 bits are not enough to
     // contain intermediate results: return the only possible solution.
     if(val >= (u32) U16_MAX * U16_MAX)
         return U16_MAX;
