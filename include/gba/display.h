@@ -80,6 +80,13 @@ INLINE u16 display_get_vcount(void) {
     return _DISPLAY_VCOUNT;
 }
 
+INLINE void display_set_page(u32 page) {
+    if(page & 1)
+        _DISPLAY_CONTROL |= BIT(4);
+    else
+        _DISPLAY_CONTROL &= ~BIT(4);
+}
+
 #undef _DISPLAY_CONTROL
 #undef _DISPLAY_STATUS
 #undef _DISPLAY_VCOUNT
