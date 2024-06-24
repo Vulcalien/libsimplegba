@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "base.h"
+#include <base.h>
 
 // This module makes it possible to use the debug registers of mGBA.
 

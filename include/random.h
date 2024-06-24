@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "base.h"
+#include <base.h>
 
 extern u16 rand(void);
 extern void srand(u32 val, bool reset);

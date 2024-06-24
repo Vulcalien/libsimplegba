@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-08
+:revdate: 2024-06-24
 :docdate: {revdate}
 
 == NAME
@@ -12,7 +12,7 @@ timer_config, timer_start, timer_stop, timer_restart, timer_get_counter
 == SYNOPSIS
 [verse]
 ____
-*#include "timer.h"*
+*#include <gba/timer.h>*
 
 *#define TIMER_COUNT 4*
 *#define TIMER_COUNTER_MAX 65536*

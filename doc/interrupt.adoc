@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-05-02
+:revdate: 2024-06-24
 :docdate: {revdate}
 
 == NAME
@@ -12,7 +12,7 @@ interrupt driver functions
 == SYNOPSIS
 [verse]
 ____
-*#include "interrupt.h"*
+*#include <gba/interrupt.h>*
 
 *void interrupt_init(void);*
 

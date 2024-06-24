@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "base.h"
+#include <base.h>
 
 #define SPRITE_COUNT 128
 

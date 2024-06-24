@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-05-06
+:revdate: 2024-06-24
 :docdate: {revdate}
 
 == NAME
@@ -11,7 +11,7 @@ profiler_start, profiler_stop - profiling functions
 == SYNOPSIS
 [verse]
 ____
-*#include "debug/profiler.h"*
+*#include <debug/profiler.h>*
 
 *void profiler_start(void);*
 *u32  profiler_stop(void);*

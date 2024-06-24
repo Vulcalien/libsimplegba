@@ -15,9 +15,9 @@
  */
 #pragma once
 
-#include "base.h"
+#include <base.h>
 
-#include "timer.h"
+#include <gba/timer.h>
 
 extern void sound_init(void);
 

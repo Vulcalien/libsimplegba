@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-08
+:revdate: 2024-06-24
 :docdate: {revdate}
 
 == NAME
@@ -12,7 +12,7 @@ functions
 == SYNOPSIS
 [verse]
 ____
-*#include "input.h"*
+*#include <gba/input.h>*
 
 *void input_tick(void);*
 

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include "math.h"
+#include <math.h>
 
 // This function calculates the integral part (i.e. floor) of the square
 // root of any unsigned 32-bit integer. It is based on the Binary Search

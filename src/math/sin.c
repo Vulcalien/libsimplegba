@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include "math.h"
+#include <math.h>
 
 i16 math_sin(u16 angle) {
     // val in range [0, MATH_PI * MATH_PI / 4]

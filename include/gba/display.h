@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "base.h"
+#include <base.h>
 
 #define _DISPLAY_CONTROL *((vu16 *) 0x04000000)
 #define _DISPLAY_STATUS  *((vu16 *) 0x04000004)

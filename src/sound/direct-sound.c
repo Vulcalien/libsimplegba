@@ -13,13 +13,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "sound.h"
+#include <gba/sound.h>
 
 #include "sound_p.h"
 
-#include "interrupt.h"
-#include "timer.h"
-#include "dma.h"
+#include <gba/interrupt.h>
+#include <gba/timer.h>
+#include <gba/dma.h>
 
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 

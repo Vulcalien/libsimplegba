@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-12
+:revdate: 2024-06-24
 :docdate: {revdate}
 
 == NAME
@@ -12,7 +12,7 @@ math_cos - various mathematical functions
 == SYNOPSIS
 [verse]
 ____
-*#include "math.h"*
+*#include <math.h>*
 
 **i32 math_min(i32 **__a__**, i32 **__b__**);**
 **i32 math_max(i32 **__a__**, i32 **__b__**);**

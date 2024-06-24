@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-05-29
+:revdate: 2024-06-24
 :docdate: {revdate}
 
 == NAME
@@ -12,7 +12,7 @@ sound_dma_directions, sound_dma_sample_rate - sound driver functions
 == SYNOPSIS
 [verse]
 ____
-*#include "sound.h"*
+*#include <gba/sound.h>*
 
 *void sound_init(void);*
 

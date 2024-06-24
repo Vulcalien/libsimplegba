@@ -15,9 +15,9 @@
  */
 #pragma once
 
-#include "base.h"
+#include <base.h>
 
-#include "timer.h"
+#include <gba/timer.h>
 
 // This small module can be used for profiling.
 // 'profiler_start' starts Timer 2 and Timer 3 in cascade.

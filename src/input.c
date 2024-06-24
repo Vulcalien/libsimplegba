@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "input.h"
+#include <gba/input.h>
 
 u16 _input_is_down  = 0;
 u16 _input_was_down = 0;
