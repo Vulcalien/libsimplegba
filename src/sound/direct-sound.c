@@ -44,9 +44,9 @@ static inline void start_sound(const u8 *sound, u32 length, bool loop,
                                sound_dma_Channel channel) {
     // reset channel FIFO
     if(channel == SOUND_DMA_A)
-        DIRECT_SOUND_CONTROL |= (1 << 11);
+        DIRECT_SOUND_CONTROL |= BIT(11);
     else
-        DIRECT_SOUND_CONTROL |= (1 << 15);
+        DIRECT_SOUND_CONTROL |= BIT(15);
 
     // reset DMA
     dma_config(DMA(channel), &(struct DMA) {
@@ -132,9 +132,9 @@ void sound_dma_volume(sound_dma_Channel channel, u32 volume) {
     const u32 volume_bit = (channel == SOUND_DMA_A ? 2 : 3);
 
     if(volume != 0) // 100%
-        DIRECT_SOUND_CONTROL |= (1 << volume_bit);
+        DIRECT_SOUND_CONTROL |= BIT(volume_bit);
     else // 50%
-        DIRECT_SOUND_CONTROL &= ~(1 << volume_bit);
+        DIRECT_SOUND_CONTROL &= ~BIT(volume_bit);
 }
 
 void sound_dma_directions(sound_dma_Channel channel,
