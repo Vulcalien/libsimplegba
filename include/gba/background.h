@@ -30,7 +30,6 @@
 struct Background {
     u16 priority : 2; // 0-3, 0=highest
     u16 tileset  : 2; // 0-3, in units of 16 KB
-    u16 _unused  : 2;
     u16 mosaic   : 1; // 0=disable, 1=enable
     u16 colors   : 1; // 0=16 palettes of 16, 1=1 palette of 256
     u16 tilemap  : 5; // 0-31, in units of 2 KB
@@ -45,7 +44,6 @@ INLINE void background_config(u32 id, const struct Background *config) {
     vu16 *control = _BACKGROUND_GET_CONTROL(id);
     *control = config->priority << 0  |
                config->tileset  << 2  |
-               config->_unused  << 4  |
                config->mosaic   << 6  |
                config->colors   << 7  |
                config->tilemap  << 8  |
