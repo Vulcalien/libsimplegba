@@ -17,6 +17,9 @@
 
 #include <base.h>
 
+#define DISPLAY_BG_PALETTE  ((vu16 *) 0x05000000)
+#define DISPLAY_OBJ_PALETTE ((vu16 *) 0x05000200)
+
 #define _DISPLAY_CONTROL *((vu16 *) 0x04000000)
 #define _DISPLAY_STATUS  *((vu16 *) 0x04000004)
 #define _DISPLAY_VCOUNT  *((vu16 *) 0x04000006)
