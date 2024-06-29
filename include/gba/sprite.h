@@ -91,3 +91,13 @@ INLINE void sprite_hide(u32 id) {
     vu16 *attribs = &OAM[id * 4];
     attribs[0] = (1 << 9);
 }
+
+// 'start' is included, 'stop' is not included
+INLINE void sprite_hide_range(u32 start, u32 stop) {
+    for(u32 i = start; i < stop; i++)
+        sprite_hide(i);
+}
+
+INLINE void sprite_hide_all(void) {
+    sprite_hide_range(0, SPRITE_COUNT);
+}
