@@ -1,0 +1,100 @@
+= libsimplegba(7)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2024-06-29
+:docdate: {revdate}
+
+== NAME
+libsimplegba - overview of libsimplegba
+
+== DESCRIPTION
+This library offers functions and constants useful when interfacing with
+hardware components of the Game Boy Advance, plus some other utilities.
+
+[verse]
+____
+Modules included in this library (and corresponding headers):
+    Misc
+        Base                *<base.h>*
+        Math                *<math.h>*
+        Random              *<random.h>*
+        Memory              *<memory.h>*
+
+    GBA Hardware
+        Display             *<gba/display.h>*
+        Background          *<gba/background.h>*
+        Sprite              *<gba/sprite.h>*
+        Sound               *<gba/sound.h>*
+        Timer               *<gba/timer.h>*
+        DMA                 *<gba/dma.h>*
+        Input               *<gba/input.h>*
+        Interrupt           *<gba/interrupt.h>*
+
+    Debug
+        Profiler            *<debug/profiler.h>*
+        mGBA                *<debug/mgba.h>*
+____
+
+=== Misc
+
+*Base <base.h>*::
+Basic definitions, such as data types (u8, i32, bool...), their MIN/MAX
+constants (I32_MIN, U16_MAX...), the NULL pointer, section macros
+(IWRAM_SECTION, SBSS_SECTION...), etc.
+
+*Math <math.h>*::
+Various mathematical functions for integers and fixed-point numbers.
+
+*Random <random.h>*::
+Interact with a pseudorandom number generator. This module contains
+replacements for some C standard functions like _rand_ and _srand_.
+
+*Memory <memory.h>*::
+Manipulate memory. This module contains replacements for some C standard
+library functions like _memset_ and _memcpy_, providing
+alignment-specific versions (e.g., memset16, memcpy32) as well.
+
+=== GBA Hardware
+
+*Display <gba/display.h>*::
+Configure and interact with the GBA display in a generic way.
+
+*Background <gba/background.h>*::
+Configure and interact with the GBA display's backgrounds specifically.
+
+*Sprite <gba/sprite.h>*::
+Configure and interact with the GBA display's sprites (objects)
+specifically.
+
+*Sound <gba/sound.h>*::
+Play sound and interact with the GBA sound hardware.
+
+*Timer <gba/timer.h>*::
+Configure and interact with the GBA's four timers.
+
+*DMA <gba/dma.h>*::
+Configure and interact with the GBA's four DMA channels, using them to
+make memory transfers.
+
+*Input <gba/input.h>*::
+Interact with the GBA's buttons and D-Pad.
+
+*Interrupt <gba/interrupt.h>*::
+Enable or disable interrupt requests and set callback functions (ISRs)
+that handle those requests.
+
+=== Debug
+
+*Profiler <debug/profiler.h>*::
+Profile a piece of code, obtaining an indicative count of the CPU clock
+cycles required to run it.
+
+*mGBA <debug/mgba.h>*::
+Interface with the debug registers of the mGBA emulator, allowing to
+print text similarly to how the standard output is used in computer
+programs.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
