@@ -76,15 +76,21 @@ INLINE void display_force_blank(bool flag) {
         _DISPLAY_CONTROL &= ~BIT(7);
 }
 
+INLINE u16 display_get_vcount(void) {
+    return _DISPLAY_VCOUNT;
+}
+
+// === Bitmap-specific ===
+
+INLINE u32 display_get_page(void) {
+    return (_DISPLAY_CONTROL >> 4) & 1;
+}
+
 INLINE void display_set_page(u32 page) {
     if(page & 1)
         _DISPLAY_CONTROL |= BIT(4);
     else
         _DISPLAY_CONTROL &= ~BIT(4);
-}
-
-INLINE u16 display_get_vcount(void) {
-    return _DISPLAY_VCOUNT;
 }
 
 #undef _DISPLAY_CONTROL
