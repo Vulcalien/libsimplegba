@@ -96,17 +96,7 @@ INLINE void display_set_page(u32 page) {
         _DISPLAY_CONTROL &= ~BIT(4);
 }
 
-// if Video Mode is 0-2: returns NULL
-// if Video Mode is 3-5: returns page's raster
-//
-// Note that in Mode 3 there is only one page: call this with page=0.
 INLINE vu16 *display_get_raster(u32 page) {
-    const u32 mode = _DISPLAY_CONTROL & 7;
-
-    // check if the current Video Mode is a tilemap mode
-    if(mode < 3)
-        return NULL;
-
     return (vu16 *) (0x06000000 + (page & 1) * 0xa000);
 }
 
