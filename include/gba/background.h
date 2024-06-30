@@ -59,25 +59,5 @@ INLINE void background_set_offset(u32 id, u16 x, u16 y) {
     *offset = (x | y << 16);
 }
 
-INLINE vu16 *background_get_tileset(u32 id) {
-    if(id >= BACKGROUND_COUNT)
-        return NULL;
-
-    vu16 *control = _BACKGROUND_GET_CONTROL(id);
-    u32 tileset = (*control >> 2) & 3;
-
-    return (vu16 *) (0x06000000 + tileset * 0x4000);
-}
-
-INLINE vu16 *background_get_tilemap(u32 id) {
-    if(id >= BACKGROUND_COUNT)
-        return NULL;
-
-    vu16 *control = _BACKGROUND_GET_CONTROL(id);
-    u32 tilemap = (*control >> 8) & 31;
-
-    return (vu16 *) (0x06000000 + tilemap * 0x800);
-}
-
 #undef _BACKGROUND_GET_CONTROL
 #undef _BACKGROUND_GET_OFFSET
