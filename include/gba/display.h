@@ -83,6 +83,25 @@ INLINE u16 display_get_vcount(void) {
     return _DISPLAY_VCOUNT;
 }
 
+// Charblocks are 16 KB areas of VRAM. There are 6 charblocks. They are
+// used to store tilesets.
+//
+// Note that charblocks 0-3 and screenblocks share the same memory area.
+//
+// charblocks 0-3: background tiles (only in Tilemap modes)
+// charblocks 4-5: sprite tiles (only charblock 5 in Bitmap modes)
+INLINE vu16 *display_get_charblock(u32 block) {
+    return (vu16 *) (0x06000000 + block * 0x4000);
+}
+
+// Screenblocks are 2 KB areas of VRAM. There are 32 screenblocks. They
+// are used to store background tilemaps.
+//
+// Note that charblocks 0-3 and screenblocks share the same memory area.
+INLINE vu16 *display_get_screenblock(u32 block) {
+    return (vu16 *) (0x06000000 + block * 0x800);
+}
+
 // === Bitmap-specific ===
 
 INLINE u32 display_get_page(void) {
