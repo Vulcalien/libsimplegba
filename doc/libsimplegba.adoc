@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-29
+:revdate: 2024-07-01
 :docdate: {revdate}
 
 == NAME
@@ -40,8 +40,8 @@ ____
 
 *Base <base.h>*::
 Basic definitions, such as data types (u8, i32, bool...), their MIN/MAX
-constants (I32_MIN, U16_MAX...), the NULL pointer, section macros
-(IWRAM_SECTION, SBSS_SECTION...), etc.
+constants (*I32_MIN*, *U16_MAX*...), the NULL pointer, section macros
+(*IWRAM_SECTION*, *SBSS_SECTION*...), etc.
 
 *Math <math.h>*::
 Various mathematical functions for integers and fixed-point numbers.

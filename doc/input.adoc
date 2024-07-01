@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-24
+:revdate: 2024-07-01
 :docdate: {revdate}
 
 == NAME
@@ -48,7 +48,7 @@ condition. If __all_keys__ is true, the interrupt is raised if all of
 the specified keys are down at the same time; if __all_keys__ is false,
 the interrupt is raised if any of those keys is down. The _keys_
 argument is the list of keys joined together using the bitwise OR
-operator (e.g., KEY_A | KEY_START). For the interrupt to be
+operator (e.g., *KEY_A* | *KEY_START*). For the interrupt to be
 acknowledged, it must also be enabled by calling the
 *interrupt_enable*(3) function passing *IRQ_KEYPAD* as argument.
 
