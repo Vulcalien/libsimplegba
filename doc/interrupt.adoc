@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-24
+:revdate: 2024-07-02
 :docdate: {revdate}
 
 == NAME
@@ -65,7 +65,7 @@ void foo_isr(void) {
 ----
 
 == EXAMPLES
-Enable the VBLANK interrupt and map an ISR to it:
+Enable the VBlank interrupt and map an ISR to it:
 
 [source,c]
 ----

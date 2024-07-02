@@ -45,7 +45,7 @@
 struct Display {
     u16 mode : 3; // see 'Video Modes'
 
-    u16 oam_hblank  : 1; // 1=allow access to OAM during H-Blank
+    u16 oam_hblank  : 1; // 1=allow access to OAM during HBlank
     u16 obj_mapping : 1; // 0=32x32 matrix, 1=linear
 
     u16 enable_bg0 : 1; // 0=false, 1=true
