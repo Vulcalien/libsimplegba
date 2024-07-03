@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-07-01
+:revdate: 2024-07-03
 :docdate: {revdate}
 
 == NAME
