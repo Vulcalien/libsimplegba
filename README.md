@@ -6,16 +6,16 @@ A library containing utilities for the Game Boy Advance.
 used to interface with the GBA hardware hiding some of the complexity
 and low-level details.
 
-The library focuses on ease without reducing efficiency: most of the
-functions are implemented as *inline functions*, meaning under most
-circumstances they are just as efficient as writing to the hardware
-registers directly.
+The library focuses on ease of use without sacrificing efficiency: most
+of the functions are implemented as *inline functions*, meaning that
+under most circumstances they are just as efficient as writing to the
+hardware registers directly.
 
 ## Modules
-*libsimplegba* is composed of many modules, each specializing in a
+*libsimplegba* is composed of various modules, each specializing in a
 specific hardware component or task.
 
-Here is the list of modules available (and corresponding headers):
+Here is the list of modules available (and their corresponding headers):
 ```
 Misc
     Base                <base.h>
