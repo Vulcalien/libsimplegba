@@ -12,6 +12,9 @@ libsimplegba - overview of libsimplegba
 This library offers functions and constants useful when interfacing with
 hardware components of the Game Boy Advance, plus some other utilities.
 
+The library contains two files needed for compilation: _lnkscript_
+(linker script) and _crt0.s_ (startup code).
+
 [verse]
 ____
 Modules included in this library (and corresponding headers):
