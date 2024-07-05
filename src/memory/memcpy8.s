@@ -22,7 +22,7 @@ THUMB_FUNC
 
 @ Copy data from one memory area to another: 8-bit version.
 @
-@ The two areas must not overlap. Any alignment is allowed.
+@ The two memory areas must not overlap. Any alignment is allowed.
 
 @ input:
 @   r0 = dest : pointer

@@ -25,7 +25,7 @@ THUMB_FUNC
 @ Only the lowest 8 bits of 'byte' will be considered. The highest
 @ 24 bits will be ignored.
 @
-@ 'dest' must be aligned to 2.
+@ 'dest' must be 2-byte aligned.
 @ 'n' should be a multiple of 2, but its lowest bit is ignored.
 
 @ input:

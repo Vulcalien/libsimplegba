@@ -22,8 +22,9 @@ THUMB_FUNC
 
 @ Copy data from one memory area to another: 32-bit version.
 @
-@ The two areas must not overlap. All parameters (dest, src, n) must be
-@ properly aligned to 4.
+@ The two memory areas must not overlap.
+@ Both 'dest' and 'src' must be 4-byte aligned.
+@ 'n' should be a multiple of 4, but its lowest 2 bits are ignored.
 @
 @ By using the 'ldm' and 'stm' instructions, it is able to copy blocks
 @ of 4 words (16 bytes) efficiently.

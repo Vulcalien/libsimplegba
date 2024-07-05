@@ -22,8 +22,9 @@ THUMB_FUNC
 
 @ Copy data from one memory area to another: 16-bit version.
 @
-@ The two areas must not overlap. All parameters (dest, src, n) must be
-@ properly aligned to 2.
+@ The two memory areas must not overlap.
+@ Both 'dest' and 'src' must be 2-byte aligned.
+@ 'n' should be a multiple of 2, but its lowest bit is ignored.
 
 @ input:
 @   r0 = dest : pointer

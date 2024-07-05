@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-24
+:revdate: 2024-07-05
 :docdate: {revdate}
 
 == NAME
@@ -84,8 +84,8 @@ This operation does not affect the channel's configuration.
 
 == NOTES
 The source and destination addresses should be properly aligned to match
-the chunk size: 2-aligned for 16-bit chunks, 4-aligned for 32-bit
-chunks.
+the chunk size: 2-byte aligned for 16-bit chunks, 4-byte aligned for
+32-bit chunks.
 
 The DMA 0 channel can only read from internal memory. Meanwhile, the DMA
 3 channel can also write to the cartridge, but for that to have any

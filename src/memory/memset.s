@@ -27,7 +27,7 @@ THUMB_FUNC
 @ 24 bits will be ignored.
 @
 @ Any alignment for 'dest' and 'n' is allowed. The function relies on
-@ 'memset32' for writing to memory aligned to 4. The rest of the code
+@ 'memset32' for writing to memory 4-byte aligned. The rest of the code
 @ handles unaligned writes at the start or end.
 @
 @ Writes will be always of the highest size allowed by the alignment of
