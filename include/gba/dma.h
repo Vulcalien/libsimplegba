@@ -50,7 +50,7 @@ struct DMA {
 #define _DMA_IRQ_BIT    BIT(14)
 #define _DMA_ENABLE_BIT BIT(15)
 
-INLINE void dma_config(u32 id, struct DMA *config) {
+INLINE void dma_config(u32 id, const struct DMA *config) {
     if(id >= DMA_COUNT)
         return;
 

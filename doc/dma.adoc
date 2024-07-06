@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-07-05
+:revdate: 2024-07-06
 :docdate: {revdate}
 
 == NAME
@@ -15,7 +15,7 @@ ____
 
 *#define DMA_COUNT 4*
 
-**void dma_config(u32 **__id__**, struct DMA +++*+++**__config__**);**
+**void dma_config(u32 **__id__**, const struct DMA +++*+++**__config__**);**
 
 **void dma_transfer(u32 **__id__**, volatile void +++*+++**__dest__**,**
                   **volatile const void +++*+++**__src__**, u32 **__n__**);**
