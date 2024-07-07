@@ -136,9 +136,16 @@ struct display_Target {
     u8 backdrop : 1;
 };
 
+#define _DISPLAY_DEFAULT_TARGET (&(struct display_Target) {         \
+    .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1, .obj = 1, .backdrop = 1 \
+})
+
 INLINE void display_blend(const struct display_Target *target_1st,
                           const struct display_Target *target_2nd,
                           u32 weight_1st, u32 weight_2nd) {
+    target_1st = (target_1st ? target_1st : _DISPLAY_DEFAULT_TARGET);
+    target_2nd = (target_2nd ? target_2nd : _DISPLAY_DEFAULT_TARGET);
+
     _DISPLAY_BLEND_CONTROL = target_1st->bg0      << 0  |
                              target_1st->bg1      << 1  |
                              target_1st->bg2      << 2  |
@@ -159,6 +166,8 @@ INLINE void display_blend(const struct display_Target *target_1st,
 
 INLINE void display_brighten(const struct display_Target *target,
                              u32 weight) {
+    target = (target ? target : _DISPLAY_DEFAULT_TARGET);
+
     _DISPLAY_BLEND_CONTROL = target->bg0      << 0 |
                              target->bg1      << 1 |
                              target->bg2      << 2 |
@@ -166,11 +175,13 @@ INLINE void display_brighten(const struct display_Target *target,
                              target->obj      << 4 |
                              target->backdrop << 5 |
                              2                << 6;
-    _DISPLAY_BLEND_BRIGHTNESS = weight;
+    _DISPLAY_BLEND_BRIGHTNESS = weight & 0x1f;
 }
 
 INLINE void display_darken(const struct display_Target *target,
                            u32 weight) {
+    target = (target ? target : _DISPLAY_DEFAULT_TARGET);
+
     _DISPLAY_BLEND_CONTROL = target->bg0      << 0 |
                              target->bg1      << 1 |
                              target->bg2      << 2 |
@@ -178,7 +189,7 @@ INLINE void display_darken(const struct display_Target *target,
                              target->obj      << 4 |
                              target->backdrop << 5 |
                              3                << 6;
-    _DISPLAY_BLEND_BRIGHTNESS = weight;
+    _DISPLAY_BLEND_BRIGHTNESS = weight & 0x1f;
 }
 
 INLINE void display_disable_effects(void) {
@@ -188,6 +199,8 @@ INLINE void display_disable_effects(void) {
 #undef _DISPLAY_BLEND_CONTROL
 #undef _DISPLAY_BLEND_ALPHA
 #undef _DISPLAY_BLEND_BRIGHTNESS
+
+#undef _DISPLAY_DEFAULT_TARGET
 
 // ===== ===== =====
 
