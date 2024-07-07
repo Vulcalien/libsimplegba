@@ -21,6 +21,8 @@
 
 #define OAM ((vu16 *) 0x07000000)
 
+#define _SPRITE_MOSAIC *((vu16 *) 0x0400004c)
+
 struct Sprite {
     // Position
     u32 x : 9;
@@ -101,3 +103,11 @@ INLINE void sprite_hide_range(u32 start, u32 stop) {
 INLINE void sprite_hide_all(void) {
     sprite_hide_range(0, SPRITE_COUNT);
 }
+
+// set the mosaic values of sprites
+INLINE void sprite_mosaic(u32 x, u32 y) {
+    _SPRITE_MOSAIC = (x & 15) << 8 |
+                     (y & 15) << 12;
+}
+
+#undef _SPRITE_MOSAIC
