@@ -23,33 +23,35 @@
 
 #define _SPRITE_MOSAIC *((vu16 *) 0x0400004c)
 
+// Sprite sizes:
+//   | Size | Square | Horizontal | Vertical |
+//   | ---- | ------ | ---------- | -------- |
+//   |   0  |   8x8  |    16x8    |   8x16   |
+//   |   1  |  16x16 |    32x8    |   8x32   |
+//   |   2  |  32x32 |    32x16   |   16x32  |
+//   |   3  |  64x64 |    64x32   |   32x64  |
+
 struct Sprite {
-    // Position
     u32 x : 9;
     u32 y : 8;
 
-    // Behavior
-    u32 disable  : 1;
-    u32 mode     : 2;
+    u32 disable  : 1; // 0=false, 1=true
+    u32 mode     : 2; // 0=normal, 1=semi-transparent, 2=window
     u32 priority : 2;
 
-    // Shape, Size and Flip
-    u32 shape : 2; // 0 = square, 1 = horizontal, 2 = vertical
-    u32 size  : 2;
-    u32 flip  : 2;
+    u32 shape : 2; // 0=square, 1=horizontal, 2=vertical
+    u32 size  : 2; // see 'Sprite size'
+    u32 flip  : 2; // 0=none, 1=horizontal, 2=vertical, 3=both
 
-    // Tile and Palette
     u32 tile    : 10;
     u32 palette : 4;
 
-    // Affine Transformation
-    u32 affine_transformation : 1;
-    u32 affine_parameter      : 5;
-    u32 double_size           : 1;
+    u32 mosaic : 1; // 0=disable, 1=enable
+    u32 colors : 1; // 0=16 palettes of 16, 1=1 palette of 256
 
-    // Other
-    u32 mosaic     : 1;
-    u32 color_mode : 1; // 0 = 16/16 palettes, 1 = 256/1 palette
+    u32 affine           : 1; // 0=disable, 1=enable
+    u32 affine_parameter : 5;
+    u32 double_size      : 1; // 0=disable, 1=enable
 };
 
 INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
@@ -61,7 +63,7 @@ INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
     u32 attr0_bit_9;
     u32 attr1_bits_9_13;
 
-    if(sprite->affine_transformation) {
+    if(sprite->affine) {
         attr0_bit_9     = sprite->double_size;
         attr1_bits_9_13 = sprite->affine_parameter;
     } else {
@@ -69,13 +71,13 @@ INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
         attr1_bits_9_13 = sprite->flip << 3;
     }
 
-    attribs[0] = sprite->y                     << 0  |
-                 sprite->affine_transformation << 8  |
-                 attr0_bit_9                   << 9  |
-                 sprite->mode                  << 10 |
-                 sprite->mosaic                << 12 |
-                 sprite->color_mode            << 13 |
-                 sprite->shape                 << 14;
+    attribs[0] = sprite->y      << 0  |
+                 sprite->affine << 8  |
+                 attr0_bit_9    << 9  |
+                 sprite->mode   << 10 |
+                 sprite->mosaic << 12 |
+                 sprite->colors << 13 |
+                 sprite->shape  << 14;
 
     attribs[1] = sprite->x       << 0  |
                  attr1_bits_9_13 << 9  |
