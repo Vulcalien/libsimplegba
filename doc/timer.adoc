@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-24
+:revdate: 2024-07-07
 :docdate: {revdate}
 
 == NAME
@@ -38,15 +38,21 @@ counter is decremented until it reaches zero. Once that happens, the
 counter will be immediately reset to the provided initial value and the
 timer will continue running.
 
-The *timer_config*() function configures the specified timer. The
-_config_ argument can be any of these constants: *TIMER_PRESCALER_1*,
-*TIMER_PRESCALER_64*, *TIMER_PRESCALER_256*, *TIMER_PRESCALER_1024*,
-*TIMER_CASCADE*. If _config_ is one of the prescaler constants, the
-timer will tick every 1, 64, 256 or 1024 CPU cycles. If _config_ is
-*TIMER_CASCADE*, the timer will tick only when the counter of the
-previous timer (_id_ - 1) reaches zero. Timer 0 cannot be configured to
-run in cascade mode.
+=== Timer configuration
+The *timer_config*() function configures the specified timer. If
+running, the timer will be stopped.
 
+The _config_ argument can be any of these constants:
+*TIMER_PRESCALER_1*, *TIMER_PRESCALER_64*, *TIMER_PRESCALER_256*,
+*TIMER_PRESCALER_1024*, *TIMER_CASCADE*.
+
+If configured with one of the prescaler constants, the timer will tick
+every 1, 64, 256 or 1024 CPU cycles. If configured to run in cascade
+mode, the timer will tick only when the counter of the previous timer
+(_id_ - 1) reaches zero. Timer 0 cannot be configured to run in cascade
+mode.
+
+=== Timer operation
 The *timer_start*() function starts the specified timer and sets its
 initial counter value to _ticks_. Before being started, the timer should
 be properly configured by calling *timer_config*(). If the timer is
