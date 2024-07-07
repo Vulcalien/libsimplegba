@@ -20,10 +20,6 @@
 #define DISPLAY_BG_PALETTE  ((vu16 *) 0x05000000)
 #define DISPLAY_OBJ_PALETTE ((vu16 *) 0x05000200)
 
-#define _DISPLAY_CONTROL *((vu16 *) 0x04000000)
-#define _DISPLAY_STATUS  *((vu16 *) 0x04000004)
-#define _DISPLAY_VCOUNT  *((vu16 *) 0x04000006)
-
 // Video Modes
 //
 // Tilemap modes:
@@ -54,6 +50,10 @@ struct Display {
     u16 enable_bg3 : 1; // 0=false, 1=true
     u16 enable_obj : 1; // 0=false, 1=true
 };
+
+#define _DISPLAY_CONTROL *((vu16 *) 0x04000000)
+#define _DISPLAY_STATUS  *((vu16 *) 0x04000004)
+#define _DISPLAY_VCOUNT  *((vu16 *) 0x04000006)
 
 INLINE void display_config(const struct Display *config) {
     // clear bits used by this function
@@ -118,6 +118,72 @@ INLINE void display_set_page(u32 page) {
 INLINE vu16 *display_get_raster(u32 page) {
     return (vu16 *) (0x06000000 + (page & 1) * 0xa000);
 }
+
+// === Special Effects ===
+
+#define DISPLAY_EFFECT_NONE    0
+#define DISPLAY_EFFECT_BLEND   1
+#define DISPLAY_EFFECT_LIGHTEN 2
+#define DISPLAY_EFFECT_DARKEN  3
+
+#define _DISPLAY_BLEND_CONTROL    *((vu16 *) 0x04000050)
+#define _DISPLAY_BLEND_ALPHA      *((vu16 *) 0x04000052)
+#define _DISPLAY_BLEND_BRIGHTNESS *((vu16 *) 0x04000054)
+
+struct display_Effect {
+    u32 type : 2; // 0=none, 1=blend, 2=lighten, 3=darken
+
+    u32 weight_1st : 5; // 0-16
+    u32 weight_2nd : 5; // 0-16
+
+    u32 target_1st_bg0      : 1;
+    u32 target_1st_bg1      : 1;
+    u32 target_1st_bg2      : 1;
+    u32 target_1st_bg3      : 1;
+    u32 target_1st_obj      : 1;
+    u32 target_1st_backdrop : 1;
+
+    u32 target_2nd_bg0      : 1;
+    u32 target_2nd_bg1      : 1;
+    u32 target_2nd_bg2      : 1;
+    u32 target_2nd_bg3      : 1;
+    u32 target_2nd_obj      : 1;
+    u32 target_2nd_backdrop : 1;
+};
+
+INLINE void display_effect(const struct display_Effect *effect) {
+    _DISPLAY_BLEND_CONTROL = effect->target_1st_bg0      << 0  |
+                             effect->target_1st_bg1      << 1  |
+                             effect->target_1st_bg2      << 2  |
+                             effect->target_1st_bg3      << 3  |
+                             effect->target_1st_obj      << 4  |
+                             effect->target_1st_backdrop << 5  |
+                             effect->type                << 6  |
+                             effect->target_2nd_bg0      << 8  |
+                             effect->target_2nd_bg1      << 9  |
+                             effect->target_2nd_bg2      << 10 |
+                             effect->target_2nd_bg3      << 11 |
+                             effect->target_2nd_obj      << 12 |
+                             effect->target_2nd_backdrop << 13;
+
+    switch(effect->type) {
+        case DISPLAY_EFFECT_BLEND:
+            _DISPLAY_BLEND_ALPHA = effect->weight_1st << 0 |
+                                   effect->weight_2nd << 8;
+            break;
+
+        case DISPLAY_EFFECT_LIGHTEN:
+        case DISPLAY_EFFECT_DARKEN:
+            _DISPLAY_BLEND_BRIGHTNESS = effect->weight_2nd;
+            break;
+    }
+}
+
+#undef _DISPLAY_BLEND_CONTROL
+#undef _DISPLAY_BLEND_ALPHA
+#undef _DISPLAY_BLEND_BRIGHTNESS
+
+// ===== ===== =====
 
 #undef _DISPLAY_CONTROL
 #undef _DISPLAY_STATUS
