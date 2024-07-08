@@ -23,7 +23,7 @@ extern void sound_init(void);
 
 // === Direct Sound ===
 
-typedef bool sound_dma_Channel;
+typedef bool SoundDmaChannel;
 #define SOUND_DMA_A 0
 #define SOUND_DMA_B 1
 
@@ -31,13 +31,13 @@ typedef bool sound_dma_Channel;
     sound_dma_play((sound), sizeof(sound), (loop), (channel))
 
 extern void sound_dma_play(const u8 *sound, u32 length, bool loop,
-                           sound_dma_Channel channel);
-extern void sound_dma_stop(sound_dma_Channel channel);
+                           SoundDmaChannel channel);
+extern void sound_dma_stop(SoundDmaChannel channel);
 
 // volume: 0=50%, 1=100% (default=100%)
-extern void sound_dma_volume(sound_dma_Channel channel, u32 volume);
+extern void sound_dma_volume(SoundDmaChannel channel, u32 volume);
 
-extern void sound_dma_directions(sound_dma_Channel channel,
+extern void sound_dma_directions(SoundDmaChannel channel,
                                  bool left, bool right);
 
 INLINE void sound_dma_sample_rate(u32 sample_rate) {

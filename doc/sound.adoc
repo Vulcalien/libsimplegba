@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-24
+:revdate: 2024-07-08
 :docdate: {revdate}
 
 == NAME
@@ -17,11 +17,11 @@ ____
 *void sound_init(void);*
 
 **void sound_dma_play(const u8 +++*+++**__sound__**, u32 **__length__**, bool **__loop__**,**
-                    **sound_dma_Channel **__channel__**);**
-**void sound_dma_stop(sound_dma_Channel **__channel__**);**
+                    **SoundDmaChannel **__channel__**);**
+**void sound_dma_stop(SoundDmaChannel **__channel__**);**
 
-**void sound_dma_volume(sound_dma_Channel **__channel__**, u32 **__volume__**);**
-**void sound_dma_directions(sound_dma_Channel **__channel__**,**
+**void sound_dma_volume(SoundDmaChannel **__channel__**, u32 **__volume__**);**
+**void sound_dma_directions(SoundDmaChannel **__channel__**,**
                           **bool **__left__**, bool **__right__**);**
 
 **void sound_dma_sample_rate(u32 **__sample_rate__**);**

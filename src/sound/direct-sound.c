@@ -41,7 +41,7 @@ static struct SoundData {
 } sound_data[2];
 
 static inline void start_sound(const u8 *sound, u32 length, bool loop,
-                               sound_dma_Channel channel) {
+                               SoundDmaChannel channel) {
     // reset channel FIFO
     if(channel == SOUND_DMA_A)
         DIRECT_SOUND_CONTROL |= BIT(11);
@@ -90,7 +90,7 @@ static inline void schedule_next_irq(void) {
     timer_restart(TIMER1, next_stop);
 }
 
-static inline void update_enable_bits(sound_dma_Channel channel) {
+static inline void update_enable_bits(SoundDmaChannel channel) {
     const u32 enable_bits = (channel == SOUND_DMA_A ? 8 : 12);
     struct SoundData *data = &sound_data[channel];
 
@@ -103,7 +103,7 @@ static inline void update_enable_bits(sound_dma_Channel channel) {
 }
 
 void sound_dma_play(const u8 *sound, u32 length, bool loop,
-                    sound_dma_Channel channel) {
+                    SoundDmaChannel channel) {
     if(length == 0)
         return;
 
@@ -119,7 +119,7 @@ void sound_dma_play(const u8 *sound, u32 length, bool loop,
     schedule_next_irq();
 }
 
-void sound_dma_stop(sound_dma_Channel channel) {
+void sound_dma_stop(SoundDmaChannel channel) {
     struct SoundData *data = &sound_data[channel];
 
     data->playing = false;
@@ -128,7 +128,7 @@ void sound_dma_stop(sound_dma_Channel channel) {
     update_enable_bits(channel);
 }
 
-void sound_dma_volume(sound_dma_Channel channel, u32 volume) {
+void sound_dma_volume(SoundDmaChannel channel, u32 volume) {
     const u32 volume_bit = (channel == SOUND_DMA_A ? 2 : 3);
 
     if(volume != 0) // 100%
@@ -137,7 +137,7 @@ void sound_dma_volume(sound_dma_Channel channel, u32 volume) {
         DIRECT_SOUND_CONTROL &= ~BIT(volume_bit);
 }
 
-void sound_dma_directions(sound_dma_Channel channel,
+void sound_dma_directions(SoundDmaChannel channel,
                           bool left, bool right) {
     directions[channel] = left << 1 | right;
     update_enable_bits(channel);
