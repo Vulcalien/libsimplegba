@@ -125,7 +125,7 @@ INLINE vu16 *display_get_raster(u32 page) {
 #define _DISPLAY_BLEND_ALPHA      *((vu16 *) 0x04000052)
 #define _DISPLAY_BLEND_BRIGHTNESS *((vu16 *) 0x04000054)
 
-struct display_Target {
+struct DisplayTarget {
     u8 bg0 : 1;
     u8 bg1 : 1;
     u8 bg2 : 1;
@@ -136,12 +136,12 @@ struct display_Target {
     u8 backdrop : 1;
 };
 
-#define _DISPLAY_DEFAULT_TARGET (&(struct display_Target) {         \
+#define _DISPLAY_DEFAULT_TARGET (&(struct DisplayTarget) {          \
     .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1, .obj = 1, .backdrop = 1 \
 })
 
-INLINE void display_blend(const struct display_Target *target_1st,
-                          const struct display_Target *target_2nd,
+INLINE void display_blend(const struct DisplayTarget *target_1st,
+                          const struct DisplayTarget *target_2nd,
                           u32 weight_1st, u32 weight_2nd) {
     target_1st = (target_1st ? target_1st : _DISPLAY_DEFAULT_TARGET);
     target_2nd = (target_2nd ? target_2nd : _DISPLAY_DEFAULT_TARGET);
@@ -164,7 +164,7 @@ INLINE void display_blend(const struct display_Target *target_1st,
                            (weight_2nd & 0x1f) << 8;
 }
 
-INLINE void display_brighten(const struct display_Target *target,
+INLINE void display_brighten(const struct DisplayTarget *target,
                              u32 weight) {
     target = (target ? target : _DISPLAY_DEFAULT_TARGET);
 
@@ -178,7 +178,7 @@ INLINE void display_brighten(const struct display_Target *target,
     _DISPLAY_BLEND_BRIGHTNESS = weight & 0x1f;
 }
 
-INLINE void display_darken(const struct display_Target *target,
+INLINE void display_darken(const struct DisplayTarget *target,
                            u32 weight) {
     target = (target ? target : _DISPLAY_DEFAULT_TARGET);
 
