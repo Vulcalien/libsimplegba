@@ -15,17 +15,4 @@
  */
 #include <random.h>
 
-static u32 seed = 0;
-
-IWRAM_SECTION
-u16 rand(void) {
-    seed = seed * 0x248f7b13 + 0xc21840c5;
-    return seed >> 16;
-}
-
-void srand(u32 val, bool reset) {
-    if(reset)
-        seed = val;
-    else
-        seed += val;
-}
+u32 _random_seed = 0;

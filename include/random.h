@@ -1,4 +1,4 @@
-/* Copyright 2022 Vulcalien
+/* Copyright 2024 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,5 +17,20 @@
 
 #include <base.h>
 
-extern u16 rand(void);
-extern void srand(u32 val, bool reset);
+#define RANDOM_MAX 65535
+
+extern u32 _random_seed;
+
+// 'bound' must be in range [1, RANDOM_MAX + 1]
+INLINE u16 random(u32 bound) {
+    _random_seed = _random_seed * 0x248f7b13 + 0xc21840c5;
+    return (_random_seed >> 16) * bound / (RANDOM_MAX + 1);
+}
+
+// 'seed' can be any unsigned 32-bit integer.
+// The previously stored seed value is returned.
+INLINE u32 random_seed(u32 seed) {
+    u32 old = _random_seed;
+    _random_seed = seed;
+    return old;
+}
