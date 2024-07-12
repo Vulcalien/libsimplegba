@@ -202,6 +202,90 @@ INLINE void display_disable_effects(void) {
 
 #undef _DISPLAY_DEFAULT_TARGET
 
+// === Windows ===
+
+#define DISPLAY_WINDOW_COUNT 4
+
+#define DISPLAY_WINDOW_0   0
+#define DISPLAY_WINDOW_1   1
+#define DISPLAY_WINDOW_OUT 2
+#define DISPLAY_WINDOW_OBJ 3
+
+struct DisplayWindow {
+    u8 bg0 : 1;
+    u8 bg1 : 1;
+    u8 bg2 : 1;
+    u8 bg3 : 1;
+
+    u8 obj : 1;
+
+    u8 effects : 1;
+};
+
+INLINE void display_window_config(u32 id,
+                                  struct DisplayWindow *config) {
+    if(id > DISPLAY_WINDOW_COUNT)
+        return;
+
+    // if config is NULL, use a default configuration instead
+    config = (config ? config : (&(struct DisplayWindow) {
+        .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1, .obj = 1, .effects = 1
+    }));
+
+    vu32 *control = (vu32 *) 0x04000048;
+
+    // clear the window's bits
+    u32 val = *control & ~(0x3f << id * 8);
+
+    // set the window's bit as configured
+    val |= (
+        config->bg0     << 0 |
+        config->bg1     << 1 |
+        config->bg2     << 2 |
+        config->bg3     << 3 |
+        config->obj     << 4 |
+        config->effects << 5
+    ) << (id * 8);
+    *control = val;
+}
+
+INLINE void display_window_set_size(u32 id,
+                                    u8 x0, u8 y0, u8 x1, u8 y1) {
+    if(id != DISPLAY_WINDOW_0 && id != DISPLAY_WINDOW_1)
+        return;
+
+    vu16 *horizontal = (vu16 *) (0x04000040 + id * 2);
+    vu16 *vertical   = (vu16 *) (0x04000044 + id * 2);
+
+    *horizontal = (x0 << 8 | x1);
+    *vertical   = (y0 << 8 | y1);
+}
+
+INLINE void _display_window_toggle_enable_bit(u32 id, bool enable) {
+    if(id > DISPLAY_WINDOW_COUNT)
+        return;
+
+    u16 bit = (u16 [DISPLAY_WINDOW_COUNT]) {
+        [DISPLAY_WINDOW_0]   = BIT(13),
+        [DISPLAY_WINDOW_1]   = BIT(14),
+        [DISPLAY_WINDOW_OUT] = 0,
+        [DISPLAY_WINDOW_OBJ] = BIT(15)
+    }[id];
+
+    if(enable)
+        _DISPLAY_CONTROL |= bit;
+    else
+        _DISPLAY_CONTROL &= ~bit;
+}
+
+INLINE void display_window_enable(u32 id) {
+    _display_window_toggle_enable_bit(id, true);
+}
+
+INLINE void display_window_disable(u32 id) {
+    _display_window_toggle_enable_bit(id, false);
+}
+
 // ===== ===== =====
 
 #undef _DISPLAY_CONTROL
