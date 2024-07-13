@@ -1,0 +1,40 @@
+= random(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2024-07-13
+:docdate: {revdate}
+
+== NAME
+random, random_seed - pseudo-random number generator
+
+== SYNOPSIS
+[verse]
+____
+*#include <random.h>*
+
+*#define RANDOM_MAX 65535*
+
+**u16 random(u32 **__bound__**);**
+**u32 random_seed(u32 **__seed__**);**
+____
+
+== DESCRIPTION
+The *random*() function returns a pseudo-random unsigned integer with
+value between 0 (inclusive) and _bound_ (exclusive). The _bound_
+argument must be in the range [1, *RANDOM_MAX* + 1].
+
+The *random_seed*() function sets _seed_ as the new generator's seed and
+returns the previously stored seed value.
+
+== NOTES
+The implementation of the *random*() function does not use the modulo
+operator to reduce its output to the desired range. Instead, it used
+multiplication and bitshift.
+
+While it is allowed, calling *random*() with a _bound_ of 1 makes the
+function always return 0.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
