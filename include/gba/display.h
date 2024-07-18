@@ -249,16 +249,17 @@ INLINE void display_window_config(u32 id,
     *control = val;
 }
 
-INLINE void display_window_set_size(u32 id,
-                                    u8 x0, u8 y0, u8 x1, u8 y1) {
+INLINE void display_window_viewport(u32 id,
+                                    u32 x, u32 y,
+                                    u32 width, u32 height) {
     if(id != DISPLAY_WINDOW_0 && id != DISPLAY_WINDOW_1)
         return;
 
     vu16 *horizontal = (vu16 *) (0x04000040 + id * 2);
     vu16 *vertical   = (vu16 *) (0x04000044 + id * 2);
 
-    *horizontal = (x0 << 8 | x1);
-    *vertical   = (y0 << 8 | y1);
+    *horizontal = ((x & 0xff) << 8 | ((x + width) & 0xff));
+    *vertical   = ((y & 0xff) << 8 | ((y + height) & 0xff));
 }
 
 INLINE void _display_window_toggle_enable_bit(u32 id, bool enable) {
