@@ -192,7 +192,7 @@ INLINE void display_darken(const struct DisplayTarget *target,
     _DISPLAY_EFFECTS_BRIGHTNESS = weight & 0x1f;
 }
 
-INLINE void display_disable_effects(void) {
+INLINE void display_effects_disable(void) {
     _DISPLAY_EFFECTS_CONTROL = 0;
 }
 
