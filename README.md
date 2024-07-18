@@ -27,6 +27,7 @@ GBA Hardware
     Display             <gba/display.h>
     Background          <gba/background.h>
     Sprite              <gba/sprite.h>
+    Window              <gba/window.h>
     Sound               <gba/sound.h>
     Timer               <gba/timer.h>
     DMA                 <gba/dma.h>

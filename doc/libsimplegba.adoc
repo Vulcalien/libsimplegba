@@ -28,6 +28,7 @@ Modules included in this library (and corresponding headers):
         Display             *<gba/display.h>*
         Background          *<gba/background.h>*
         Sprite              *<gba/sprite.h>*
+        Window              *<gba/window.h>*
         Sound               *<gba/sound.h>*
         Timer               *<gba/timer.h>*
         DMA                 *<gba/dma.h>*
@@ -69,6 +70,10 @@ Configure and interact with the GBA display's backgrounds specifically.
 *Sprite <gba/sprite.h>*::
 Configure and interact with the GBA display's sprites (objects)
 specifically.
+
+*Window <gba/window.h>*::
+Configure the GBA display's windows, choosing which ones to enable and
+how they affect the video output.
 
 *Sound <gba/sound.h>*::
 Play sound and interact with the GBA sound hardware.
