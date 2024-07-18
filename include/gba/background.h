@@ -26,7 +26,6 @@
 
 #define _BACKGROUND_GET_CONTROL(id) ((vu16 *) (0x04000008 + id * 2))
 #define _BACKGROUND_GET_OFFSET(id)  ((vu32 *) (0x04000010 + id * 4))
-#define _BACKGROUND_MOSAIC *((vu16 *) 0x0400004c)
 
 struct Background {
     u16 priority : 2; // 0-3, 0=highest
@@ -62,10 +61,9 @@ INLINE void background_set_offset(u32 id, u16 x, u16 y) {
 
 // set the mosaic values of backgrounds
 INLINE void background_mosaic(u32 x, u32 y) {
-    _BACKGROUND_MOSAIC = (x & 15) << 0 |
-                         (y & 15) << 4;
+    vu16 *mosaic = (vu16 *) 0x0400004c;
+    *mosaic = (x & 15) << 0 | (y & 15) << 4;
 }
 
 #undef _BACKGROUND_GET_CONTROL
 #undef _BACKGROUND_GET_OFFSET
-#undef _BACKGROUND_MOSAIC

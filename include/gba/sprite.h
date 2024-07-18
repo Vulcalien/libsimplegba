@@ -21,8 +21,6 @@
 
 #define OAM ((vu16 *) 0x07000000)
 
-#define _SPRITE_MOSAIC *((vu16 *) 0x0400004c)
-
 // Sprite sizes:
 //   | Size | Square | Horizontal | Vertical |
 //   | ---- | ------ | ---------- | -------- |
@@ -108,8 +106,6 @@ INLINE void sprite_hide_all(void) {
 
 // set the mosaic values of sprites
 INLINE void sprite_mosaic(u32 x, u32 y) {
-    _SPRITE_MOSAIC = (x & 15) << 8 |
-                     (y & 15) << 12;
+    vu16 *mosaic = (vu16 *) 0x0400004c;
+    *mosaic = (x & 15) << 8 | (y & 15) << 12;
 }
-
-#undef _SPRITE_MOSAIC
