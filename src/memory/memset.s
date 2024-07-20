@@ -75,7 +75,7 @@ memset:
     beq     17f @ after byte-store
 
     @ store a byte
-    strb    r1, [r0]
+    strb    r1, [r0]                    @ *dest = 8-bit content
     add     r0, #1                      @ (r0) dest += 1
     sub     r2, #1                      @ (r2) n -= 1
 17: @ after byte-store
@@ -94,7 +94,7 @@ memset:
     orr     r1, r3                      @ r1 = xx xx
 
     @ store an halfword
-    strh    r1, [r0]
+    strh    r1, [r0]                    @ *dest = 16-bit content
     add     r0, #2                      @ (r0) dest += 2
     sub     r2, #2                      @ (r2) n -= 2
 
@@ -110,8 +110,8 @@ memset:
     beq     33f @ after byte-store
 
     @ store a byte
-    sub     r2, #1
-    strb    r1, [r0, r2]
+    sub     r2, #1                      @ (r2) n -= 1
+    strb    r1, [r0, r2]                @ dest[n] = 8-bit content
 33: @ after byte-store
 
     @ check if (n & 2) != 0
@@ -125,7 +125,7 @@ memset:
 
     @ store an halfword
     sub     r2, #2                      @ (r2) n -= 2
-    strh    r1, [r0, r2]                @ dest[n] = content
+    strh    r1, [r0, r2]                @ dest[n] = 16-bit content
 
     @ return
     b       2b @ unaligned end return
