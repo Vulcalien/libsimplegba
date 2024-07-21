@@ -20,7 +20,7 @@ BIN_DIR := bin
 SRC_SUBDIRS := math memory sound backup debug
 
 # === Compilation ===
-CPPFLAGS := -MMD -MP -nostdinc -Iinclude
+CPPFLAGS := -MMD -MP -Iinclude
 CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
             -Wall -pedantic
 

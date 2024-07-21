@@ -15,6 +15,10 @@
  */
 #include <debug/mgba.h>
 
+#include <stdarg.h>
+
+#include <math.h>
+
 #define MGBA_DEBUG_ENABLE *((vu16 *) 0x04fff780)
 #define MGBA_DEBUG_FLAGS  *((vu16 *) 0x04fff700)
 #define MGBA_DEBUG_STRING  ((char *) 0x04fff600)
@@ -47,5 +51,70 @@ void mgba_puts(const char *str) {
         if(str[i] == '\0')
             break;
     }
+    MGBA_DEBUG_FLAGS = debug_level | 0x100;
+}
+
+// This function does not implement the full functionality of 'printf',
+// but only a very small subset:
+//   %% - '%' character
+//   %u - u32 (decimal)
+//   %x - u32 (hexadecimal)
+//   %c - char
+void mgba_printf(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    bool converting_special = false;
+    for(u32 index = 0; index < 256; format++) {
+        char c = *format;
+
+        if(converting_special) {
+            if(c == '%') {
+                MGBA_DEBUG_STRING[index++] = '%';
+            } else if(c == 'c') {
+                u32 val = va_arg(args, u32);
+                MGBA_DEBUG_STRING[index++] = (char) val;
+            } else if(c == 'u') {
+                u32 val = va_arg(args, u32);
+                u32 len = math_digits(val, 10);
+
+                for(u32 i = 0; i < len; i++) {
+                    u32 digit_val = val % 10;
+                    val /= 10;
+
+                    char digit = '0' + digit_val;
+                    MGBA_DEBUG_STRING[index + len - 1 - i] = digit;
+                }
+                index += len;
+            } else if(c == 'x') {
+                u32 val = va_arg(args, u32);
+                u32 len = math_digits(val, 16);
+
+                for(u32 i = 0; i < len; i++) {
+                    u32 digit_val = val % 16;
+                    val /= 16;
+
+                    char digit = (
+                        digit_val < 10 ? '0' + digit_val
+                                       : 'a' + digit_val - 10
+                    );
+                    MGBA_DEBUG_STRING[index + len - 1 - i] = digit;
+                }
+                index += len;
+            }
+
+            converting_special = false;
+        } else {
+            if(c == '%')
+                converting_special = true;
+            else
+                MGBA_DEBUG_STRING[index++] = c; // might be '\0'
+        }
+
+        if(c == '\0')
+            break;
+    }
+    va_end(args);
+
     MGBA_DEBUG_FLAGS = debug_level | 0x100;
 }
