@@ -29,6 +29,7 @@ GBA Hardware
     Sprite              <gba/sprite.h>
     Window              <gba/window.h>
     Sound               <gba/sound.h>
+    Backup              <gba/backup.h>
     Timer               <gba/timer.h>
     DMA                 <gba/dma.h>
     Input               <gba/input.h>
