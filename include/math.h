@@ -52,6 +52,15 @@ INLINE i32 math_pow(i32 base, u32 exp) {
 
 extern u16 math_sqrt(u32 val);
 
+INLINE i32 math_digits(i32 val, u32 base) {
+    i32 result = 0;
+    do {
+        result++;
+        val /= base;
+    } while(val != 0);
+    return result;
+}
+
 // Approximate 'sin' and 'cos' functions
 //
 // 'angle' in range [0, 0xffff]
