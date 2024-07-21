@@ -106,6 +106,6 @@ INLINE void sprite_hide_all(void) {
 
 // set the mosaic values of sprites
 INLINE void sprite_mosaic(u32 x, u32 y) {
-    vu16 *mosaic = (vu16 *) 0x0400004c;
-    *mosaic = (x & 15) << 8 | (y & 15) << 12;
+    vu8 *mosaic = (vu8 *) 0x0400004d;
+    *mosaic = (x & 15) | (y & 15) << 4;
 }

@@ -61,8 +61,8 @@ INLINE void background_set_offset(u32 id, u16 x, u16 y) {
 
 // set the mosaic values of backgrounds
 INLINE void background_mosaic(u32 x, u32 y) {
-    vu16 *mosaic = (vu16 *) 0x0400004c;
-    *mosaic = (x & 15) << 0 | (y & 15) << 4;
+    vu8 *mosaic = (vu8 *) 0x0400004c;
+    *mosaic = (x & 15) | (y & 15) << 4;
 }
 
 #undef _BACKGROUND_GET_CONTROL
