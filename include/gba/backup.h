@@ -17,6 +17,8 @@
 
 #include <base.h>
 
+#include <memory.h>
+
 #define _BACKUP_ADDR ((vu8 *) 0x0e000000)
 
 // === SRAM ===
@@ -25,8 +27,16 @@ INLINE u8 backup_sram_read_byte(u16 address) {
     return _BACKUP_ADDR[address];
 }
 
+INLINE void backup_sram_read(u16 offset, void *buffer, u32 n) {
+    memcpy8(buffer, _BACKUP_ADDR + offset, n);
+}
+
 INLINE void backup_sram_write_byte(u16 address, u8 byte) {
     _BACKUP_ADDR[address] = byte;
+}
+
+INLINE void backup_sram_write(u16 offset, const void *buffer, u32 n) {
+    memcpy8(_BACKUP_ADDR + offset, buffer, n);
 }
 
 // === Flash ROM ===
@@ -38,7 +48,16 @@ INLINE u8 backup_flash_read_byte(u16 address) {
     return _BACKUP_ADDR[address];
 }
 
+INLINE void backup_flash_read(u16 offset, void *buffer, u32 n) {
+    memcpy8(buffer, _BACKUP_ADDR + offset, n);
+}
+
 extern void backup_flash_write_byte(u16 address, u8 byte);
+
+INLINE void backup_flash_write(u16 offset, const void *buffer, u32 n) {
+    for(u32 i = 0; i < n; i++)
+        backup_flash_write_byte(offset + i, ((u8 *) buffer)[i]);
+}
 
 extern void backup_flash_erase_chip(void);
 extern void backup_flash_erase_sector(u32 n);
