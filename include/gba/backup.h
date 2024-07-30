@@ -21,11 +21,11 @@
 
 // === SRAM ===
 
-INLINE u8 backup_sram_read(u16 address) {
+INLINE u8 backup_sram_read_byte(u16 address) {
     return _BACKUP_ADDR[address];
 }
 
-INLINE void backup_sram_write(u16 address, u8 byte) {
+INLINE void backup_sram_write_byte(u16 address, u8 byte) {
     _BACKUP_ADDR[address] = byte;
 }
 
@@ -34,11 +34,11 @@ INLINE void backup_sram_write(u16 address, u8 byte) {
 extern u16 backup_flash_identify(void);
 extern void backup_flash_set_bank(u32 bank);
 
-INLINE u8 backup_flash_read(u16 address) {
+INLINE u8 backup_flash_read_byte(u16 address) {
     return _BACKUP_ADDR[address];
 }
 
-extern void backup_flash_write(u16 address, u8 byte);
+extern void backup_flash_write_byte(u16 address, u8 byte);
 
 extern void backup_flash_erase_chip(void);
 extern void backup_flash_erase_sector(u32 n);

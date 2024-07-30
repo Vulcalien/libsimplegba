@@ -42,7 +42,7 @@ void backup_flash_set_bank(u32 bank) {
 }
 
 THUMB
-void backup_flash_write(u16 address, u8 byte) {
+void backup_flash_write_byte(u16 address, u8 byte) {
     BACKUP_ADDR[0x5555] = 0xaa;
     BACKUP_ADDR[0x2aaa] = 0x55;
     BACKUP_ADDR[0x5555] = 0xa0;
