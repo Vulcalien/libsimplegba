@@ -1,0 +1,79 @@
+= backup_flash(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2024-08-01
+:docdate: {revdate}
+
+== NAME
+backup_flash_identify, backup_flash_set_bank,
+backup_flash_read, backup_flash_write,
+backup_flash_read_byte, backup_flash_write_byte,
+backup_flash_erase_chip, backup_flash_erase_sector
+- Flash ROM backup memory functions
+
+== SYNOPSIS
+[verse]
+____
+*#include <gba/backup.h>*
+
+*u16 backup_flash_identify(void);*
+**void backup_flash_set_bank(u32 **__bank__**);**
+
+**void backup_flash_read(u16 **__offset__**, void +++*+++**__buffer__**, u32 **__n__**);**
+**void backup_flash_write(u16 **__offset__**, const void +++*+++**__buffer__**, u32 **__n__**);**
+
+**u8 backup_flash_read_byte(u16 **__address__**);**
+**void backup_flash_write_byte(u16 **__address__**, u8 **__byte__**);**
+
+*void backup_flash_erase_chip(void);*
+**void backup_flash_erase_sector(u32 **__n__**);**
+____
+
+== DESCRIPTION
+The size of a Game Boy Advance Flash ROM chip can be either 64 KB or 128
+KB. Since the Flash ROM address bus is only 16 bits wide, the memory of
+128 KB chips is divided into two banks large 64 KB each. Banking affects
+reading, writing and sector erasure.
+
+The *backup_flash_identify*() function reads the Flash ROM chip's 16-bit
+identification code and returns it.
+
+The *backup_flash_set_bank*() function switches the chip's bank to
+_bank_. This function should only be used on chips of size 128 KB, and
+the value of _bank_ should be either 0 or 1.
+
+The *backup_flash_read*() and *backup_flash_write*() functions,
+respectively, read from and write to backup memory. These functions
+transfer _n_ bytes between _buffer_ and the backup memory area beginning
+at _offset_. For 128 KB chips, the location where data is read or
+written also depends on the currently selected bank.
+
+The *backup_flash_read_byte*() function reads one byte from backup
+memory at address _offset_ and returns it. The
+*backup_flash_write_byte*() function writes _byte_ into backup memory at
+address _offset_. For 128 KB chips, the location where data is read or
+written also depends on the currently selected bank.
+
+The *backup_flash_erase_chip*() function erases all data present in the
+Flash ROM chip, setting every byte to 255 (0xff).
+
+The *backup_flash_erase_sector*() function erases the 4 KB sector of
+index _n_. The value of _n_ should be in the range [0, 15]. For 128 KB
+chips, the deleted sector also depends on the currently selected bank.
+
+== RETURN VALUE
+The *backup_flash_identify*() function returns the chip's 16-bit
+identification code.
+
+The *backup_flash_read_byte*() function returns the byte read from
+backup memory.
+
+== NOTES
+A Flash ROM chip's memory area must be erased before writing to it. This
+applies to both the *backup_flash_write* and *backup_flash_write_byte*
+functions. Each erased byte can only be written to once.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
