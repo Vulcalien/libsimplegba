@@ -71,8 +71,9 @@ backup memory.
 
 == NOTES
 A Flash ROM chip's memory area must be erased before writing to it. This
-applies to both the *backup_flash_write* and *backup_flash_write_byte*
-functions. Each erased byte can only be written to once.
+applies to both the *backup_flash_write*() and
+*backup_flash_write_byte*() functions. Each erased byte can only be
+written to once.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
