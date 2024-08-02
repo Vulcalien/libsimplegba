@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-07-07
+:revdate: 2024-08-02
 :docdate: {revdate}
 
 == NAME
@@ -70,6 +70,11 @@ running or unknown.
 The *timer_get_counter*() function returns the specified timer's counter
 value. Since stopping a timer does not reset its counter, it is safe to
 call this function on stopped timers.
+
+== RETURN VALUE
+The *timer_get_counter*() function returns the specified timer's counter
+value as a _u32_ (unsigned 32-bit integer) with values in the range [1,
+*TIMER_COUNTER_MAX*].
 
 == NOTES
 This library considers the timers to be decrementing (i.e., their
