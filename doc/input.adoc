@@ -2,11 +2,11 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-07-01
+:revdate: 2024-08-03
 :docdate: {revdate}
 
 == NAME
-input_tick, input_down, input_pressed, input_released - input driver
+input_update, input_down, input_pressed, input_released - input driver
 functions
 
 == SYNOPSIS
@@ -14,7 +14,7 @@ functions
 ____
 *#include <gba/input.h>*
 
-*void input_tick(void);*
+*void input_update(void);*
 
 **bool input_down(u16 **__key__**);**
 **bool input_pressed(u16 **__key__**);**
@@ -24,9 +24,9 @@ ____
 ____
 
 == DESCRIPTION
-The *input_tick*() function updates the driver's internal state to match
-the one of the GBA buttons. This function should be called once at the
-beginning of every tick (i.e. game update), before any input processing
+The *input_update*() function updates the driver's internal state to
+match the one of the GBA buttons. This function should be called once at
+the beginning of every tick (game update), before any input processing
 is done.
 
 The *input_down*(), *input_pressed*() and *input_released*() functions

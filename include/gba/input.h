@@ -38,7 +38,7 @@
 extern u16 _input_is_down;
 extern u16 _input_was_down;
 
-INLINE void input_tick(void) {
+INLINE void input_update(void) {
     _input_was_down = _input_is_down;
     _input_is_down  = _INPUT_KEY_INPUT ^ 0x3ff;
 }
@@ -71,8 +71,7 @@ INLINE void input_irq_config(bool all_keys, u16 keys) {
     // clear all bits, except IRQ enable
     u16 val = _INPUT_KEY_CONTROL & _INPUT_IRQ_BIT;
 
-    val |= keys     << 0 |
-           all_keys << 15;
+    val |= keys << 0 | all_keys << 15;
     _INPUT_KEY_CONTROL = val;
 }
 
