@@ -20,13 +20,23 @@
 .text
 THUMB_FUNC
 
-@ Fill a memory area with a given byte value: 32-bit version.
+@ This function fills a memory area with a given byte value, using only
+@ 32-bit writes.
 @
-@ Only the lowest 8 bits of 'byte' will be considered. The highest
-@ 24 bits will be ignored.
+@ Return value:
+@   The 'dest' pointer.
 @
-@ 'dest' must be 4-byte aligned.
-@ 'n' should be a multiple of 4, but its lowest 2 bits are ignored.
+@ Constraints:
+@ - The 'dest' pointer must be 4-byte aligned.
+@
+@ Notes:
+@ - Only the lowest 8 bits of 'byte' are used.
+@ - The lowest 2 bites of 'n' are ignored.
+@
+@ Implementation:
+@   Memory is filled left-to-right: at first, with 4 writes at a time
+@   (to reduce branching) for as much as possible; at the end, with
+@   single writes.
 
 @ input:
 @   r0 = dest : pointer
