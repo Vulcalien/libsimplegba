@@ -20,9 +20,21 @@
 .text
 THUMB_FUNC
 
-@ Copy data from one memory area to another: 8-bit version.
+@ This function copies data from one memory area to another, using only
+@ 8-bit reads and writes.
 @
-@ The two memory areas must not overlap. Any alignment is allowed.
+@ Return value:
+@   The 'dest' pointer.
+@
+@ Constraints:
+@ - The two memory areas must not overlap.
+@
+@ Notes:
+@ - Any alignment is allowed for 'dest' and 'src'.
+@
+@ Implementation:
+@   Data is copied left-to-right: at first, in blocks of 4 units at a
+@   time for as much as possible; at the end, one unit at a time.
 
 @ input:
 @   r0 = dest : pointer

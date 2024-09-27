@@ -20,14 +20,24 @@
 .text
 THUMB_FUNC
 
-@ Copy data from one memory area to another: 32-bit version.
+@ This function copies data from one memory area to another, using only
+@ 32-bit reads and writes.
 @
-@ The two memory areas must not overlap.
-@ Both 'dest' and 'src' must be 4-byte aligned.
-@ 'n' should be a multiple of 4, but its lowest 2 bits are ignored.
+@ Return value:
+@   The 'dest' pointer.
 @
-@ By using the 'ldm' and 'stm' instructions, it is able to copy blocks
-@ of 4 words (16 bytes) efficiently.
+@ Constraints:
+@ - The two memory areas must not overlap.
+@ - The 'dest' and 'src' pointers must be 4-byte aligned.
+@
+@ Notes:
+@ - The lowest 2 bites of 'n' are ignored.
+@
+@ Implementation:
+@   Data is copied left-to-right: at first, in blocks of 4 units at a
+@   time for as much as possible; at the end, one unit at a time.
+@   By using the 'ldm' and 'stm' instructions, the blocks of 4 units are
+@   copied efficiently.
 
 @ input:
 @   r0 = dest : pointer
