@@ -21,13 +21,23 @@
 
 #define OAM ((vu16 *) 0x07000000)
 
-// Sprite sizes:
-//   | Size | Square | Horizontal | Vertical |
-//   | ---- | ------ | ---------- | -------- |
-//   |   0  |   8x8  |    16x8    |   8x16   |
-//   |   1  |  16x16 |    32x8    |   8x32   |
-//   |   2  |  32x32 |    32x16   |   16x32  |
-//   |   3  |  64x64 |    64x32   |   32x64  |
+// Square sizes
+#define SPRITE_SIZE_8x8   (0 << 2 | 0)
+#define SPRITE_SIZE_16x16 (0 << 2 | 1)
+#define SPRITE_SIZE_32x32 (0 << 2 | 2)
+#define SPRITE_SIZE_64x64 (0 << 2 | 3)
+
+// Horizontal sizes
+#define SPRITE_SIZE_16x8  (1 << 2 | 0)
+#define SPRITE_SIZE_32x8  (1 << 2 | 1)
+#define SPRITE_SIZE_32x16 (1 << 2 | 2)
+#define SPRITE_SIZE_64x32 (1 << 2 | 3)
+
+// Vertical sizes
+#define SPRITE_SIZE_8x16  (2 << 2 | 0)
+#define SPRITE_SIZE_8x32  (2 << 2 | 1)
+#define SPRITE_SIZE_16x32 (2 << 2 | 2)
+#define SPRITE_SIZE_32x64 (2 << 2 | 3)
 
 struct Sprite {
     u32 x : 9;
@@ -37,9 +47,8 @@ struct Sprite {
     u32 mode     : 2; // 0=normal, 1=semi-transparent, 2=window
     u32 priority : 2;
 
-    u32 shape : 2; // 0=square, 1=horizontal, 2=vertical
-    u32 size  : 2; // see 'Sprite size'
-    u32 flip  : 2; // 0=none, 1=horizontal, 2=vertical, 3=both
+    u32 size : 4; // one of the SPRITE_SIZE_* constants
+    u32 flip : 2; // 0=none, 1=horizontal, 2=vertical, 3=both
 
     u32 tile    : 10;
     u32 palette : 4;
@@ -69,17 +78,20 @@ INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
         attr1_bits_9_13 = sprite->flip << 3;
     }
 
+    const u32 shape = (sprite->size >> 2) & 3;
+    const u32 size = sprite->size & 3;
+
     attribs[0] = sprite->y      << 0  |
                  sprite->affine << 8  |
                  attr0_bit_9    << 9  |
                  sprite->mode   << 10 |
                  sprite->mosaic << 12 |
                  sprite->colors << 13 |
-                 sprite->shape  << 14;
+                 shape          << 14;
 
     attribs[1] = sprite->x       << 0  |
                  attr1_bits_9_13 << 9  |
-                 sprite->size    << 14;
+                 size            << 14;
 
     attribs[2] = sprite->tile     << 0  |
                  sprite->priority << 10 |
