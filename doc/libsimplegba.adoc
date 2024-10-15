@@ -80,9 +80,6 @@ how they affect the video output.
 *Sound <gba/sound.h>*::
 Play sound and interact with the GBA sound hardware.
 
-*Backup <gba/backup.h>*::
-Store data to and retrieve data from the cartridge's backup chip.
-
 *Timer <gba/timer.h>*::
 Configure and interact with the GBA's four timers.
 
@@ -96,6 +93,12 @@ Interact with the GBA's buttons and D-Pad.
 *Interrupt <gba/interrupt.h>*::
 Enable or disable interrupt requests and set callback functions (ISRs)
 that handle those requests.
+
+*Cartridge <gba/cartridge.h>*::
+Access information about the cartridge, such as its header.
+
+*Backup <gba/backup.h>*::
+Store data to and retrieve data from the cartridge's backup chip.
 
 === Debug
 
