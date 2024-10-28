@@ -56,7 +56,6 @@ struct Display {
 
 #define _DISPLAY_CONTROL *((vu16 *) 0x04000000)
 #define _DISPLAY_STATUS  *((vu16 *) 0x04000004)
-#define _DISPLAY_VCOUNT  *((vu16 *) 0x04000006)
 
 INLINE void display_config(const struct Display *config) {
     // clear bits used by this function
@@ -83,7 +82,7 @@ INLINE void display_force_blank(bool flag) {
 }
 
 INLINE u16 display_get_vcount(void) {
-    return _DISPLAY_VCOUNT;
+    return *(vu16 *) 0x04000006;
 }
 
 // Charblocks are 16 KB areas of VRAM. There are 6 charblocks. They are
@@ -209,4 +208,3 @@ INLINE void display_effects_disable(void) {
 
 #undef _DISPLAY_CONTROL
 #undef _DISPLAY_STATUS
-#undef _DISPLAY_VCOUNT
