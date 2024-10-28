@@ -19,8 +19,6 @@
 
 #define SPRITE_COUNT 128
 
-#define OAM ((vu16 *) 0x07000000)
-
 // Square sizes
 #define SPRITE_SIZE_8x8   (0 << 2 | 0)
 #define SPRITE_SIZE_16x16 (0 << 2 | 1)
@@ -61,11 +59,13 @@ struct Sprite {
     u32 double_size      : 1; // 0=disable, 1=enable
 };
 
+#define _SPRITE_OAM ((vu16 *) 0x07000000)
+
 INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
     if(id >= SPRITE_COUNT)
         return;
 
-    vu16 *attribs = &OAM[id * 4];
+    vu16 *attribs = &_SPRITE_OAM[id * 4];
 
     u32 attr0_bit_9;
     u32 attr1_bits_9_13;
@@ -102,7 +102,7 @@ INLINE void sprite_hide(u32 id) {
     if(id >= SPRITE_COUNT)
         return;
 
-    vu16 *attribs = &OAM[id * 4];
+    vu16 *attribs = &_SPRITE_OAM[id * 4];
     attribs[0] = (1 << 9);
 }
 
@@ -127,5 +127,7 @@ INLINE void sprite_affine(u32 parameter, i16 matrix[4]) {
         return;
 
     for(u32 i = 0; i < 4; i++)
-        OAM[parameter * 16 + i * 4 + 3] = matrix[i];
+        _SPRITE_OAM[parameter * 16 + i * 4 + 3] = matrix[i];
 }
+
+#undef _SPRITE_OAM
