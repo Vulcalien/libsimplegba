@@ -45,7 +45,7 @@ struct Sprite {
 
     u32 disable  : 1; // 0=false, 1=true
     u32 mode     : 2; // 0=normal, 1=semi-transparent, 2=window
-    u32 priority : 2;
+    u32 priority : 2; // 0-3, 0=highest
 
     u32 size : 4; // one of the SPRITE_SIZE_* constants
     u32 flip : 2; // 0=none, 1=horizontal, 2=vertical, 3=both
@@ -57,7 +57,7 @@ struct Sprite {
     u32 colors : 1; // 0=16 palettes of 16, 1=1 palette of 256
 
     u32 affine           : 1; // 0=disable, 1=enable
-    u32 affine_parameter : 5;
+    u32 affine_parameter : 5; // 0-31
     u32 double_size      : 1; // 0=disable, 1=enable
 };
 
@@ -120,4 +120,12 @@ INLINE void sprite_hide_all(void) {
 INLINE void sprite_mosaic(u32 x, u32 y) {
     vu8 *mosaic = (vu8 *) 0x0400004d;
     *mosaic = (x & 15) | (y & 15) << 4;
+}
+
+INLINE void sprite_affine(u32 parameter, i16 matrix[4]) {
+    if(parameter >= 32)
+        return;
+
+    for(u32 i = 0; i < 4; i++)
+        OAM[parameter * 16 + i * 4 + 3] = matrix[i];
 }
