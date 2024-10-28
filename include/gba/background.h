@@ -51,7 +51,7 @@ INLINE void background_config(u32 id, const struct Background *config) {
                config->size     << 14;
 }
 
-INLINE void background_set_offset(u32 id, u16 x, u16 y) {
+INLINE void background_offset(u32 id, u16 x, u16 y) {
     if(id >= BACKGROUND_COUNT)
         return;
 
