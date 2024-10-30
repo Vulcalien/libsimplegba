@@ -50,8 +50,8 @@ static inline void start_sound(const u8 *sound, u32 length, bool loop,
 
     // reset DMA
     dma_config(DMA(channel), &(struct DMA) {
-        .repeat = true,
-        .start_timing = DMA_START_SPECIAL
+        .start_timing = DMA_START_SPECIAL,
+        .repeat = true
     });
     dma_transfer(DMA(channel), FIFO(channel), sound, 0);
 
