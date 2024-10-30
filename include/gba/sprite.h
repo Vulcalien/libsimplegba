@@ -19,34 +19,38 @@
 
 #define SPRITE_COUNT 128
 
-// Sprite modes
+// Mode
 #define SPRITE_MODE_NORMAL           0
 #define SPRITE_MODE_SEMI_TRANSPARENT 1
 #define SPRITE_MODE_WINDOW           2
 
-// Sprite sizes: Square
+// Square sizes
 #define SPRITE_SIZE_8x8   (0 << 2 | 0)
 #define SPRITE_SIZE_16x16 (0 << 2 | 1)
 #define SPRITE_SIZE_32x32 (0 << 2 | 2)
 #define SPRITE_SIZE_64x64 (0 << 2 | 3)
 
-// Sprite sizes: Horizontal
+// Horizontal sizes
 #define SPRITE_SIZE_16x8  (1 << 2 | 0)
 #define SPRITE_SIZE_32x8  (1 << 2 | 1)
 #define SPRITE_SIZE_32x16 (1 << 2 | 2)
 #define SPRITE_SIZE_64x32 (1 << 2 | 3)
 
-// Sprite sizes: Vertical
+// Vertical sizes
 #define SPRITE_SIZE_8x16  (2 << 2 | 0)
 #define SPRITE_SIZE_8x32  (2 << 2 | 1)
 #define SPRITE_SIZE_16x32 (2 << 2 | 2)
 #define SPRITE_SIZE_32x64 (2 << 2 | 3)
 
-// Sprite flips
+// Flip
 #define SPRITE_FLIP_NONE       0
 #define SPRITE_FLIP_HORIZONTAL 1
 #define SPRITE_FLIP_VERTICAL   2
 #define SPRITE_FLIP_BOTH       3
+
+// Color mode
+#define SPRITE_COLORS_16  0
+#define SPRITE_COLORS_256 1
 
 struct Sprite {
     u32 x : 9;
