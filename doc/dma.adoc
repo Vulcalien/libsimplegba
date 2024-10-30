@@ -55,7 +55,7 @@ value when the transfer repeats. These constants can be used to set the
 two fields: *DMA_ADDR_INCREMENT*, *DMA_ADDR_DECREMENT*,
 *DMA_ADDR_FIXED*, *DMA_ADDR_RELOAD* (__dest_control__ only).
 
-The _chunk_ fields specifies whether the DMA transfer should use 16-bit
+The _chunk_ field specifies whether the DMA transfer should use 16-bit
 or 32-bit chunks. These constants can be used to set the field:
 *DMA_CHUNK_16_BIT*, *DMA_CHUNK_32_BIT*.
 
