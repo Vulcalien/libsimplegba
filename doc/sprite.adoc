@@ -33,9 +33,76 @@ available.
 
 === Sprite configuration
 The *sprite_config*() function configures the sprite with the settings
-specified in the _config_ structure.
+specified in the _config_ structure. The structure is defined as
+follows:
 
-TODO
+[source,c]
+----
+struct Sprite {
+    u32 x : 9;
+    u32 y : 8;
+
+    u32 disable  : 1;
+    u32 mode     : 2;
+    u32 priority : 2;
+
+    u32 size : 4;
+    u32 flip : 2;
+
+    u32 tile    : 10;
+    u32 palette : 4;
+
+    u32 mosaic : 1;
+    u32 colors : 1;
+
+    u32 affine           : 1;
+    u32 affine_parameter : 5;
+    u32 double_size      : 1;
+};
+----
+
+The _x_ and _y_ fields specify the location of the sprite's top-left
+corner, relative to the display's top-left corner. These values are
+treated as signed integers.
+
+The _disable_ field specifies whether a sprite is hidden (one) or not
+(zero). If set to one, this has the same effect as calling
+*sprite_hide*() on the same sprite ID. Ignored if _affine_ is one.
+
+The _mode_ field TODO
+
+The _priority_ field TODO
+
+The _size_ field specifies the size of the sprite. Its value can be any
+of the *SPRITE_SIZE_X* constants, with *X* replaced by one of the
+following sizes:
+
+.Sprite sizes
+[cols="1,1,1,1,1"]
+|===
+
+|*Square*     |8x8  |16x16 |32x32 |64x64
+|*Horizontal* |16x8 |32x8  |32x16 |64x32
+|*Vertical*   |8x16 |8x32  |16x32 |32x64
+|===
+
+The _flip_ field specifies if and how the sprite is flipped. Possible
+values are: *SPRITE_FLIP_NONE* (0), *SPRITE_FLIP_HORIZONTAL* (1),
+*SPRITE_FLIP_VERTICAL* (2), *SPRITE_FLIP_BOTH* (3).
+
+The _tile_ field TODO
+
+The _palette_ field TODO
+
+The _mosaic_ field TODO
+
+The _colors_ field specifies the color mode of the sprite. TODO
+
+The _affine_ field TODO
+
+The __affine_parameter__ field TODO
+
+The __double_size__ field TODO
 
 === Hiding sprites
 The *sprite_hide*() function hides the sprite identified by _id_.
