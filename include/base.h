@@ -53,6 +53,7 @@ typedef volatile i32    vi32;
 // === Macros ===
 
 #define BIT(n) (1 << (n))
+#define BITMASK(n) ((1 << (n)) - 1)
 
 // ===== ===== =====
 
