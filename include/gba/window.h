@@ -33,7 +33,7 @@ struct Window {
     u8 effects : 1;
 };
 
-INLINE void window_config(u32 id, struct Window *config) {
+INLINE void window_config(u32 id, const struct Window *config) {
     if(id >= WINDOW_COUNT)
         return;
 
