@@ -82,11 +82,11 @@ extern void interrupt_init(void);
 
 INLINE void interrupt_enable(u8 irq) {
     _interrupt_toggle_register_bit(irq, true);
-    _INTERRUPT_IE |= (1 << irq);
+    _INTERRUPT_IE |= BIT(irq);
 }
 
 INLINE void interrupt_disable(u8 irq) {
-    _INTERRUPT_IE &= ~(1 << irq);
+    _INTERRUPT_IE &= ~BIT(irq);
     _interrupt_toggle_register_bit(irq, false);
 }
 

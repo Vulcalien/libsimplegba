@@ -20,7 +20,7 @@
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)
 
 void sound_init(void) {
-    MASTER_SOUND_CONTROL = 1 << 7; // Enable sound
+    MASTER_SOUND_CONTROL = BIT(7); // Enable sound
 
     sound_dma_init();
 }

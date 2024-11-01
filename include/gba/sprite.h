@@ -121,7 +121,7 @@ INLINE void sprite_hide(u32 id) {
         return;
 
     vu16 *attribs = &_SPRITE_OAM[id * 4];
-    attribs[0] = (1 << 9);
+    attribs[0] = BIT(9);
 }
 
 // 'start' is included, 'stop' is not included
