@@ -96,6 +96,9 @@ INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
     const u32 shape = (sprite->size >> 2) & 3;
     const u32 size = sprite->size & 3;
 
+    // if in 256-colors mode, double the tile number
+    const u32 tile = sprite->tile << sprite->colors;
+
     attribs[0] = sprite->y      << 0  |
                  sprite->affine << 8  |
                  attr0_bit_9    << 9  |
@@ -108,7 +111,7 @@ INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
                  attr1_bits_9_13 << 9  |
                  size            << 14;
 
-    attribs[2] = sprite->tile     << 0  |
+    attribs[2] = tile             << 0  |
                  sprite->priority << 10 |
                  sprite->palette  << 12;
 }
