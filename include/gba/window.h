@@ -42,21 +42,15 @@ INLINE void window_config(u32 id, const struct Window *config) {
         .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1, .obj = 1, .effects = 1
     }));
 
-    vu32 *control = (vu32 *) 0x04000048;
-
-    // clear the window's bits
-    u32 val = *control & ~(0x3f << id * 8);
-
-    // set the window's bit as configured
-    val |= (
+    vu8 *control = (vu8 *) (0x04000048 + id);
+    *control = (
         config->bg0     << 0 |
         config->bg1     << 1 |
         config->bg2     << 2 |
         config->bg3     << 3 |
         config->obj     << 4 |
         config->effects << 5
-    ) << (id * 8);
-    *control = val;
+    );
 }
 
 INLINE void window_viewport(u32 id, u32 x, u32 y,
