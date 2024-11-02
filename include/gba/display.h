@@ -81,7 +81,7 @@ INLINE void display_force_blank(bool flag) {
         _DISPLAY_CONTROL &= ~BIT(7);
 }
 
-INLINE u16 display_get_vcount(void) {
+INLINE u16 display_vcount(void) {
     return *(vu16 *) 0x04000006;
 }
 
@@ -92,7 +92,7 @@ INLINE u16 display_get_vcount(void) {
 //
 // charblocks 0-3: background tiles (only in Tilemap modes)
 // charblocks 4-5: sprite tiles (only charblock 5 in Bitmap modes)
-INLINE vu16 *display_get_charblock(u32 block) {
+INLINE vu16 *display_charblock(u32 block) {
     return (vu16 *) (0x06000000 + block * 0x4000);
 }
 
@@ -100,7 +100,7 @@ INLINE vu16 *display_get_charblock(u32 block) {
 // are used to store background tilemaps.
 //
 // Note that charblocks 0-3 and screenblocks share the same memory area.
-INLINE vu16 *display_get_screenblock(u32 block) {
+INLINE vu16 *display_screenblock(u32 block) {
     return (vu16 *) (0x06000000 + block * 0x800);
 }
 
