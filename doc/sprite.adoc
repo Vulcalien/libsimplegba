@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-10-30
+:revdate: 2024-11-12
 :docdate: {revdate}
 
 == NAME
@@ -28,8 +28,8 @@ ____
 
 == DESCRIPTION
 Some of these functions take an _id_ parameter, or a range of IDs. These
-identify which sprites to operate on. There are *SPRITE_COUNT* sprites
-available.
+identify which sprites to operate on. There are *SPRITE_COUNT* (128)
+sprites available.
 
 === Sprite configuration
 The *sprite_config*() function configures the sprite with the settings
@@ -86,23 +86,31 @@ following sizes:
 |*Vertical*   |8x16 |8x32  |16x32 |32x64
 |===
 
-The _flip_ field specifies if and how the sprite is flipped. Possible
-values are: *SPRITE_FLIP_NONE* (0), *SPRITE_FLIP_HORIZONTAL* (1),
-*SPRITE_FLIP_VERTICAL* (2), *SPRITE_FLIP_BOTH* (3).
+The _flip_ field specifies if and how the sprite is flipped. Ignored if
+_affine_ is one. Possible values are: *SPRITE_FLIP_NONE* (0),
+*SPRITE_FLIP_HORIZONTAL* (1), *SPRITE_FLIP_VERTICAL* (2),
+*SPRITE_FLIP_BOTH* (3).
 
 The _tile_ field TODO
 
 The _palette_ field TODO
 
-The _mosaic_ field TODO
+The _mosaic_ field specifies whether the mosaic graphic effect is
+applied to the sprite. See *sprite_mosaic*().
 
 The _colors_ field specifies the color mode of the sprite. TODO
 
-The _affine_ field TODO
+The _affine_ field specifies whether an affine transformation is applied
+to the sprite (one) or not (zero).
 
-The __affine_parameter__ field TODO
+The __affine_parameter__ field specifies which of the 32 affine
+transformation matrices is used to transform the sprite. Use
+*sprite_affine*() to set the values of these matrices. Ignored if
+_affine_ is zero.
 
-The __double_size__ field TODO
+The __double_size__ field specifies whether the sprite size is doubled
+while applying an affine transformation (one) or not (zero). Ignored if
+_affine_ is zero.
 
 === Hiding sprites
 The *sprite_hide*() function hides the sprite identified by _id_.
