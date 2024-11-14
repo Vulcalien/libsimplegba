@@ -20,7 +20,7 @@
 #define WINDOW_0   0
 #define WINDOW_1   1
 #define WINDOW_OUT 2
-#define WINDOW_OBJ 3
+#define WINDOW_SPR 3
 
 struct Window {
     u8 bg0 : 1;
@@ -28,7 +28,7 @@ struct Window {
     u8 bg2 : 1;
     u8 bg3 : 1;
 
-    u8 obj : 1;
+    u8 sprites : 1;
 
     u8 effects : 1;
 };
@@ -39,7 +39,8 @@ INLINE void window_config(u32 id, const struct Window *config) {
 
     // if config is NULL, use a default configuration instead
     config = (config ? config : (&(struct Window) {
-        .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1, .obj = 1, .effects = 1
+        .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1,
+        .sprites = 1, .effects = 1
     }));
 
     vu8 *control = (vu8 *) (0x04000048 + id);
@@ -48,7 +49,7 @@ INLINE void window_config(u32 id, const struct Window *config) {
         config->bg1     << 1 |
         config->bg2     << 2 |
         config->bg3     << 3 |
-        config->obj     << 4 |
+        config->sprites << 4 |
         config->effects << 5
     );
 }
@@ -73,7 +74,7 @@ INLINE void _window_toggle_enable_bit(u32 id, bool enable) {
         [WINDOW_0]   = BIT(13),
         [WINDOW_1]   = BIT(14),
         [WINDOW_OUT] = 0,
-        [WINDOW_OBJ] = BIT(15)
+        [WINDOW_SPR] = BIT(15)
     }[id];
 
     vu16 *display_control = (vu16 *) 0x04000000;
