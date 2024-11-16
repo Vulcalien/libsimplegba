@@ -66,11 +66,11 @@ INLINE void window_viewport(u32 id, u32 x, u32 y,
     *vertical   = ((y & 0xff) << 8 | ((y + height) & 0xff));
 }
 
-INLINE void _window_toggle_enable_bit(u32 id, bool enable) {
+INLINE void window_toggle(u32 id, bool enable) {
     if(id >= WINDOW_COUNT)
         return;
 
-    u16 bit = (u16 [WINDOW_COUNT]) {
+    const u16 bit = (u16 [WINDOW_COUNT]) {
         [WINDOW_0]   = BIT(13),
         [WINDOW_1]   = BIT(14),
         [WINDOW_OUT] = 0,
@@ -82,12 +82,4 @@ INLINE void _window_toggle_enable_bit(u32 id, bool enable) {
         *display_control |= bit;
     else
         *display_control &= ~bit;
-}
-
-INLINE void window_enable(u32 id) {
-    _window_toggle_enable_bit(id, true);
-}
-
-INLINE void window_disable(u32 id) {
-    _window_toggle_enable_bit(id, false);
 }
