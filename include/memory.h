@@ -25,6 +25,6 @@ extern void *memset16(volatile void *dest, i32 byte, u32 n);
 extern void *memset32(volatile void *dest, i32 byte, u32 n);
 
 // alignment-specific versions of 'memcpy'
-extern void *memcpy8 (volatile void *dest, const volatile void *src, u32 n);
-extern void *memcpy16(volatile void *dest, const volatile void *src, u32 n);
-extern void *memcpy32(volatile void *dest, const volatile void *src, u32 n);
+extern void *memcpy8 (volatile void *dest, volatile const void *src, u32 n);
+extern void *memcpy16(volatile void *dest, volatile const void *src, u32 n);
+extern void *memcpy32(volatile void *dest, volatile const void *src, u32 n);
