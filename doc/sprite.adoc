@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-11-12
+:revdate: 2024-11-16
 :docdate: {revdate}
 
 == NAME
@@ -69,7 +69,9 @@ The _disable_ field specifies whether a sprite is hidden (one) or not
 (zero). If set to one, this has the same effect as calling
 *sprite_hide*() on the same sprite ID. Ignored if _affine_ is one.
 
-The _mode_ field TODO
+The _mode_ field specifies the sprite's mode. Possible values are:
+*SPRITE_MODE_NORMAL* (0), *SPRITE_MODE_SEMI_TRANSPARENT* (1),
+*SPRITE_MODE_WINDOW* (2).
 
 The _priority_ field TODO
 
@@ -91,9 +93,22 @@ _affine_ is one. Possible values are: *SPRITE_FLIP_NONE* (0),
 *SPRITE_FLIP_HORIZONTAL* (1), *SPRITE_FLIP_VERTICAL* (2),
 *SPRITE_FLIP_BOTH* (3).
 
-The _tile_ field TODO
+The _tile_ field specifies the top-left tile number, thus selecting the
+image used to draw the sprite. The range of this value is affected by
+the display's video mode (see *display_config*(3)) and by the sprite's
+color mode (determined by the _colors_ field). See NOTES below.
 
-The _palette_ field TODO
+.Tile value ranges
+[cols="1,1,1"]
+|===
+
+|                |*16-color mode* |*256-color mode*
+|*Tilemap modes* |0-1023 (1024)   |0-511 (512)
+|*Bitmap modes*  |512-1023 (512)  |256-511 (256)
+|===
+
+The _palette_ field specifies which 16-color row of the sprite palette
+is used to draw the sprite. Ignored if _colors_ is one (256-color mode).
 
 The _mosaic_ field specifies whether the mosaic graphic effect is
 applied to the sprite. See *sprite_mosaic*().
@@ -122,6 +137,12 @@ The *sprite_hide_all*() function hides all sprites.
 
 === Mosaic and Affine
 TODO
+
+== NOTES
+If a sprite uses 256-color mode, each tile occupies double the amount of
+VRAM, meaning that only half the tiles are available. Bitmap video modes
+use charblock 4 to display pixels, meaning that only the second half of
+the tiles is available.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
