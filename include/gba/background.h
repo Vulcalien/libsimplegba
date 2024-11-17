@@ -24,18 +24,22 @@
 #define BG2 2
 #define BG3 3
 
-#define _BACKGROUND_GET_CONTROL(id) ((vu16 *) (0x04000008 + id * 2))
-#define _BACKGROUND_GET_OFFSET(id)  ((vu32 *) (0x04000010 + id * 4))
+// Color mode
+#define BACKGROUND_COLORS_16  0
+#define BACKGROUND_COLORS_256 1
 
 struct Background {
     u16 priority : 2; // 0-3, 0=highest
     u16 tileset  : 2; // 0-3, in units of 16 KB
     u16 mosaic   : 1; // 0=disable, 1=enable
-    u16 colors   : 1; // 0=16 palettes of 16, 1=1 palette of 256
+    u16 colors   : 1; // 0=16-color mode, 1=256-color mode
     u16 tilemap  : 5; // 0-31, in units of 2 KB
     u16 overflow : 1; // 0=transparent, 1=wraparound (only BG2/BG3)
     u16 size     : 2; // 0-3
 };
+
+#define _BACKGROUND_GET_CONTROL(id) ((vu16 *) (0x04000008 + id * 2))
+#define _BACKGROUND_GET_OFFSET(id)  ((vu32 *) (0x04000010 + id * 4))
 
 INLINE void background_config(u32 id, const struct Background *config) {
     if(id >= BACKGROUND_COUNT)
