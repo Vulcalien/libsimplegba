@@ -67,7 +67,7 @@ struct Sprite {
     u32 palette : 4;
 
     u32 mosaic : 1; // 0=disable, 1=enable
-    u32 colors : 1; // 0=16 palettes of 16, 1=1 palette of 256
+    u32 colors : 1; // 0=16-color mode, 1=256-color mode
 
     u32 affine           : 1; // 0=disable, 1=enable
     u32 affine_parameter : 5; // 0-31
