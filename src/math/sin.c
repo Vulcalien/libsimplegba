@@ -15,6 +15,9 @@
  */
 #include <math.h>
 
+// TODO remove this constant
+#define MATH_PI math_brad(180)
+
 i16 math_sin(u16 angle) {
     // val in range [0, MATH_PI * MATH_PI / 4]
     u32 val = (angle % MATH_PI) * (MATH_PI - (angle % MATH_PI));

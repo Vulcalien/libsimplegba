@@ -17,8 +17,6 @@
 
 #include <base.h>
 
-#define MATH_PI 0x8000
-
 INLINE i32 math_min(i32 a, i32 b) {
     return (a < b ? a : b);
 }
@@ -61,6 +59,12 @@ INLINE i32 math_digits(i32 val, u32 base) {
     return result;
 }
 
+// === Trigonometry ===
+
+INLINE i32 math_brad(i32 angle) {
+    return angle * 0x2000 / 45;
+}
+
 // Approximate 'sin' and 'cos' functions
 //
 // 'angle' in range [0, 0xffff]
@@ -68,5 +72,5 @@ INLINE i32 math_digits(i32 val, u32 base) {
 extern i16 math_sin(u16 angle);
 
 INLINE i16 math_cos(u16 angle) {
-    return math_sin(angle + MATH_PI / 2);
+    return math_sin(angle + math_brad(90));
 }

@@ -2,12 +2,13 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-07-21
+:revdate: 2024-11-19
 :docdate: {revdate}
 
 == NAME
 math_min, math_max, math_abs, math_sign, math_pow, math_sqrt,
-math_digits, math_sin, math_cos - various mathematical functions
+math_digits, math_brad, math_sin, math_cos - various mathematical
+functions
 
 == SYNOPSIS
 [verse]
@@ -25,7 +26,7 @@ ____
 
 **i32 math_digits(i32 **__val__**, u32 **__base__**);**
 
-*#define MATH_PI 0x8000*
+**i32 math_brad(i32 **__angle__**);**
 
 **i16 math_sin(u16 **__angle__**);**
 **i16 math_cos(u16 **__angle__**);**
@@ -55,8 +56,12 @@ The *math_digits*() function returns the number of digits of _val_ when
 written using the specified _base_.
 
 === Trigonometry
-The trigonometric functions in this module use binary radians (brad) to
-measure angles. The value of PI is defined in the *MATH_PI* constant.
+These trigonometric functions use 16-bit binary radians (brad) to
+measure angles, with values in range [0, 0xffff].
+
+The *math_brad*() function converts _angle_ from degrees to binary
+radians. Negative input values are allowed and result in negative output
+values.
 
 The *math_sin*() and *math_cos*() functions return, respectively,
 approximate values of sine and cosine of _angle_. The returned value is
