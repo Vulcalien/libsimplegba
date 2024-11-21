@@ -41,36 +41,27 @@
 //   |   4  | 240x160 |  8  |   2   |
 //   |   5  | 160x128 |  16 |   2   |
 
-struct Display {
-    u16 mode : 3; // see 'Video Modes'
-
-    u16 oam_hblank  : 1; // 1=allow access to OAM during HBlank
-    u16 obj_mapping : 1; // 0=32x32 matrix, 1=linear
-
-    u16 enable_bg0 : 1; // 0=false, 1=true
-    u16 enable_bg1 : 1; // 0=false, 1=true
-    u16 enable_bg2 : 1; // 0=false, 1=true
-    u16 enable_bg3 : 1; // 0=false, 1=true
-    u16 enable_obj : 1; // 0=false, 1=true
-};
-
 #define _DISPLAY_CONTROL *((vu16 *) 0x04000000)
-#define _DISPLAY_STATUS  *((vu16 *) 0x04000004)
 
-INLINE void display_config(const struct Display *config) {
-    // clear bits used by this function
-    u16 val = _DISPLAY_CONTROL & ~(0x1f67);
+INLINE void display_config(u32 video_mode) {
+    if(video_mode >= 6)
+        return;
 
-    if(config) {
-        val |= config->mode        << 0  |
-               config->oam_hblank  << 5  |
-               config->obj_mapping << 6  |
-               config->enable_bg0  << 8  |
-               config->enable_bg1  << 9  |
-               config->enable_bg2  << 10 |
-               config->enable_bg3  << 11 |
-               config->enable_obj  << 12;
-    }
+    // clear all bits except force blank
+    u16 val = _DISPLAY_CONTROL & BIT(7);
+
+    val |= video_mode;
+    val |= 0 << 4  | // select raster page 0
+           0 << 5  | // disable access to OAM during HBlank
+           1 << 6  | // linear sprite mapping
+           0 << 8  | // disable all backgrounds
+           1 << 12 | // enable sprites
+           0 << 13;  // disable all windows
+
+    // if configuring a bitmap Video Mode, enable BG 2
+    if(video_mode >= 3)
+        val |= BIT(10);
+
     _DISPLAY_CONTROL = val;
 }
 
@@ -207,4 +198,3 @@ INLINE void display_effects_disable(void) {
 // ===== ===== =====
 
 #undef _DISPLAY_CONTROL
-#undef _DISPLAY_STATUS
