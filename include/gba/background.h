@@ -63,6 +63,19 @@ INLINE void background_offset(u32 id, u16 x, u16 y) {
     *offset = (x | y << 16);
 }
 
+INLINE void background_toggle(u32 id, bool enable) {
+    if(id >= BACKGROUND_COUNT)
+        return;
+
+    const u16 bit = BIT(8 + id);
+
+    vu16 *display_control = (vu16 *) 0x04000000;
+    if(enable)
+        *display_control |= bit;
+    else
+        *display_control &= ~bit;
+}
+
 // set the mosaic values of backgrounds
 INLINE void background_mosaic(u32 x, u32 y) {
     vu8 *mosaic = (vu8 *) 0x0400004c;
