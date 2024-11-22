@@ -38,14 +38,11 @@ struct Background {
     u16 size     : 2; // 0-3
 };
 
-#define _BACKGROUND_GET_CONTROL(id) ((vu16 *) (0x04000008 + id * 2))
-#define _BACKGROUND_GET_OFFSET(id)  ((vu32 *) (0x04000010 + id * 4))
-
 INLINE void background_config(u32 id, const struct Background *config) {
     if(id >= BACKGROUND_COUNT)
         return;
 
-    vu16 *control = _BACKGROUND_GET_CONTROL(id);
+    vu16 *control = (vu16 *) (0x04000008 + id * 2);
     *control = config->priority << 0  |
                config->tileset  << 2  |
                config->mosaic   << 6  |
@@ -59,7 +56,7 @@ INLINE void background_offset(u32 id, u16 x, u16 y) {
     if(id >= BACKGROUND_COUNT)
         return;
 
-    vu32 *offset = _BACKGROUND_GET_OFFSET(id);
+    vu32 *offset = (vu32 *) (0x04000010 + id * 4);
     *offset = (x | y << 16);
 }
 
@@ -81,6 +78,3 @@ INLINE void background_mosaic(u32 x, u32 y) {
     vu8 *mosaic = (vu8 *) 0x0400004c;
     *mosaic = (x & 15) | (y & 15) << 4;
 }
-
-#undef _BACKGROUND_GET_CONTROL
-#undef _BACKGROUND_GET_OFFSET
