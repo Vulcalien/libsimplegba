@@ -19,6 +19,8 @@
 
 // === Data Types ===
 
+#define NULL ((void *) 0)
+
 typedef _Bool bool;
 #define true  1
 #define false 0
@@ -56,10 +58,6 @@ typedef volatile i32    vi32;
 #define BITMASK(n) ((1 << (n)) - 1)
 
 // ===== ===== =====
-
-#ifndef NULL
-    #define NULL ((void *) 0)
-#endif
 
 #define static_assert _Static_assert
 
