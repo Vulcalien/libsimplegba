@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-07-08
+:revdate: 2024-11-24
 :docdate: {revdate}
 
 == NAME
@@ -36,7 +36,7 @@ the driver.
 === Direct Sound
 The following functions make up a simple direct sound driver capable of
 playing digital audio on the two digital-to-analog channels of the GBA.
-Sounds should be encoded as uncompressed signed 8-bit PCM. By default,
+Sounds should be encoded as uncompressed *signed 8-bit PCM*. By default,
 the sample rate is set to 16.384 KHz and both channels have volume set
 to 100% and play sound from left and right.
 
