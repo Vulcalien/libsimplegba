@@ -144,7 +144,13 @@ _start_ (inclusive) and _stop_ (exclusive).
 The *sprite_hide_all*() function hides all sprites.
 
 === Mosaic and Affine
-TODO
+The *sprite_mosaic*() function sets the parameters of the mosaic graphic
+effect of sprites. TODO
+
+The *sprite_affine*() function sets the values of the affine matrix
+identified by _parameter_ (0 to 31). The 2x2 matrix describes an affine
+transformation used for *inverse texture mapping*. Its values are signed
+16-bit fixed-point numbers, with 8 bits as fractional part (1 = 256).
 
 == NOTES
 If a sprite uses 256-color mode, each tile occupies double the amount of
