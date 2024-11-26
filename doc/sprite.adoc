@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-11-17
+:revdate: 2024-11-26
 :docdate: {revdate}
 
 == NAME
@@ -27,9 +27,13 @@ ____
 ____
 
 == DESCRIPTION
-Some of these functions take an _id_ parameter, or a range of IDs. These
-identify which sprites to operate on. There are *SPRITE_COUNT* (128)
-sprites available.
+A sprite, also called 'object' in GBA documentation, is a graphical
+element that can be drawn anywhere on the display, without being
+restricted to a grid like background tiles are.
+
+To identify which sprites to operate on, these functions take an _id_
+parameter, or a range of IDs. There are *SPRITE_COUNT* (128) sprites
+available.
 
 === Sprite configuration
 The *sprite_config*() function configures the sprite with the settings
