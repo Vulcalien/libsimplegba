@@ -23,6 +23,16 @@
 #define DISPLAY_BG_PALETTE  ((vu16 *) 0x05000000)
 #define DISPLAY_OBJ_PALETTE ((vu16 *) 0x05000200)
 
+// Tilemap video modes
+#define DISPLAY_MODE_0 0
+#define DISPLAY_MODE_1 1
+#define DISPLAY_MODE_2 2
+
+// Bitmap video modes
+#define DISPLAY_MODE_3 3
+#define DISPLAY_MODE_4 4
+#define DISPLAY_MODE_5 5
+
 // Video Modes
 //
 // Tilemap modes:
