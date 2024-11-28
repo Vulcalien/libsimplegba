@@ -65,10 +65,7 @@ INLINE i32 math_brad(i32 angle) {
     return angle * 0x2000 / 45;
 }
 
-// Approximate 'sin' and 'cos' functions
-//
-// 'angle' in range [0, 0xffff]
-// Output in range [-0x4000, 0x4000]
+// output in range [-0x4000, +0x4000]
 extern i16 math_sin(u16 angle);
 
 INLINE i16 math_cos(u16 angle) {
