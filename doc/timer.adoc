@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-08-02
+:revdate: 2024-12-04
 :docdate: {revdate}
 
 == NAME
 timer_config, timer_start, timer_stop, timer_restart, timer_get_counter
-- timer driver functions
+- timer functions
 
 == SYNOPSIS
 [verse]
@@ -27,61 +27,60 @@ ____
 ____
 
 == DESCRIPTION
-All of these functions take the _id_ argument, used to identify the
-timers. This can be an integer between 0 and 3 or one of these
-constants: *TIMER0*, *TIMER1*, *TIMER2*, *TIMER3*.
+A timer is a hardware component that precisely measures time. It is
+composed of a *counter* and a *reload register*, with values between 1
+*TIMER_COUNTER_MAX* (65536). Each time a timer ticks, its counter is
+decremented until it reaches zero: once that occurs, the counter is
+immediately reset to the reload value, and the timer continues running.
 
-Each timer has its decrementing counter, with values between 1 and
-*TIMER_COUNTER_MAX* (defined as 65536 = 2^16). When starting a timer, an
-initial counter value has to be provided. Every time a timer ticks, its
-counter is decremented until it reaches zero. Once that happens, the
-counter will be immediately reset to the provided initial value and the
-timer will continue running.
+When the counter of a timer reaches zero, an interrupt request tied to
+that timer is raised, if enabled: see *interrupt_enable(3)*.
+
+These functions take the _id_ argument, used to identify the timers.
+This can be an integer between 0 and 3, or one of these constants:
+*TIMER0*, *TIMER1*, *TIMER2*, *TIMER3*.
 
 === Timer configuration
-The *timer_config*() function configures the specified timer. If
-running, the timer will be stopped.
+The *timer_config*() function configures the timer and, if running,
+stops it.
 
 The _config_ argument can be any of these constants:
 *TIMER_PRESCALER_1*, *TIMER_PRESCALER_64*, *TIMER_PRESCALER_256*,
 *TIMER_PRESCALER_1024*, *TIMER_CASCADE*.
 
-If configured with one of the prescaler constants, the timer will tick
-every 1, 64, 256 or 1024 CPU cycles. If configured to run in cascade
-mode, the timer will tick only when the counter of the previous timer
-(_id_ - 1) reaches zero. Timer 0 cannot be configured to run in cascade
-mode.
+If configured with one of the prescaler constants, the timer ticks every
+1, 64, 256 or 1024 CPU cycles. If configured to run in cascade mode, the
+timer ticks only when the counter of the previous timer (_id_ - 1)
+reaches zero. Timer 0 cannot be configured to run in cascade mode.
 
 === Timer operation
-The *timer_start*() function starts the specified timer and sets its
-initial counter value to _ticks_. Before being started, the timer should
-be properly configured by calling *timer_config*(). If the timer is
-already running, this function will change the counter's initial value
-without overwriting its current value.
+The *timer_start*() function starts the timer and sets its reload value
+to _ticks_. If the timer is already running, this function only updates
+its reload value, without resetting its counter. Timers should be
+configured before being started.
 
-The *timer_stop*() function stops the specified timer. Stopping a timer
-does not reset its counter, nor does it affect its configuration.
+The *timer_stop*() function stops the timer. Stopping a timer does not
+affect its counter, nor does it affect its configuration.
 
-The *timer_restart*() function does the same thing as *timer_start*(),
-but first stops the specified timer. It is recommended to use this
-function instead of *timer_start*() when the timer's state is either
-running or unknown.
+The *timer_restart*() function restarts the timer, ensuring that its
+counter is reset without waiting for it to first reach zero. This is
+equivalent to stopping the timer and then starting it.
 
-The *timer_get_counter*() function returns the specified timer's counter
-value. Since stopping a timer does not reset its counter, it is safe to
-call this function on stopped timers.
+The *timer_get_counter*() function returns the timer's counter value.
+Since stopping a timer does not affect its counter, it is safe to call
+this function on stopped timers.
 
 == RETURN VALUE
-The *timer_get_counter*() function returns the specified timer's counter
-value as a _u32_ (unsigned 32-bit integer) with values in the range [1,
+The *timer_get_counter*() function returns the timer's counter value as
+a _u32_ (unsigned 32-bit integer) with values in the range [1,
 *TIMER_COUNTER_MAX*].
 
 == NOTES
-This library considers the timers to be decrementing (i.e., their
-counters are decremented). In GBA hardware, and thus in documentation
-regarding it, the timers are considered to be incrementing. When using
-this driver and reading other GBA documentation, be aware of this
-difference.
+This library assumes timers to be *decrementing* (i.e., their counters
+are decremented). Other projects and GBA documentation instead consider
+timers to be *incrementing*. The two interpretations are equivalent, but
+be aware of this difference when using this module and reading other GBA
+documentation.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
