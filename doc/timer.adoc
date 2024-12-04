@@ -29,7 +29,7 @@ ____
 == DESCRIPTION
 A timer is a hardware component that precisely measures time. It is
 composed of a *counter* and a *reload register*, with values between 1
-*TIMER_COUNTER_MAX* (65536). Each time a timer ticks, its counter is
+and *TIMER_COUNTER_MAX* (65536). Each time a timer ticks, its counter is
 decremented until it reaches zero: once that occurs, the counter is
 immediately reset to the reload value, and the timer continues running.
 
