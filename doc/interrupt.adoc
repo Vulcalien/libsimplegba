@@ -21,10 +21,8 @@ ____
 ____
 
 == DESCRIPTION
-The *interrupt_init*() function initializes the driver. This needs to be
-called once before calling other functions of the interrupt driver or
-any module that depends on the interrupt driver (such as the sound
-driver).
+The *interrupt_init*() function initializes the module. This function
+should be called once at the beginning of a program.
 
 The *interrupt_toggle*() function enables or disables (depending on the
 value of _enable_) the specified _irq_, identified by one of the
