@@ -38,17 +38,16 @@
 #define IRQ_KEYPAD  12
 #define IRQ_GAMEPAK 13
 
-#define _INTERRUPT_IE *((vu16 *) 0x04000200)
+extern void interrupt_init(void);
 
-// toggle the IRQ sender bit of the corresponding register
-INLINE void _interrupt_toggle_register_bit(u8 irq, bool enable) {
+INLINE void interrupt_toggle(u32 irq, bool enable) {
     if(irq >= INTERRUPT_COUNT)
         return;
 
     const struct {
-        u16 addr_offset;
+        u16 offset;
         u16 bit;
-    } registers[INTERRUPT_COUNT] = {
+    } senders[INTERRUPT_COUNT] = {
         [IRQ_VBLANK]  = { 0x0004, BIT(3)  },
         [IRQ_HBLANK]  = { 0x0004, BIT(4)  },
         [IRQ_VCOUNT]  = { 0x0004, BIT(5)  },
@@ -62,32 +61,20 @@ INLINE void _interrupt_toggle_register_bit(u8 irq, bool enable) {
         [IRQ_DMA2]    = { 0x00d2, BIT(14) },
         [IRQ_DMA3]    = { 0x00de, BIT(14) },
         [IRQ_KEYPAD]  = { 0x0132, BIT(14) },
-        [IRQ_GAMEPAK] = { 0,      0       }, // (no register)
+        [IRQ_GAMEPAK] = { 0,      0       }, // no register
     };
 
-    vu16 *address = (vu16 *) (0x04000000 + registers[irq].addr_offset);
-    u16 bit = registers[irq].bit;
+    vu16 *sender = (vu16 *) (0x04000000 + senders[irq].offset);
+    vu16 *ie = (vu16 *) 0x04000200;
 
-    // check if the given IRQ has no sender bit (only IRQ_GAMEPAK)
-    if(!bit)
-        return;
-
-    if(enable)
-        *address |= bit;
-    else
-        *address &= ~bit;
-}
-
-extern void interrupt_init(void);
-
-INLINE void interrupt_enable(u8 irq) {
-    _interrupt_toggle_register_bit(irq, true);
-    _INTERRUPT_IE |= BIT(irq);
-}
-
-INLINE void interrupt_disable(u8 irq) {
-    _INTERRUPT_IE &= ~BIT(irq);
-    _interrupt_toggle_register_bit(irq, false);
+    // toggle IRQ bits in both sender register and IE
+    if(enable) {
+        *sender |= senders[irq].bit;
+        *ie     |= BIT(irq);
+    } else {
+        *sender &= ~senders[irq].bit;
+        *ie     &= ~BIT(irq);
+    }
 }
 
 extern void interrupt_set_isr(u8 irq, void (*isr)(void));

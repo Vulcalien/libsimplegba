@@ -167,7 +167,7 @@ void sound_dma_init(void) {
                            0 << 14;  // Channel B Timer (0 = Timer 0)
 
     // enable Timer 1 IRQ
-    interrupt_enable(IRQ_TIMER1);
+    interrupt_toggle(IRQ_TIMER1, true);
     interrupt_set_isr(IRQ_TIMER1, timer1_isr);
 
     // configure Timer 0 and Timer 1
