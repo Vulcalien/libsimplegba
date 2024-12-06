@@ -94,7 +94,8 @@ static inline void update_enable_bits(SoundDmaChannel channel) {
     const u32 enable_bits = (channel == SOUND_DMA_A ? 8 : 12);
     struct SoundData *data = &sound_data[channel];
 
-    // clear enable bits
+    // Clear enable bits. It is important to always clear the bits,
+    // even before setting them, in case the directions changed.
     DIRECT_SOUND_CONTROL &= ~(3 << enable_bits);
 
     // if playing, set enable bits
