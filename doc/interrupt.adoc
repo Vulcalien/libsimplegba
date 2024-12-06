@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-07-02
+:revdate: 2024-12-06
 :docdate: {revdate}
 
 == NAME
 interrupt_init, interrupt_enable, interrupt_disable, interrupt_set_isr -
-interrupt driver functions
+interrupt handling
 
 == SYNOPSIS
 [verse]
@@ -16,10 +16,8 @@ ____
 
 *void interrupt_init(void);*
 
-**void interrupt_enable(u8 **__irq__**);**
-**void interrupt_disable(u8 **__irq__**);**
-
-**void interrupt_set_isr(u8 **__irq__**, void (+++*+++**__isr__**)(void));**
+**void interrupt_toggle(u32 **__irq__**, bool **__enable__**);**
+**void interrupt_set_isr(u32 **__irq__**, void (+++*+++**__isr__**)(void));**
 ____
 
 == DESCRIPTION
@@ -28,9 +26,9 @@ called once before calling other functions of the interrupt driver or
 any module that depends on the interrupt driver (such as the sound
 driver).
 
-The *interrupt_enable*() and *interrupt_disable()* functions enable and
-disable the specified _irq_, identified by one of the constants listed
-below.
+The *interrupt_toggle*() function enables or disables (depending on the
+value of _enable_) the specified _irq_, identified by one of the
+constants listed below.
 
 .IRQ identifiers
 [cols="1,1,1,1"]
@@ -43,18 +41,14 @@ below.
 |===
 
 The *interrupt_set_isr*() function maps the specified _irq_ to its _isr_
-(Interrupt Service Routine). _irq_ can be any of the interrupt
-identifiers listed above.
-
-If _irq_ is NULL, the driver will perform no action when that interrupt
-is detected. It is recommended (but not required) to also disable the
-interrupt by calling *interrupt_disable*().
+(Interrupt Service Routine). If _isr_ is set to NULL, no action will be
+performed when that interrupt is raised.
 
 == NOTES
-Each IRQ can be mapped to just one ISR at a time, so calling
-*interrupt_set_isr*() will overwrite the previous association. If
-multiple ISRs are required, the recommended approach is to write a
-function that calls all the others:
+Each IRQ can only be mapped to one ISR at a time, so that calling
+*interrupt_set_isr*() overwrites the previous association. If an IRQ
+needs multiple ISRs, the recommended approach is to write a wrapper
+function:
 
 [source,c]
 ----
@@ -72,7 +66,7 @@ Enable the VBlank interrupt and map an ISR to it:
 int AgbMain(void) {
     interrupt_init();
 
-    interrupt_enable(IRQ_VBLANK);
+    interrupt_toggle(IRQ_VBLANK, true);
     interrupt_set_isr(IRQ_VBLANK, vblank_isr);
 }
 ----
