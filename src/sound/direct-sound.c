@@ -7,11 +7,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include <gba/sound.h>
 
@@ -23,11 +23,35 @@
 
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 
-#define FIFO_A ((vu32 *) 0x040000a0)
-#define FIFO_B ((vu32 *) 0x040000a4)
+static const struct Channel {
+    vu32 *fifo;
+    u32 dma;
 
-#define FIFO(channel) ((channel) == SOUND_DMA_A ? FIFO_A : FIFO_B)
-#define DMA(channel)  ((channel) == SOUND_DMA_A ? DMA1 : DMA2)
+    struct {
+        u16 reset;
+        u16 volume;
+    } bits;
+} channels[2] = {
+    [SOUND_DMA_A] = {
+        .fifo = (vu32 *) 0x040000a0,
+        .dma = DMA1,
+
+        .bits = {
+            .reset = BIT(11),
+            .volume = BIT(2)
+        }
+    },
+
+    [SOUND_DMA_B] = {
+        .fifo = (vu32 *) 0x040000a4,
+        .dma = DMA2,
+
+        .bits = {
+            .reset = BIT(15),
+            .volume = BIT(3)
+        }
+    }
+};
 
 static u8 directions[2];
 
@@ -43,17 +67,18 @@ static struct SoundData {
 static inline void start_sound(const u8 *sound, u32 length, bool loop,
                                SoundDmaChannel channel) {
     // reset channel FIFO
-    if(channel == SOUND_DMA_A)
-        DIRECT_SOUND_CONTROL |= BIT(11);
-    else
-        DIRECT_SOUND_CONTROL |= BIT(15);
+    DIRECT_SOUND_CONTROL |= channels[channel].bits.reset;
 
     // reset DMA
-    dma_config(DMA(channel), &(struct DMA) {
+    dma_config(channels[channel].dma, &(struct DMA) {
         .start_timing = DMA_START_SPECIAL,
         .repeat = true
     });
-    dma_transfer(DMA(channel), FIFO(channel), sound, 0);
+    dma_transfer(
+        channels[channel].dma,
+        channels[channel].fifo,
+        sound, 0
+    );
 
     // update the channel's sound_data
     sound_data[channel] = (struct SoundData) {
@@ -125,17 +150,17 @@ void sound_dma_stop(SoundDmaChannel channel) {
 
     data->playing = false;
 
-    dma_stop(DMA(channel));
+    dma_stop(channels[channel].dma);
     update_enable_bits(channel);
 }
 
 void sound_dma_volume(SoundDmaChannel channel, u32 volume) {
-    const u32 volume_bit = (channel == SOUND_DMA_A ? 2 : 3);
+    const u16 bit = channels[channel].bits.volume;
 
     if(volume != 0) // 100%
-        DIRECT_SOUND_CONTROL |= BIT(volume_bit);
+        DIRECT_SOUND_CONTROL |= bit;
     else // 50%
-        DIRECT_SOUND_CONTROL &= ~BIT(volume_bit);
+        DIRECT_SOUND_CONTROL &= ~bit;
 }
 
 void sound_dma_directions(SoundDmaChannel channel,
