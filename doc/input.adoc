@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-08-03
+:revdate: 2024-12-06
 :docdate: {revdate}
 
 == NAME
-input_update, input_down, input_pressed, input_released - input driver
-functions
+input_update, input_down, input_pressed, input_released - input
+detection
 
 == SYNOPSIS
 [verse]
@@ -24,7 +24,7 @@ ____
 ____
 
 == DESCRIPTION
-The *input_update*() function updates the driver's internal state to
+The *input_update*() function updates the module's internal state to
 match the one of the GBA buttons. This function should be called once at
 the beginning of every tick (game update), before any input processing
 is done.
@@ -47,10 +47,10 @@ The *input_irq_config*() function configures the keypad interrupt
 condition. If __all_keys__ is true, the interrupt is raised if all of
 the specified keys are down at the same time; if __all_keys__ is false,
 the interrupt is raised if any of those keys is down. The _keys_
-argument is the list of keys joined together using the bitwise OR
-operator (e.g., *KEY_A* | *KEY_START*). For the interrupt to be
-acknowledged, it must also be enabled by calling the
-*interrupt_enable*(3) function passing *IRQ_KEYPAD* as argument.
+argument is a list of keys joined together using the bitwise OR operator
+(e.g., *KEY_A* | *KEY_START*). For the interrupt to be acknowledged, it
+must also be enabled by calling the *interrupt_enable*(3) function
+passing *IRQ_KEYPAD* as argument.
 
 == RETURN VALUE
 The *input_down*(), *input_pressed*() and *input_released*() functions
@@ -62,5 +62,4 @@ The *libsimplegba* library was written by Vulcalien
 <\vulcalien@vulcalien.net>.
 
 == SEE ALSO
-*interrupt_enable*(3),
-*interrupt_set_isr*(3)
+*interrupt_enable*(3), *interrupt_set_isr*(3)
