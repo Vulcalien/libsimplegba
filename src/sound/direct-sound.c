@@ -201,13 +201,14 @@ void sound_dma_init(void) {
     timer_config(TIMER0, TIMER_PRESCALER_1);
     timer_config(TIMER1, TIMER_CASCADE);
 
-    // set volume to 100% on both channels
-    sound_dma_volume(SOUND_DMA_A, 1);
-    sound_dma_volume(SOUND_DMA_B, 1);
+    // configure channels with default settings
+    for(u32 channel = 0; channel < CHANNEL_COUNT; channel++) {
+        // set volume to 100%
+        sound_dma_volume(channel, 1);
 
-    // enable left and right on both channels
-    sound_dma_directions(SOUND_DMA_A, true, true);
-    sound_dma_directions(SOUND_DMA_B, true, true);
+        // enable left and right
+        sound_dma_directions(channel, true, true);
+    }
 
     // Set sample rate to the default value. This also starts Timer 0.
     sound_dma_sample_rate(0);
