@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-10-15
+:revdate: 2024-12-06
 :docdate: {revdate}
 
 == NAME
@@ -50,11 +50,12 @@ constants (*I32_MIN*, *U16_MAX*...), the NULL pointer, section macros
 (*IWRAM_SECTION*, *SBSS_SECTION*...), etc.
 
 *Math <math.h>*::
-Various mathematical functions for integers and fixed-point numbers.
+Various mathematical functions for integers and fixed-point numbers,
+including basic trigonometry.
 
 *Random <random.h>*::
-Interact with a pseudorandom number generator. This module contains
-replacements for some C standard functions like _rand_ and _srand_.
+Pseudorandom number generator, offering the _random_ function and other
+related functions.
 
 *Memory <memory.h>*::
 Manipulate memory. This module contains replacements for some C standard
@@ -64,21 +65,20 @@ alignment-specific versions (e.g., memset16, memcpy32) as well.
 === GBA Hardware
 
 *Display <gba/display.h>*::
-Configure and interact with the GBA display in a generic way.
+Basic display functions, such as configuring the Video Mode or getting a
+pointer to the bitmap raster. Graphic effects are also included.
 
 *Background <gba/background.h>*::
-Configure and interact with the GBA display's backgrounds specifically.
+Configure and interact with the GBA display's background layers.
 
 *Sprite <gba/sprite.h>*::
-Configure and interact with the GBA display's sprites (objects)
-specifically.
+Configure and interact with the GBA display's sprites (objects).
 
 *Window <gba/window.h>*::
-Configure the GBA display's windows, choosing which ones to enable and
-how they affect the video output.
+Configure the GBA display's windows.
 
 *Sound <gba/sound.h>*::
-Play sound and interact with the GBA sound hardware.
+Simple sound driver, supporting two direct sound channels.
 
 *Timer <gba/timer.h>*::
 Configure and interact with the GBA's four timers.
