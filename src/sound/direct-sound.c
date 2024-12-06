@@ -21,6 +21,8 @@
 #include <gba/timer.h>
 #include <gba/dma.h>
 
+#define CHANNEL_COUNT 2
+
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 
 static const struct Channel {
@@ -31,7 +33,7 @@ static const struct Channel {
         u16 reset;
         u16 volume;
     } bits;
-} channels[2] = {
+} channels[CHANNEL_COUNT] = {
     [SOUND_DMA_A] = {
         .fifo = (vu32 *) 0x040000a0,
         .dma = DMA1,
@@ -53,7 +55,7 @@ static const struct Channel {
     }
 };
 
-static u8 directions[2];
+static u8 directions[CHANNEL_COUNT];
 
 static struct SoundData {
     const u8 *sound;
@@ -62,7 +64,7 @@ static struct SoundData {
 
     bool playing;
     u32 remaining;
-} sound_data[2];
+} sound_data[CHANNEL_COUNT];
 
 static inline void start_sound(const u8 *sound, u32 length, bool loop,
                                SoundDmaChannel channel) {
@@ -95,7 +97,7 @@ static inline void start_sound(const u8 *sound, u32 length, bool loop,
 static inline void schedule_next_irq(void) {
     // determine how many samples should be played before stopping
     u32 next_stop = U16_MAX;
-    for(u32 channel = 0; channel < 2; channel++) {
+    for(u32 channel = 0; channel < CHANNEL_COUNT; channel++) {
         struct SoundData *data = &sound_data[channel];
 
         if(data->playing && data->remaining < next_stop)
@@ -103,7 +105,7 @@ static inline void schedule_next_irq(void) {
     }
 
     // decrease the count of remaining samples
-    for(u32 channel = 0; channel < 2; channel++) {
+    for(u32 channel = 0; channel < CHANNEL_COUNT; channel++) {
         struct SoundData *data = &sound_data[channel];
 
         // Checking if the channel is playing is unnecessary: if the
@@ -172,7 +174,7 @@ void sound_dma_directions(SoundDmaChannel channel,
 IWRAM_SECTION
 static void timer1_isr(void) {
     // stop or loop the channels
-    for(u32 channel = 0; channel < 2; channel++) {
+    for(u32 channel = 0; channel < CHANNEL_COUNT; channel++) {
         struct SoundData *data = &sound_data[channel];
 
         if(data->playing && data->remaining == 0) {
