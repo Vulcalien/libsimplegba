@@ -7,11 +7,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #pragma once
 
@@ -19,33 +19,24 @@
 
 #include <gba/timer.h>
 
+#define SOUND_VOLUME_MAX 64
+
+#define SOUND_PANNING_MIN (-64)
+#define SOUND_PANNING_MAX (+64)
+
 extern void sound_init(void);
 
-// === Direct Sound ===
+extern void sound_play(u32 channel, const u8 *sound, u32 length);
+extern void sound_stop(u32 channel);
 
-typedef bool SoundDmaChannel;
-#define SOUND_DMA_A 0
-#define SOUND_DMA_B 1
+extern void sound_loop(u32 channel, u32 loop_length);
+extern void sound_volume(u32 channel, u32 volume);
+extern void sound_panning(u32 channel, i32 panning);
 
-#define SOUND_DMA_PLAY(sound, loop, channel)\
-    sound_dma_play((sound), sizeof(sound), (loop), (channel))
-
-extern void sound_dma_play(const u8 *sound, u32 length, bool loop,
-                           SoundDmaChannel channel);
-extern void sound_dma_stop(SoundDmaChannel channel);
-
-// volume: 0=50%, 1=100% (default=100%)
-extern void sound_dma_volume(SoundDmaChannel channel, u32 volume);
-
-extern void sound_dma_directions(SoundDmaChannel channel,
-                                 bool left, bool right);
-
-INLINE void sound_dma_sample_rate(u32 sample_rate) {
+INLINE void sound_sample_rate(u32 sample_rate) {
     if(sample_rate == 0)
         sample_rate = 16384;
 
     const u32 cycles_per_sample = CLOCK_FREQUENCY / sample_rate;
     timer_start(TIMER0, cycles_per_sample);
 }
-
-// ===== ===== =====
