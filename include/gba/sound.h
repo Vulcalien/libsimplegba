@@ -19,7 +19,22 @@
 
 #include <gba/timer.h>
 
+#define SOUND_VOLUME_MAX 64
+
 extern void sound_init(void);
+extern void sound_update(void);
+
+extern void sound_play(const i8 *sound, u32 length, u32 channel);
+extern void sound_volume(u32 channel, u32 volume); // 0 ... 64
+extern void sound_panning(u32 channel, i32 panning); // -64 ... +64
+
+INLINE void sound_sample_rate(u32 sample_rate) {
+    if(sample_rate == 0)
+        sample_rate = 16384;
+
+    const u32 cycles_per_sample = CLOCK_FREQUENCY / sample_rate;
+    timer_start(TIMER0, cycles_per_sample);
+}
 
 // === Direct Sound ===
 
