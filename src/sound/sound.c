@@ -57,6 +57,9 @@ static i8 buffers[2][OUTPUT_COUNT][BUFFER_SIZE];
 
 IWRAM_SECTION
 static void timer1_isr(void) {
+    // reset FIFOs
+    DIRECT_SOUND_CONTROL |= BIT(11) | BIT(15);
+
     // configure DMA transfers for each output
     for(u32 o = 0; o < OUTPUT_COUNT; o++) {
         u32 dma = (o == 0 ? DMA1 : DMA2);
@@ -84,15 +87,13 @@ void sound_init(void) {
 
     #ifdef SOUND_STEREO
     // stereo: enable one direction per DMA channel
-    DIRECT_SOUND_CONTROL = BIT(2)  | BIT(3)  | // set volume to 100%
-                           BIT(8)  | BIT(13) | // enable right and left
-                           BIT(11) | BIT(15);  // reset FIFOs
+    DIRECT_SOUND_CONTROL = BIT(2) | BIT(3)  | // set volume to 100%
+                           BIT(8) | BIT(13);  // enable right and left
     #else
     // mono: only enable DMA channel A
-    DIRECT_SOUND_CONTROL = BIT(2)  | // set volume to 100%
-                           BIT(8)  | // enable right
-                           BIT(9)  | // enable left
-                           BIT(11);  // reset FIFO
+    DIRECT_SOUND_CONTROL = BIT(2) | // set volume to 100%
+                           BIT(8) | // enable right
+                           BIT(9);  // enable left
     #endif
 
     // configure Timer 0 and Timer 1
@@ -115,7 +116,7 @@ void sound_init(void) {
     timer_start(TIMER1, BUFFER_SIZE);
 
     // Set default sample rate. This also starts Timer 0
-    sound_sample_rate(32000);
+    sound_sample_rate(0);
 }
 
 SBSS_SECTION
