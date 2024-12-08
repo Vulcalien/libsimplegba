@@ -203,8 +203,7 @@ void sound_stop(u32 channel) {
     if(channel >= CHANNEL_COUNT)
         return;
 
-    struct Channel *channel_struct = &channels[channel];
-    channel_struct->data = NULL;
+    channels[channel].data = NULL;
 
     update_enable_bits(channel);
     dma_stop(outputs[channel].dma);
@@ -235,9 +234,7 @@ void sound_panning(u32 channel, i32 panning) {
     // audio plays in one side only if panning is at either extreme
     bool left  = (panning < SOUND_PANNING_MAX);
     bool right = (panning > SOUND_PANNING_MIN);
-
-    struct Channel *channel_struct = &channels[channel];
-    channel_struct->directions = left << 1 | right;
+    channels[channel].directions = left << 1 | right;
 
     update_enable_bits(channel);
 }
