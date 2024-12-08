@@ -130,7 +130,7 @@ static INLINE void schedule_timer1_irq(void) {
 }
 
 IWRAM_SECTION
-void timer1_isr(void) {
+static void timer1_isr(void) {
     // stop or loop the channels
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
