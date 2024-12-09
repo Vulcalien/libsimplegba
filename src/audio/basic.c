@@ -265,7 +265,7 @@ void audio_panning(i32 channel, i32 panning) {
         return;
     }
 
-    // audio plays in one side only if panning is at either extreme
+    // audio only plays on one side if panning is at either extreme
     bool left  = (panning < AUDIO_PANNING_MAX);
     bool right = (panning > AUDIO_PANNING_MIN);
     channels[channel].directions = left << 1 | right;
