@@ -172,13 +172,27 @@ void audio_init(void) {
     audio_sample_rate(0);
 }
 
-void audio_play(i32 channel, const u8 *sound, u32 length) {
-    if(channel < 0 || channel >= CHANNEL_COUNT)
-        return;
+i32 audio_play(i32 channel, const u8 *sound, u32 length) {
+    if(channel < 0) {
+        // look for an available channel
+        for(u32 c = 0; c < CHANNEL_COUNT; c++) {
+            if(!channels[c].data) {
+                channel = c;
+                break;
+            }
+        }
 
+        // if no channel is available, return
+        if(channel < 0)
+            return -1;
+    } else if(channel >= CHANNEL_COUNT) {
+        return -1;
+    }
+
+    // if sound length is zero, stop the channel
     if(length == 0) {
         audio_stop(channel);
-        return;
+        return channel;
     }
 
     struct Channel *channel_struct = &channels[channel];
@@ -195,6 +209,8 @@ void audio_play(i32 channel, const u8 *sound, u32 length) {
 
     // reschedule the next IRQ
     schedule_timer1_irq();
+
+    return channel;
 }
 
 void audio_stop(i32 channel) {

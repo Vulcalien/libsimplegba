@@ -26,7 +26,7 @@
 
 extern void audio_init(void);
 
-extern void audio_play(i32 channel, const u8 *sound, u32 length);
+extern i32 audio_play(i32 channel, const u8 *sound, u32 length);
 extern void audio_stop(i32 channel);
 
 extern void audio_loop(i32 channel, u32 loop_length);
