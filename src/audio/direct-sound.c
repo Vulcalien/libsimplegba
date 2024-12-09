@@ -72,7 +72,7 @@ static struct Channel {
 } channels[CHANNEL_COUNT];
 
 IWRAM_SECTION
-static void restart_dma(u32 channel) {
+static void restart_dma(i32 channel) {
     // reset FIFO
     DIRECT_SOUND_CONTROL |= outputs[channel].bits.reset;
 
@@ -88,7 +88,7 @@ static void restart_dma(u32 channel) {
     );
 }
 
-static INLINE void update_enable_bits(u32 channel) {
+static INLINE void update_enable_bits(i32 channel) {
     const u32 enable_bits = outputs[channel].enable_bits;
     struct Channel *channel_struct = &channels[channel];
 
@@ -174,8 +174,8 @@ void audio_init(void) {
     audio_sample_rate(0);
 }
 
-void audio_play(u32 channel, const u8 *sound, u32 length) {
-    if(channel >= CHANNEL_COUNT)
+void audio_play(i32 channel, const u8 *sound, u32 length) {
+    if(channel < 0 || channel >= CHANNEL_COUNT)
         return;
 
     if(length == 0) {
@@ -199,8 +199,8 @@ void audio_play(u32 channel, const u8 *sound, u32 length) {
     schedule_timer1_irq();
 }
 
-void audio_stop(u32 channel) {
-    if(channel >= CHANNEL_COUNT)
+void audio_stop(i32 channel) {
+    if(channel < 0 || channel >= CHANNEL_COUNT)
         return;
 
     channels[channel].data = NULL;
@@ -209,15 +209,15 @@ void audio_stop(u32 channel) {
     dma_stop(outputs[channel].dma);
 }
 
-void audio_loop(u32 channel, u32 loop_length) {
-    if(channel >= CHANNEL_COUNT)
+void audio_loop(i32 channel, u32 loop_length) {
+    if(channel < 0 || channel >= CHANNEL_COUNT)
         return;
 
     channels[channel].loop_length = loop_length;
 }
 
-void audio_volume(u32 channel, u32 volume) {
-    if(channel >= CHANNEL_COUNT)
+void audio_volume(i32 channel, u32 volume) {
+    if(channel < 0 || channel >= CHANNEL_COUNT)
         return;
 
     const u16 bit = outputs[channel].bits.volume;
@@ -227,8 +227,8 @@ void audio_volume(u32 channel, u32 volume) {
         DIRECT_SOUND_CONTROL &= ~bit;
 }
 
-void audio_panning(u32 channel, i32 panning) {
-    if(channel >= CHANNEL_COUNT)
+void audio_panning(i32 channel, i32 panning) {
+    if(channel < 0 || channel >= CHANNEL_COUNT)
         return;
 
     // audio plays in one side only if panning is at either extreme
