@@ -164,11 +164,9 @@ void audio_init(void) {
     interrupt_set_isr(IRQ_TIMER1, timer1_isr);
 
     // setup channels with default configuration
-    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
-        audio_loop(c, 0);
-        audio_volume(c, AUDIO_VOLUME_MAX);
-        audio_panning(c, 0);
-    }
+    audio_loop   (-1, 0);
+    audio_volume (-1, AUDIO_VOLUME_MAX);
+    audio_panning(-1, 0);
 
     // Set default sample rate. This also starts Timer 0
     audio_sample_rate(0);
@@ -200,8 +198,13 @@ void audio_play(i32 channel, const u8 *sound, u32 length) {
 }
 
 void audio_stop(i32 channel) {
-    if(channel < 0 || channel >= CHANNEL_COUNT)
+    if(channel < 0) {
+        for(u32 c = 0; c < CHANNEL_COUNT; c++)
+            audio_stop(c);
         return;
+    } else if(channel >= CHANNEL_COUNT) {
+        return;
+    }
 
     channels[channel].data = NULL;
 
@@ -210,15 +213,25 @@ void audio_stop(i32 channel) {
 }
 
 void audio_loop(i32 channel, u32 loop_length) {
-    if(channel < 0 || channel >= CHANNEL_COUNT)
+    if(channel < 0) {
+        for(u32 c = 0; c < CHANNEL_COUNT; c++)
+            audio_loop(c, loop_length);
         return;
+    } else if(channel >= CHANNEL_COUNT) {
+        return;
+    }
 
     channels[channel].loop_length = loop_length;
 }
 
 void audio_volume(i32 channel, u32 volume) {
-    if(channel < 0 || channel >= CHANNEL_COUNT)
+    if(channel < 0) {
+        for(u32 c = 0; c < CHANNEL_COUNT; c++)
+            audio_volume(c, volume);
         return;
+    } else if(channel >= CHANNEL_COUNT) {
+        return;
+    }
 
     const u16 bit = outputs[channel].bits.volume;
     if(volume > AUDIO_VOLUME_MAX / 2) // 100%
@@ -228,8 +241,13 @@ void audio_volume(i32 channel, u32 volume) {
 }
 
 void audio_panning(i32 channel, i32 panning) {
-    if(channel < 0 || channel >= CHANNEL_COUNT)
+    if(channel < 0) {
+        for(u32 c = 0; c < CHANNEL_COUNT; c++)
+            audio_panning(c, panning);
         return;
+    } else if(channel >= CHANNEL_COUNT) {
+        return;
+    }
 
     // audio plays in one side only if panning is at either extreme
     bool left  = (panning < AUDIO_PANNING_MAX);
