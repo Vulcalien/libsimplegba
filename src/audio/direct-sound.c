@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include <gba/sound.h>
+#include <gba/audio.h>
 
 #include <gba/interrupt.h>
 #include <gba/timer.h>
@@ -142,7 +142,7 @@ static void timer1_isr(void) {
                 channel->data = channel->end - channel->loop_length;
                 restart_dma(c);
             } else {
-                sound_stop(c);
+                audio_stop(c);
             }
         }
     }
@@ -151,7 +151,7 @@ static void timer1_isr(void) {
     schedule_timer1_irq();
 }
 
-void sound_init(void) {
+void audio_init(void) {
     MASTER_SOUND_CONTROL = BIT(7); // enable sound
     DIRECT_SOUND_CONTROL = 0; // use Timer 0 for both DMA channels
 
@@ -165,21 +165,21 @@ void sound_init(void) {
 
     // setup channels with default configuration
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
-        sound_loop(c, 0);
-        sound_volume(c, SOUND_VOLUME_MAX);
-        sound_panning(c, 0);
+        audio_loop(c, 0);
+        audio_volume(c, AUDIO_VOLUME_MAX);
+        audio_panning(c, 0);
     }
 
     // Set default sample rate. This also starts Timer 0
-    sound_sample_rate(0);
+    audio_sample_rate(0);
 }
 
-void sound_play(u32 channel, const u8 *sound, u32 length) {
+void audio_play(u32 channel, const u8 *sound, u32 length) {
     if(channel >= CHANNEL_COUNT)
         return;
 
     if(length == 0) {
-        sound_stop(channel);
+        audio_stop(channel);
         return;
     }
 
@@ -199,7 +199,7 @@ void sound_play(u32 channel, const u8 *sound, u32 length) {
     schedule_timer1_irq();
 }
 
-void sound_stop(u32 channel) {
+void audio_stop(u32 channel) {
     if(channel >= CHANNEL_COUNT)
         return;
 
@@ -209,31 +209,31 @@ void sound_stop(u32 channel) {
     dma_stop(outputs[channel].dma);
 }
 
-void sound_loop(u32 channel, u32 loop_length) {
+void audio_loop(u32 channel, u32 loop_length) {
     if(channel >= CHANNEL_COUNT)
         return;
 
     channels[channel].loop_length = loop_length;
 }
 
-void sound_volume(u32 channel, u32 volume) {
+void audio_volume(u32 channel, u32 volume) {
     if(channel >= CHANNEL_COUNT)
         return;
 
     const u16 bit = outputs[channel].bits.volume;
-    if(volume > SOUND_VOLUME_MAX / 2) // 100%
+    if(volume > AUDIO_VOLUME_MAX / 2) // 100%
         DIRECT_SOUND_CONTROL |= bit;
     else // 50%
         DIRECT_SOUND_CONTROL &= ~bit;
 }
 
-void sound_panning(u32 channel, i32 panning) {
+void audio_panning(u32 channel, i32 panning) {
     if(channel >= CHANNEL_COUNT)
         return;
 
     // audio plays in one side only if panning is at either extreme
-    bool left  = (panning < SOUND_PANNING_MAX);
-    bool right = (panning > SOUND_PANNING_MIN);
+    bool left  = (panning < AUDIO_PANNING_MAX);
+    bool right = (panning > AUDIO_PANNING_MIN);
     channels[channel].directions = left << 1 | right;
 
     update_enable_bits(channel);

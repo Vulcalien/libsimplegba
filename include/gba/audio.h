@@ -19,21 +19,21 @@
 
 #include <gba/timer.h>
 
-#define SOUND_VOLUME_MAX 64
+#define AUDIO_VOLUME_MAX 64
 
-#define SOUND_PANNING_MIN (-64)
-#define SOUND_PANNING_MAX (+64)
+#define AUDIO_PANNING_MIN (-64)
+#define AUDIO_PANNING_MAX (+64)
 
-extern void sound_init(void);
+extern void audio_init(void);
 
-extern void sound_play(u32 channel, const u8 *sound, u32 length);
-extern void sound_stop(u32 channel);
+extern void audio_play(u32 channel, const u8 *sound, u32 length);
+extern void audio_stop(u32 channel);
 
-extern void sound_loop(u32 channel, u32 loop_length);
-extern void sound_volume(u32 channel, u32 volume);
-extern void sound_panning(u32 channel, i32 panning);
+extern void audio_loop(u32 channel, u32 loop_length);
+extern void audio_volume(u32 channel, u32 volume);
+extern void audio_panning(u32 channel, i32 panning);
 
-INLINE void sound_sample_rate(u32 sample_rate) {
+INLINE void audio_sample_rate(u32 sample_rate) {
     if(sample_rate == 0)
         sample_rate = 16384;
 
