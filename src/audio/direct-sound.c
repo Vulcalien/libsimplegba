@@ -88,21 +88,6 @@ static void restart_dma(i32 channel) {
     );
 }
 
-static INLINE void update_enable_bits(i32 channel) {
-    const u32 enable_bits = outputs[channel].enable_bits;
-    struct Channel *channel_struct = &channels[channel];
-
-    // Clear enable bits. It is important to always clear the bits,
-    // even before setting them, in case the directions changed.
-    DIRECT_SOUND_CONTROL &= ~(3 << enable_bits);
-
-    const u32 directions = channel_struct->directions;
-
-    // if playing, set enable bits
-    if(channel_struct->data)
-        DIRECT_SOUND_CONTROL |= (directions << enable_bits);
-}
-
 static INLINE void schedule_timer1_irq(void) {
     // determine how many samples should be played before stopping
     u32 next_stop = TIMER_COUNTER_MAX;
@@ -170,6 +155,21 @@ void audio_init(void) {
 
     // Set default sample rate. This also starts Timer 0
     audio_sample_rate(0);
+}
+
+static INLINE void update_enable_bits(i32 channel) {
+    const u32 enable_bits = outputs[channel].enable_bits;
+    struct Channel *channel_struct = &channels[channel];
+
+    // Clear enable bits. It is important to always clear the bits,
+    // even before setting them, in case the directions changed.
+    DIRECT_SOUND_CONTROL &= ~(3 << enable_bits);
+
+    const u32 directions = channel_struct->directions;
+
+    // if playing, set enable bits
+    if(channel_struct->data)
+        DIRECT_SOUND_CONTROL |= (directions << enable_bits);
 }
 
 i32 audio_play(i32 channel, const u8 *sound, u32 length) {
