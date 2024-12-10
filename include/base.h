@@ -75,10 +75,8 @@ typedef volatile i32    vi32;
 #define ARM   __attribute__((target("arm")))
 #define THUMB __attribute__((target("thumb")))
 
-#define NOINLINE __attribute__((noinline))
-#define NOCLONE  __attribute__((noclone))
-
 #define INLINE inline __attribute__((always_inline))
+#define NO_INLINE __attribute__((noinline, noclone))
 
 // Constants
 #define CLOCK_FREQUENCY (16 * 1024 * 1024)
