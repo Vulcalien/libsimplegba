@@ -72,7 +72,7 @@ static struct Channel {
 } channels[CHANNEL_COUNT];
 
 IWRAM_SECTION
-static void restart_dma(i32 channel) {
+static NO_INLINE void restart_dma(i32 channel) {
     // reset FIFO
     DIRECT_SOUND_CONTROL |= outputs[channel].bits.reset;
 
