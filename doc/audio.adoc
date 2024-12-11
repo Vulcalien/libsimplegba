@@ -1,0 +1,78 @@
+= audio(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2024-12-11
+:docdate: {revdate}
+
+== NAME
+audio_init, audio_play, audio_stop, audio_loop, audio_volume,
+audio_panning, audio_sample_rate - audio driver
+
+== SYNOPSIS
+[verse]
+____
+*#include <gba/audio.h>*
+
+*void audio_init(void);*
+
+**i32  audio_play(i32 **__channel__**, const u8 +++*+++**__sound__**, u32 **__length__**);**
+**void audio_stop(i32 **__channel__**);**
+
+**void audio_loop(i32 **__channel__**, u32 **__loop_length__**);**
+**void audio_volume(i32 **__channel__**, u32 **__volume__**);**
+**void audio_panning(i32 **__channel__**, i32 **__panning__**);**
+
+**void audio_sample_rate(u32 **__sample_rate__**);**
+____
+
+== DESCRIPTION
+These functions define the interface of an audio driver with channels
+capable of playing digital audio, encoded as uncompressed *signed 8-bit
+PCM*. Implementations of the driver can offer various capabilities: see
+IMPLEMENTATIONS below.
+
+The *audio_init*() function initializes the audio driver.
+
+The *audio_play*() function plays _length_ samples of _sound_ on
+_channel_, or any inactive channel if a negative value is passed.
+
+The *audio_stop*() function stops _channel_, or all channels if a
+negative value is passed.
+
+The *audio_loop*() function TODO
+
+The *audio_volume*() function sets the volume of _channel_, or all
+channels if a negative value is passed. The maximum volume is
+*AUDIO_VOLUME_MAX* (64).
+
+The *audio_panning*() function sets the panning of _channel_, or all
+channels if a negative value is passed. Positive values of _panning_
+correspond to the right, negative values to the left, and zero to the
+center. The maximum and minimum values are *AUDIO_PANNING_MAX* (+64) and
+*AUDIO_PANNING_MIN* (-64).
+
+The *audio_sample_rate*() function sets the driver's sampling rate. If
+__sample_rate__ is zero, the default value (16384 Hz) is used.
+
+== RETURN VALUE
+The *audio_play*() function returns the channel on which the sound is
+going to play. If _channel_ is negative and no channel is available, or
+if the specified channel does not exist, a negative value is returned.
+
+== IMPLEMENTATIONS
+Currently, the library only contains one audio driver implementation.
+
+=== Basic driver
+Driver  name    - 'basic'                        +
+Channel count   - 2                              +
+Volume  control - limited (0-32=50%, 33-64=100%) +
+Panning control - limited (-64=left, +64=right)  +
+
+This driver implementation maps both channels to the GBA's direct sound
+channels directly, so that its CPU usage and RAM usage remain very low,
+at the cost of only offering basic capabilities.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
