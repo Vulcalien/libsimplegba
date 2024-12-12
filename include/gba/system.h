@@ -1,4 +1,4 @@
-/* Copyright 2023-2024 Vulcalien
+/* Copyright 2024 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,4 @@
 
 #include <base.h>
 
-#include <gba/system.h>
-#include <gba/timer.h>
-
-#define AUDIO_VOLUME_MAX 64
-
-#define AUDIO_PANNING_MIN (-64)
-#define AUDIO_PANNING_MAX (+64)
-
-extern void audio_init(void);
-
-extern i32  audio_play(i32 channel, const u8 *sound, u32 length);
-extern void audio_stop(i32 channel);
-
-extern void audio_loop(i32 channel, u32 loop_length);
-extern void audio_volume(i32 channel, u32 volume);
-extern void audio_panning(i32 channel, i32 panning);
-
-INLINE void audio_sample_rate(u32 sample_rate) {
-    if(sample_rate == 0)
-        sample_rate = 16384;
-
-    const u32 cycles_per_sample = SYSTEM_FREQUENCY / sample_rate;
-    timer_start(TIMER0, cycles_per_sample);
-}
+#define SYSTEM_FREQUENCY (16 * 1024 * 1024) // about 16.78 MHz
