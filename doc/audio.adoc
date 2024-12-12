@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-12-11
+:revdate: 2024-12-12
 :docdate: {revdate}
 
 == NAME
@@ -40,7 +40,9 @@ _channel_, or any inactive channel if a negative value is passed.
 The *audio_stop*() function stops _channel_, or all channels if a
 negative value is passed.
 
-The *audio_loop*() function TODO
+The *audio_loop*() function loops the last __loop_length__ samples of
+the sound playing on _channel_, or all channels if a negative value is
+passed. If __loop_length__ is zero, looping is disabled on that channel.
 
 The *audio_volume*() function sets the volume of _channel_, or all
 channels if a negative value is passed. The maximum volume is
