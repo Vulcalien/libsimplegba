@@ -33,6 +33,7 @@ GBA Hardware
     DMA                 <gba/dma.h>
     Input               <gba/input.h>
     Interrupt           <gba/interrupt.h>
+    System              <gba/system.h>
     Cartridge           <gba/cartridge.h>
     Backup              <gba/backup.h>
 

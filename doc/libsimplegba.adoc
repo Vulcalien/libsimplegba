@@ -34,6 +34,7 @@ Modules included in this library (and corresponding headers):
         DMA                 *<gba/dma.h>*
         Input               *<gba/input.h>*
         Interrupt           *<gba/interrupt.h>*
+        System              *<gba/system.h>*
         Cartridge           *<gba/cartridge.h>*
         Backup              *<gba/backup.h>*
 
@@ -93,6 +94,10 @@ Interact with the GBA's buttons and D-Pad.
 *Interrupt <gba/interrupt.h>*::
 Enable or disable interrupt requests and set callback functions (ISRs)
 that handle those requests.
+
+*System <gba/system.h>*::
+System control interface, including constants such as the GBA's clock
+frequency.
 
 *Cartridge <gba/cartridge.h>*::
 Access information about the cartridge, such as its header.
