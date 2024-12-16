@@ -23,7 +23,13 @@ extern u32 _random_seed;
 
 // 'bound' must be in range [1, RANDOM_MAX + 1]
 INLINE u16 random(u32 bound) {
-    _random_seed = _random_seed * 0x248f7b13 + 0xc21840c5;
+    // source (paper):
+    //   Computationally easy, spectrally good multipliers for
+    //   congruential pseudorandom number generators
+    // by Guy Steele and Sebastiano Vigna
+    const u32 multiplier = 0x915f77f5;
+
+    _random_seed = _random_seed * multiplier + 1;
     return (_random_seed >> 16) * bound / (RANDOM_MAX + 1);
 }
 
