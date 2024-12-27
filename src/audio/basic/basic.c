@@ -27,7 +27,7 @@
 // Each channel is mapped directly to an output, so that the CPU usage
 // is very low.
 
-#define CHANNEL_COUNT 2
+static_assert(AUDIO_CHANNEL_COUNT == 2, "wrong number of channels");
 
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)
@@ -69,7 +69,7 @@ static struct Channel {
 
     u32 loop_length;
     u8 directions;
-} channels[CHANNEL_COUNT];
+} channels[AUDIO_CHANNEL_COUNT];
 
 IWRAM_SECTION
 static NO_INLINE void restart_dma(i32 channel) {
@@ -91,7 +91,7 @@ static NO_INLINE void restart_dma(i32 channel) {
 static INLINE void schedule_timer1_irq(void) {
     // determine how many samples should be played before stopping
     u32 next_stop = TIMER_COUNTER_MAX;
-    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
+    for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
         if(!channel->data)
             continue;
@@ -102,7 +102,7 @@ static INLINE void schedule_timer1_irq(void) {
     }
 
     // add number of samples to be played to data pointers of channels
-    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
+    for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
         if(!channel->data)
             continue;
@@ -117,7 +117,7 @@ static INLINE void schedule_timer1_irq(void) {
 IWRAM_SECTION
 static void timer1_isr(void) {
     // stop or loop the channels
-    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
+    for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
         if(!channel->data)
             continue;
@@ -175,7 +175,7 @@ static INLINE void update_enable_bits(i32 channel) {
 i32 audio_play(i32 channel, const u8 *sound, u32 length) {
     if(channel < 0) {
         // look for an available channel
-        for(u32 c = 0; c < CHANNEL_COUNT; c++) {
+        for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
             if(!channels[c].data) {
                 channel = c;
                 break;
@@ -185,7 +185,7 @@ i32 audio_play(i32 channel, const u8 *sound, u32 length) {
         // if no channel is available, return
         if(channel < 0)
             return -1;
-    } else if(channel >= CHANNEL_COUNT) {
+    } else if(channel >= AUDIO_CHANNEL_COUNT) {
         return -1;
     }
 
@@ -213,42 +213,18 @@ i32 audio_play(i32 channel, const u8 *sound, u32 length) {
     return channel;
 }
 
-void audio_stop(i32 channel) {
-    if(channel < 0) {
-        for(u32 c = 0; c < CHANNEL_COUNT; c++)
-            audio_stop(c);
-        return;
-    } else if(channel >= CHANNEL_COUNT) {
-        return;
-    }
-
+void _audio_stop(i32 channel) {
     channels[channel].data = NULL;
 
     update_enable_bits(channel);
     dma_stop(outputs[channel].dma);
 }
 
-void audio_loop(i32 channel, u32 loop_length) {
-    if(channel < 0) {
-        for(u32 c = 0; c < CHANNEL_COUNT; c++)
-            audio_loop(c, loop_length);
-        return;
-    } else if(channel >= CHANNEL_COUNT) {
-        return;
-    }
-
+void _audio_loop(i32 channel, u32 loop_length) {
     channels[channel].loop_length = loop_length;
 }
 
-void audio_volume(i32 channel, u32 volume) {
-    if(channel < 0) {
-        for(u32 c = 0; c < CHANNEL_COUNT; c++)
-            audio_volume(c, volume);
-        return;
-    } else if(channel >= CHANNEL_COUNT) {
-        return;
-    }
-
+void _audio_volume(i32 channel, u32 volume) {
     const u16 bit = outputs[channel].bits.volume;
     if(volume > AUDIO_VOLUME_MAX / 2) // 100%
         DIRECT_SOUND_CONTROL |= bit;
@@ -256,15 +232,7 @@ void audio_volume(i32 channel, u32 volume) {
         DIRECT_SOUND_CONTROL &= ~bit;
 }
 
-void audio_panning(i32 channel, i32 panning) {
-    if(channel < 0) {
-        for(u32 c = 0; c < CHANNEL_COUNT; c++)
-            audio_panning(c, panning);
-        return;
-    } else if(channel >= CHANNEL_COUNT) {
-        return;
-    }
-
+void _audio_panning(i32 channel, i32 panning) {
     // audio only plays on one side if panning is at either extreme
     bool left  = (panning < AUDIO_PANNING_MAX);
     bool right = (panning > AUDIO_PANNING_MIN);
