@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-12-12
+:revdate: 2024-12-27
 :docdate: {revdate}
 
 == NAME
@@ -15,6 +15,7 @@ ____
 *#include <gba/audio.h>*
 
 *void audio_init(void);*
+*void audio_update(void);*
 
 **i32  audio_play(i32 **__channel__**, const u8 +++*+++**__sound__**, u32 **__length__**);**
 **void audio_stop(i32 **__channel__**);**
@@ -33,6 +34,9 @@ PCM*. Implementations of the driver can offer various capabilities: see
 IMPLEMENTATIONS below.
 
 The *audio_init*() function initializes the audio driver.
+
+The *audio_update*() function updates the internal state of the driver.
+It needs to be called at least 50 times a second.
 
 The *audio_play*() function plays _length_ samples of _sound_ on
 _channel_, or any inactive channel if a negative value is passed.
