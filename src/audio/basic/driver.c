@@ -24,8 +24,8 @@
 // - limited volume control (50%, 100%)
 // - basic panning control (left, right, both)
 //
-// Each channel is mapped directly to an output, so that the CPU usage
-// is very low.
+// Each channel is mapped directly to a Direct Sound output, so the CPU
+// usage remains very low.
 
 static_assert(AUDIO_CHANNEL_COUNT == 2, "wrong number of channels");
 
@@ -137,8 +137,8 @@ static void timer1_isr(void) {
 }
 
 void audio_init(void) {
-    MASTER_SOUND_CONTROL = BIT(7); // enable sound
-    DIRECT_SOUND_CONTROL = 0; // use Timer 0 for both DMA channels
+    MASTER_SOUND_CONTROL = BIT(7);
+    DIRECT_SOUND_CONTROL = 0;
 
     // configure Timer 0 and Timer 1
     timer_config(TIMER0, TIMER_PRESCALER_1);
