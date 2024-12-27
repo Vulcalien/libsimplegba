@@ -130,7 +130,6 @@ void sound_update(void) {
     // fill intermediate buffers
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
-
         if(!channel->data)
             continue;
 
@@ -168,14 +167,14 @@ void sound_update(void) {
     }
 }
 
-void sound_play(const i8 *sound, u32 length, u32 channel) {
+void sound_play(const u8 *sound, u32 length, u32 channel) {
     if(channel >= CHANNEL_COUNT)
         return;
 
     struct Channel *channel_struct = &channels[channel];
 
-    channel_struct->data = sound;
-    channel_struct->end = sound + length;
+    channel_struct->data = (i8 *) sound;
+    channel_struct->end = (i8 *) sound + length;
 }
 
 static void update_output_volume(u32 channel) {

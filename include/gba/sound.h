@@ -24,7 +24,7 @@
 extern void sound_init(void);
 extern void sound_update(void);
 
-extern void sound_play(const i8 *sound, u32 length, u32 channel);
+extern void sound_play(const u8 *sound, u32 length, u32 channel);
 extern void sound_volume(u32 channel, u32 volume); // 0 ... 64
 extern void sound_panning(u32 channel, i32 panning); // -64 ... +64
 
