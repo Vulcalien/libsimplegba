@@ -157,6 +157,10 @@ void audio_init(void) {
     audio_sample_rate(0);
 }
 
+void audio_update(void) {
+    // nothing to do
+}
+
 static INLINE void update_enable_bits(i32 channel) {
     const u32 enable_bits = outputs[channel].enable_bits;
     struct Channel *channel_struct = &channels[channel];

@@ -29,6 +29,7 @@
 #define AUDIO_CHANNEL_COUNT 2
 
 extern void audio_init(void);
+extern void audio_update(void);
 
 extern i32 audio_play(i32 channel, const u8 *sound, u32 length);
 
