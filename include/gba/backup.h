@@ -28,7 +28,7 @@ INLINE u8 backup_sram_read_byte(u16 address) {
 }
 
 INLINE void backup_sram_read(u16 offset, void *buffer, u32 n) {
-    memcpy8(buffer, _BACKUP_ADDR + offset, n);
+    memory_copy_8(buffer, _BACKUP_ADDR + offset, n);
 }
 
 INLINE void backup_sram_write_byte(u16 address, u8 byte) {
@@ -36,7 +36,7 @@ INLINE void backup_sram_write_byte(u16 address, u8 byte) {
 }
 
 INLINE void backup_sram_write(u16 offset, const void *buffer, u32 n) {
-    memcpy8(_BACKUP_ADDR + offset, buffer, n);
+    memory_copy_8(_BACKUP_ADDR + offset, buffer, n);
 }
 
 // === Flash ROM ===
@@ -49,7 +49,7 @@ INLINE u8 backup_flash_read_byte(u16 address) {
 }
 
 INLINE void backup_flash_read(u16 offset, void *buffer, u32 n) {
-    memcpy8(buffer, _BACKUP_ADDR + offset, n);
+    memory_copy_8(buffer, _BACKUP_ADDR + offset, n);
 }
 
 extern void backup_flash_write_byte(u16 address, u8 byte);

@@ -15,29 +15,27 @@
 
 .include "macros.inc"
 
-@ --- memcpy32 --- @
-.global memcpy32
+@ --- memory_copy_16 --- @
+.global memory_copy_16
 .text
 THUMB_FUNC
 
 @ This function copies data from one memory area to another, using only
-@ 32-bit reads and writes.
+@ 16-bit reads and writes.
 @
 @ Return value:
 @   The 'dest' pointer.
 @
 @ Constraints:
 @ - The two memory areas must not overlap.
-@ - The 'dest' and 'src' pointers must be 4-byte aligned.
+@ - The 'dest' and 'src' pointers must be 2-byte aligned.
 @
 @ Notes:
-@ - The lowest 2 bites of 'n' are ignored.
+@ - The lowest bit of 'n' is ignored.
 @
 @ Implementation:
 @   Data is copied left-to-right: at first, in blocks of 4 units at a
 @   time for as much as possible; at the end, one unit at a time.
-@   By using the 'ldm' and 'stm' instructions, the blocks of 4 units are
-@   copied efficiently.
 
 @ input:
 @   r0 = dest : pointer
@@ -45,19 +43,31 @@ THUMB_FUNC
 @   r2 = n    : unsigned 32-bit
 @ output:
 @   r0 = dest : pointer
-memcpy32:
-    push    {r0, r4-r7}
+memory_copy_16:
+    push    {r0, r4}
 
-    @ calculate number of words and 4-word blocks
-    lsr     r2, #2                      @ (r2) n /= 4
+    @ calculate number of halfwords and 4-halfword blocks
+    lsr     r2, #1                      @ (r2) n /= 2
     lsr     r3, r2, #2                  @ (r3) blocks = n / 4
 
     @ if blocks == 0, skip the multi-copy loop
     beq     2f @ exit multi-copy loop
 
 1: @ multi-copy loop
-    ldmia   r1!, {r4-r7}                @ (r1) src  += 16
-    stmia   r0!, {r4-r7}                @ (r0) dest += 16
+    ldrh    r4, [r1, #0]
+    strh    r4, [r0, #0]
+
+    ldrh    r4, [r1, #2]
+    strh    r4, [r0, #2]
+
+    ldrh    r4, [r1, #4]
+    strh    r4, [r0, #4]
+
+    ldrh    r4, [r1, #6]
+    strh    r4, [r0, #6]
+
+    add     r1, #8                      @ (r1) src  += 8
+    add     r0, #8                      @ (r0) dest += 8
 
     sub     r3, #1                      @ (r3) blocks -= 1
     bne     1b @ multi-copy loop        @ if blocks != 0, repeat loop
@@ -71,17 +81,20 @@ memcpy32:
     beq     4f @ exit single-copy loop
 
 3: @ single-copy loop
-    ldmia   r1!, {r4}                   @ (r1) src  += 4
-    stmia   r0!, {r4}                   @ (r0) dest += 4
+    ldrh    r4, [r1]
+    strh    r4, [r0]
+
+    add     r1, #2                      @ (r1) src  += 2
+    add     r0, #2                      @ (r0) dest += 2
 
     sub     r2, #1                      @ (r2) n -= 1
     bne     3b @ sigle-copy loop        @ if n != 0, repeat loop
 4: @ exit single-copy loop
 
     @ return original value of dest
-    pop     {r0, r4-r7}
+    pop     {r0, r4}
     bx      lr
 
-.size memcpy32, .-memcpy32
+.size memory_copy_16, .-memory_copy_16
 
 .end

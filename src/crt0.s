@@ -40,31 +40,31 @@ start_vector:
     ldr     r0, =__bss_start            @ r0 = dest
     mov     r1, #0                      @ r1 = byte
     ldr     r2, =__bss_size             @ r2 = n
-    bl      memset32
+    bl      memory_set_32
 
     @ clear .sbss section
     ldr     r0, =__sbss_start           @ r0 = dest
     mov     r1, #0                      @ r1 = byte
     ldr     r2, =__sbss_size            @ r2 = n
-    bl      memset32
+    bl      memory_set_32
 
     @ copy .data section
     ldr     r0, =__data_start           @ r0 = dest
     ldr     r1, =__data_lma             @ r1 = src
     ldr     r2, =__data_size            @ r2 = n
-    bl      memcpy32
+    bl      memory_copy_32
 
     @ copy .iwram section
     ldr     r0, =__iwram_start          @ r0 = dest
     ldr     r1, =__iwram_lma            @ r1 = src
     ldr     r2, =__iwram_size           @ r2 = n
-    bl      memcpy32
+    bl      memory_copy_32
 
     @ copy .ewram section
     ldr     r0, =__ewram_start          @ r0 = dest
     ldr     r1, =__ewram_lma            @ r1 = src
     ldr     r2, =__ewram_size           @ r2 = n
-    bl      memcpy32
+    bl      memory_copy_32
 
     @ --- call AgbMain --- @
 

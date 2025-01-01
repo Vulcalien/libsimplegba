@@ -15,8 +15,8 @@
 
 .include "macros.inc"
 
-@ --- memset16 --- @
-.global memset16
+@ --- memory_set_16 --- @
+.global memory_set_16
 .text
 THUMB_FUNC
 
@@ -44,7 +44,7 @@ THUMB_FUNC
 @   r2 = n    : unsigned 32-bit
 @ output:
 @   r0 = dest : pointer
-memset16:
+memory_set_16:
     push    {r0}
 
     @ duplicate 'byte' to fill 16 bits
@@ -90,6 +90,6 @@ memset16:
     pop     {r0}
     bx      lr
 
-.size memset16, .-memset16
+.size memory_set_16, .-memory_set_16
 
 .end

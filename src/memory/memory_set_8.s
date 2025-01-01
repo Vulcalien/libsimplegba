@@ -15,84 +15,72 @@
 
 .include "macros.inc"
 
-@ --- memcpy8 --- @
-.global memcpy8
+@ --- memory_set_8 --- @
+.global memory_set_8
 .text
 THUMB_FUNC
 
-@ This function copies data from one memory area to another, using only
-@ 8-bit reads and writes.
+@ This function fills a memory area with a given byte value, using only
+@ 8-bit writes.
 @
 @ Return value:
 @   The 'dest' pointer.
 @
-@ Constraints:
-@ - The two memory areas must not overlap.
-@
 @ Notes:
-@ - Any alignment is allowed for 'dest' and 'src'.
+@ - Only the lowest 8 bits of 'byte' are used.
 @
 @ Implementation:
-@   Data is copied left-to-right: at first, in blocks of 4 units at a
-@   time for as much as possible; at the end, one unit at a time.
+@   Memory is filled left-to-right: at first, with 4 writes at a time
+@   (to reduce branching) for as much as possible; at the end, with
+@   single writes.
 
 @ input:
 @   r0 = dest : pointer
-@   r1 = src  : pointer
+@   r1 = byte : signed 32-bit
 @   r2 = n    : unsigned 32-bit
 @ output:
 @   r0 = dest : pointer
-memcpy8:
-    push    {r0, r4}
+memory_set_8:
+    push    {r0}
 
     @ calculate number of 4-byte blocks
     lsr     r3, r2, #2                  @ (r3) blocks = n / 4
 
-    @ if blocks == 0, skip the multi-copy loop
-    beq     2f @ exit multi-copy loop
+    @ if blocks == 0, skip the multi-store loop
+    beq     2f @ exit multi-store loop
 
-1: @ multi-copy loop
-    ldrb    r4, [r1, #0]
-    strb    r4, [r0, #0]
+1: @ multi-store loop
+    strb    r1, [r0, #0]
+    strb    r1, [r0, #1]
+    strb    r1, [r0, #2]
+    strb    r1, [r0, #3]
 
-    ldrb    r4, [r1, #1]
-    strb    r4, [r0, #1]
-
-    ldrb    r4, [r1, #2]
-    strb    r4, [r0, #2]
-
-    ldrb    r4, [r1, #3]
-    strb    r4, [r0, #3]
-
-    add     r1, #4                      @ (r1) src  += 4
     add     r0, #4                      @ (r0) dest += 4
 
     sub     r3, #1                      @ (r3) blocks -= 1
-    bne     1b @ multi-copy loop        @ if blocks != 0, repeat loop
-2: @ exit multi-copy loop
+    bne     1b @ multi-store loop       @ if blocks != 0, repeat loop
+2: @ exit multi-store loop
 
     @ calculate n % 4
     lsl     r2, #30
     lsr     r2, #30
 
-    @ if n == 0, skip the single-copy loop
-    beq     4f @ exit single-copy loop
+    @ if n == 0, skip the single-store loop
+    beq     4f @ exit single-store loop
 
-3: @ single-copy loop
-    ldrb    r4, [r1]
-    strb    r4, [r0]
+3: @ single-store loop
+    strb    r1, [r0]
 
-    add     r1, #1                      @ (r1) src  += 1
     add     r0, #1                      @ (r0) dest += 1
 
     sub     r2, #1                      @ (r2) n -= 1
-    bne     3b @ sigle-copy loop        @ if n != 0, repeat loop
-4: @ exit single-copy loop
+    bne     3b @ single-store loop      @ if n != 0, repeat loop
+4: @ exit single-store loop
 
     @ return original value of dest
-    pop     {r0, r4}
+    pop     {r0}
     bx      lr
 
-.size memcpy8, .-memcpy8
+.size memory_set_8, .-memory_set_8
 
 .end

@@ -19,12 +19,12 @@
 
 extern void *memset(volatile void *dest, i32 byte, u32 n);
 
-// alignment-specific versions of 'memset'
-extern void *memset8 (volatile void *dest, i32 byte, u32 n);
-extern void *memset16(volatile void *dest, i32 byte, u32 n);
-extern void *memset32(volatile void *dest, i32 byte, u32 n);
+#define memory_set memset
+extern void *memory_set_8 (volatile void *dest, i32 byte, u32 n);
+extern void *memory_set_16(volatile void *dest, i32 byte, u32 n);
+extern void *memory_set_32(volatile void *dest, i32 byte, u32 n);
 
-// alignment-specific versions of 'memcpy'
-extern void *memcpy8 (volatile void *dest, volatile const void *src, u32 n);
-extern void *memcpy16(volatile void *dest, volatile const void *src, u32 n);
-extern void *memcpy32(volatile void *dest, volatile const void *src, u32 n);
+// TODO #define memory_copy memcpy
+extern void *memory_copy_8 (volatile void *dest, volatile const void *src, u32 n);
+extern void *memory_copy_16(volatile void *dest, volatile const void *src, u32 n);
+extern void *memory_copy_32(volatile void *dest, volatile const void *src, u32 n);
