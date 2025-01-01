@@ -28,3 +28,8 @@ extern void *memory_set_32(volatile void *dest, i32 byte, u32 n);
 extern void *memory_copy_8 (volatile void *dest, volatile const void *src, u32 n);
 extern void *memory_copy_16(volatile void *dest, volatile const void *src, u32 n);
 extern void *memory_copy_32(volatile void *dest, volatile const void *src, u32 n);
+
+#define memory_clear(dest, n)    memory_set   ((dest), 0, (n))
+#define memory_clear_8(dest, n)  memory_set_8 ((dest), 0, (n))
+#define memory_clear_16(dest, n) memory_set_16((dest), 0, (n))
+#define memory_clear_32(dest, n) memory_set_32((dest), 0, (n))
