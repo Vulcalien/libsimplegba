@@ -2,28 +2,22 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-12-06
+:revdate: 2025-01-10
 :docdate: {revdate}
 
 == NAME
-interrupt_init, interrupt_enable, interrupt_disable, interrupt_set_isr -
-interrupt handling
+interrupt_toggle, interrupt_set_isr - interrupt handling
 
 == SYNOPSIS
 [verse]
 ____
 *#include <gba/interrupt.h>*
 
-*void interrupt_init(void);*
-
 **void interrupt_toggle(u32 **__irq__**, bool **__enable__**);**
 **void interrupt_set_isr(u32 **__irq__**, void (+++*+++**__isr__**)(void));**
 ____
 
 == DESCRIPTION
-The *interrupt_init*() function initializes the module. This function
-should be called once at the beginning of a program.
-
 The *interrupt_toggle*() function enables or disables (depending on the
 value of _enable_) the specified _irq_, identified by one of the
 constants listed below.
@@ -62,8 +56,6 @@ Enable the VBlank interrupt and map an ISR to it:
 [source,c]
 ----
 int AgbMain(void) {
-    interrupt_init();
-
     interrupt_toggle(IRQ_VBLANK, true);
     interrupt_set_isr(IRQ_VBLANK, vblank_isr);
 }
