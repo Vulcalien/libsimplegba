@@ -108,12 +108,12 @@ interrupt_handler:
 .align
 .pool
 
-@ --- interrupt_init --- @
-.global interrupt_init
+@ --- _interrupt_init --- @
+.global _interrupt_init
 .text
 THUMB_FUNC
 
-interrupt_init:
+_interrupt_init:
     @ set interrupt vector
     ldr     r0, =0x03007ffc             @ r0 = pointer to master ISR
     ldr     r1, =interrupt_handler
@@ -126,7 +126,7 @@ interrupt_init:
 
     bx      lr
 
-.size interrupt_init, .-interrupt_init
+.size _interrupt_init, .-_interrupt_init
 
 .align
 .pool

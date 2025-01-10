@@ -66,6 +66,9 @@ start_vector:
     ldr     r2, =__ewram_size           @ r2 = n
     bl      memory_copy_32
 
+    @ initialize interrupts
+    bl      _interrupt_init
+
     @ --- call AgbMain --- @
 
     @ set start_vector as return address

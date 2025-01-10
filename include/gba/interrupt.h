@@ -38,8 +38,6 @@
 #define IRQ_KEYPAD  12
 #define IRQ_GAMEPAK 13
 
-extern void interrupt_init(void);
-
 INLINE void interrupt_toggle(u32 irq, bool enable) {
     if(irq >= INTERRUPT_COUNT)
         return;
