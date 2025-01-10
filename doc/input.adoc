@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-12-06
+:revdate: 2025-01-10
 :docdate: {revdate}
 
 == NAME
-input_update, input_down, input_pressed, input_released - input
-detection
+input_update, input_down, input_pressed, input_released,
+input_irq_config - input detection
 
 == SYNOPSIS
 [verse]
@@ -49,7 +49,7 @@ the specified keys are down at the same time; if __all_keys__ is false,
 the interrupt is raised if any of those keys is down. The _keys_
 argument is a list of keys joined together using the bitwise OR operator
 (e.g., *KEY_A* | *KEY_START*). For the interrupt to be acknowledged, it
-must also be enabled by calling the *interrupt_enable*(3) function
+must also be enabled by calling the *interrupt_toggle*(3) function
 passing *IRQ_KEYPAD* as argument.
 
 == RETURN VALUE
@@ -62,4 +62,4 @@ The *libsimplegba* library was written by Vulcalien
 <\vulcalien@vulcalien.net>.
 
 == SEE ALSO
-*interrupt_enable*(3), *interrupt_set_isr*(3)
+*interrupt_toggle*(3), *interrupt_set_isr*(3)

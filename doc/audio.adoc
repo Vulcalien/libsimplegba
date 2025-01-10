@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-12-27
+:revdate: 2025-01-10
 :docdate: {revdate}
 
 == NAME
-audio_init, audio_play, audio_stop, audio_loop, audio_volume,
-audio_panning, audio_sample_rate - audio driver
+audio_init, audio_update, audio_play, audio_stop, audio_loop,
+audio_volume, audio_panning, audio_sample_rate - audio driver
 
 == SYNOPSIS
 [verse]
