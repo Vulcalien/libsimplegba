@@ -111,18 +111,18 @@ interrupt_handler:
 @ --- interrupt_init --- @
 .global interrupt_init
 .text
-ARM_FUNC
+THUMB_FUNC
 
 interrupt_init:
-    mov     r0, #0x04000000             @ r0 = register base
-
     @ set interrupt vector
+    ldr     r0, =0x03007ffc             @ r0 = pointer to master ISR
     ldr     r1, =interrupt_handler
-    str     r1, [r0, #-4]               @ master ISR = interrupt_handler
+    str     r1, [r0]
 
     @ IME = 1
+    ldr     r0, =0x04000208             @ r0 = pointer to IME
     mov     r1, #1
-    str     r1, [r0, #0x208]            @ IME = 1
+    str     r1, [r0]
 
     bx      lr
 
