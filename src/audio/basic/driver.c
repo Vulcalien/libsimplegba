@@ -33,7 +33,7 @@ static_assert(AUDIO_CHANNEL_COUNT == 2, "wrong number of channels");
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)
 
 static const struct Output {
-    vu32 *fifo;
+    vi8 *fifo;
     u32 dma;
 
     u8 enable_bits;
@@ -43,7 +43,7 @@ static const struct Output {
     } bits;
 } outputs[2] = {
     {
-        .fifo = (vu32 *) 0x040000a0,
+        .fifo = (vi8 *) 0x040000a0,
         .dma = DMA1,
 
         .enable_bits = 8,
@@ -52,7 +52,7 @@ static const struct Output {
             .volume = BIT(2)
         }
     }, {
-        .fifo = (vu32 *) 0x040000a4,
+        .fifo = (vi8 *) 0x040000a4,
         .dma = DMA2,
 
         .enable_bits = 12,
@@ -176,7 +176,7 @@ static INLINE void update_enable_bits(i32 channel) {
         DIRECT_SOUND_CONTROL |= (directions << enable_bits);
 }
 
-i32 audio_play(i32 channel, const u8 *sound, u32 length) {
+i32 audio_play(i32 channel, const i8 *sound, u32 length) {
     if(channel < 0) {
         // look for an available channel
         for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
@@ -200,8 +200,8 @@ i32 audio_play(i32 channel, const u8 *sound, u32 length) {
     }
 
     struct Channel *channel_struct = &channels[channel];
-    channel_struct->data = (i8 *) sound;
-    channel_struct->end  = (i8 *) sound + length;
+    channel_struct->data = sound;
+    channel_struct->end  = sound + length;
 
     restart_dma(channel);
     update_enable_bits(channel);

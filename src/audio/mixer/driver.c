@@ -54,7 +54,7 @@ static void timer1_isr(void) {
     // configure DMA transfers for each output
     for(u32 o = 0; o < OUTPUT_COUNT; o++) {
         u32 dma = (o == 0 ? DMA1 : DMA2);
-        vu32 *fifo = (vu32 *) (o == 0 ? 0x040000a0 : 0x040000a4);
+        vi8 *fifo = (vi8 *) (o == 0 ? 0x040000a0 : 0x040000a4);
 
         dma_config(dma, &(struct DMA) {
             .start_timing = DMA_START_SPECIAL,
@@ -112,7 +112,7 @@ void audio_update(void) {
 // Note: the effects of play, stop, volume and panning are delayed until
 // the buffer is next updated.
 
-i32 audio_play(i32 channel, const u8 *sound, u32 length) {
+i32 audio_play(i32 channel, const i8 *sound, u32 length) {
     if(channel < 0) {
         // look for an available channel
         for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
@@ -130,8 +130,8 @@ i32 audio_play(i32 channel, const u8 *sound, u32 length) {
     }
 
     struct Channel *channel_struct = &channels[channel];
-    channel_struct->data = (i8 *) sound;
-    channel_struct->end  = (i8 *) sound + length;
+    channel_struct->data = sound;
+    channel_struct->end  = sound + length;
 
     return channel;
 }
