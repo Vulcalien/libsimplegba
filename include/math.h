@@ -66,8 +66,8 @@ INLINE i32 math_brad(i32 angle) {
 }
 
 // output in range [-0x4000, +0x4000]
-extern i16 math_sin(u16 angle);
+extern i32 math_sin(u16 angle);
 
-INLINE i16 math_cos(u16 angle) {
+INLINE i32 math_cos(u16 angle) {
     return math_sin(angle + math_brad(90));
 }

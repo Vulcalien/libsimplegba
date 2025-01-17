@@ -150,7 +150,7 @@ static const u16 sin_lut[0x8000 / SCALE + 1] = {
     0x0000
 };
 
-i16 math_sin(u16 angle) {
+i32 math_sin(u16 angle) {
     u32 index = (angle % math_brad(180)) / SCALE;
     u32 weight = angle % SCALE;
 
