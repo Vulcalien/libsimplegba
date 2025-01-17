@@ -54,7 +54,7 @@ INLINE i32 math_digits(i32 val, u32 base) {
     i32 result = 0;
     do {
         result++;
-        val /= base;
+        val /= (i32) base;
     } while(val != 0);
     return result;
 }
