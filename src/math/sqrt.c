@@ -21,7 +21,7 @@
 // (i.e. 65535, the biggest integer that squared gives a 32-bit number).
 
 IWRAM_SECTION
-u16 math_sqrt(u32 val) {
+i32 math_sqrt(u32 val) {
     if(val == 0)
         return 0;
 

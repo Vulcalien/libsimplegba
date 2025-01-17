@@ -48,7 +48,7 @@ INLINE i32 math_pow(i32 base, u32 exp) {
     return result;
 }
 
-extern u16 math_sqrt(u32 val);
+extern i32 math_sqrt(u32 val);
 
 INLINE i32 math_digits(i32 val, u32 base) {
     i32 result = 0;

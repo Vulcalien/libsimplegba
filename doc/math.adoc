@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-11-19
+:revdate: 2025-01-18
 :docdate: {revdate}
 
 == NAME
@@ -22,7 +22,7 @@ ____
 **i32 math_sign(i32 **__val__**);**
 
 **i32 math_pow(i32 **__base__**, u32 **__exp__**);**
-**u16 math_sqrt(u32 **__val__**);**
+**i32 math_sqrt(u32 **__val__**);**
 
 **i32 math_digits(i32 **__val__**, u32 **__base__**);**
 
