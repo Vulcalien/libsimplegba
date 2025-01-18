@@ -108,7 +108,7 @@ void mgba_printf(const char *format, ...) {
                 if(val != I32_MIN)
                     abs = math_abs(val);
                 else
-                    abs = I32_MAX + 1;
+                    abs = (u32) I32_MAX + 1;
 
                 print_unsigned(abs, 10, &index);
             } else if(c == 'u') {
