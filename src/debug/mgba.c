@@ -78,7 +78,8 @@ static INLINE void print_unsigned(u32 val, u32 base, u32 *index) {
 // This function does not implement the full functionality of 'printf',
 // but only a very small subset:
 //   %% - '%' character
-//   %u - u32 (decimal)
+//   %d - i32 (signed decimal)
+//   %u - u32 (unsigned decimal)
 //   %x - u32 (hexadecimal)
 //   %c - char
 void mgba_printf(const char *format, ...) {
@@ -95,6 +96,21 @@ void mgba_printf(const char *format, ...) {
             } else if(c == 'c') {
                 u32 val = va_arg(args, u32);
                 MGBA_DEBUG_STRING[index++] = (char) val;
+            } else if(c == 'd') {
+                i32 val = va_arg(args, i32);
+
+                // if negative, write sign
+                if(val < 0)
+                    MGBA_DEBUG_STRING[index++] = '-';
+
+                // get absolute value of number
+                u32 abs;
+                if(val != I32_MIN)
+                    abs = math_abs(val);
+                else
+                    abs = I32_MAX + 1;
+
+                print_unsigned(abs, 10, &index);
             } else if(c == 'u') {
                 u32 val = va_arg(args, u32);
                 print_unsigned(val, 10, &index);
