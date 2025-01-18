@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2024-2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,6 +54,27 @@ void mgba_puts(const char *str) {
     MGBA_DEBUG_FLAGS = debug_level | 0x100;
 }
 
+static INLINE void print_unsigned(u32 val, u32 base, u32 *index) {
+    // count digits
+    u32 len = 0;
+    {
+        u32 tmp = val;
+        do {
+            len++;
+            tmp /= base;
+        } while(tmp != 0);
+    }
+
+    *index += len;
+    for(u32 i = 0; i < len; i++) {
+        u32 digit = val % base;
+        val /= base;
+
+        digit += (digit < 10 ? '0' : 'a' - 10);
+        MGBA_DEBUG_STRING[*index - i - 1] = digit;
+    }
+}
+
 // This function does not implement the full functionality of 'printf',
 // but only a very small subset:
 //   %% - '%' character
@@ -76,31 +97,10 @@ void mgba_printf(const char *format, ...) {
                 MGBA_DEBUG_STRING[index++] = (char) val;
             } else if(c == 'u') {
                 u32 val = va_arg(args, u32);
-                u32 len = math_digits(val, 10);
-
-                for(u32 i = 0; i < len; i++) {
-                    u32 digit_val = val % 10;
-                    val /= 10;
-
-                    char digit = '0' + digit_val;
-                    MGBA_DEBUG_STRING[index + len - 1 - i] = digit;
-                }
-                index += len;
+                print_unsigned(val, 10, &index);
             } else if(c == 'x') {
                 u32 val = va_arg(args, u32);
-                u32 len = math_digits(val, 16);
-
-                for(u32 i = 0; i < len; i++) {
-                    u32 digit_val = val % 16;
-                    val /= 16;
-
-                    char digit = (
-                        digit_val < 10 ? '0' + digit_val
-                                       : 'a' + digit_val - 10
-                    );
-                    MGBA_DEBUG_STRING[index + len - 1 - i] = digit;
-                }
-                index += len;
+                print_unsigned(val, 16, &index);
             }
 
             converting_special = false;
