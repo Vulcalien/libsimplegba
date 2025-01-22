@@ -1,0 +1,30 @@
+= cartridge(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2025-01-22
+:docdate: {revdate}
+
+== NAME
+cartridge_missing - game cartridge
+
+== SYNOPSIS
+[verse]
+____
+*#include <gba/cartridge.h>*
+
+*bool cartridge_missing(void);*
+____
+
+== DESCRIPTION
+The *cartridge_missing*() function returns true if the game cartridge is
+missing, false otherwise. To determine the result, the function looks
+for a fixed value in the cartridge header.
+
+== RETURN VALUE
+The *cartridge_missing*() function returns true if the game cartridge is
+missing, false otherwise.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
