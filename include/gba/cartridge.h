@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2024-2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,3 +40,7 @@ struct CartridgeHeader {
 
 #define CARTRIDGE_HEADER \
     ((volatile const struct CartridgeHeader *) 0x08000000)
+
+INLINE bool cartridge_missing(void) {
+    return CARTRIDGE_HEADER->fixed_value != 0x96;
+}
