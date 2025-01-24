@@ -50,6 +50,14 @@ INLINE i32 math_pow(i32 base, u32 exp) {
 
 extern i32 math_sqrt(u32 val);
 
+INLINE i32 math_clip(i32 val, i32 min, i32 max) {
+    if(val < min)
+        return min;
+    if(val > max)
+        return max;
+    return val;
+}
+
 INLINE i32 math_digits(i32 val, u32 base) {
     i32 result = 0;
     do {

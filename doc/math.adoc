@@ -2,11 +2,11 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-01-18
+:revdate: 2025-01-24
 :docdate: {revdate}
 
 == NAME
-math_min, math_max, math_abs, math_sign, math_pow, math_sqrt,
+math_min, math_max, math_abs, math_sign, math_pow, math_sqrt, math_clip,
 math_digits, math_brad, math_sin, math_cos - various mathematical
 functions
 
@@ -24,6 +24,7 @@ ____
 **i32 math_pow(i32 **__base__**, u32 **__exp__**);**
 **i32 math_sqrt(u32 **__val__**);**
 
+**i32 math_clip(i32 **__val__**, i32 **__min__**, i32 **__max__**);**
 **i32 math_digits(i32 **__val__**, u32 **__base__**);**
 
 **i32 math_brad(i32 **__angle__**);**
@@ -51,6 +52,11 @@ result is undefined.
 
 The *math_sqrt*() function returns the integral part (i.e., floor) of
 the square root of _val_.
+
+The *math_clip*() functions returns the clipped value of _val_ in the
+range [_min_, _max_]. If _val_ is less than the minimum, _min_ is
+returned. If _val_ is greater than the maximum, _max_ is returned. If
+_val_ is inside the range, _val_ is returned.
 
 The *math_digits*() function returns the number of digits of _val_ when
 written using the specified _base_.
