@@ -1,0 +1,47 @@
+= memory(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2025-02-05
+:docdate: {revdate}
+
+== NAME
+memory_set, memory_copy, memory_clear - memory functions
+
+== SYNOPSIS
+[verse]
+____
+*#include <memory.h>*
+
+**void +++*+++memory_set(volatile void +++*+++**__dest__**, i32 **__byte__**, u32 **__n__**);**
+**void +++*+++memory_copy(volatile void +++*+++**__dest__**, volatile const void +++*+++**__src__**, u32 **__n__**);**
+**void +++*+++memory_clear(volatile void +++*+++**__dest__**, u32 **__n__**);**
+____
+
+== DESCRIPTION
+The *memory_set*() function fills the first _n_ bytes of the memory area
+_dest_ with the lowest 8 bits of the value _byte_.
+
+The *memory_copy*() function copies the first _n_ bytes from the memory
+area _src_ to the memory area _dest_. The memory areas must not overlap.
+
+The *memory_clear*() function fills the first _n_ bytes of the memory
+area _dest_ with the value zero.
+
+== RETURN VALUE
+The *memory_set*(), *memory_copy*() and *memory_clear*() functions
+return _dest_;
+
+== NOTES
+The *memory_set*() and *memory_copy*() functions correspond to the
+*memset*(3) and *memcpy*(3) standard functions.
+
+The *memory_set*(), *memory_copy*() and *memory_clear*() functions have
+8-bit, 16-bit and 32-bit variants that only use the respective bit width
+when reading and writing to memory. Use those variants when dealing with
+memory that only accepts reads/writes of a specific width. The variants
+have a '_x' suffix in the name: e.g. 'memory_set_8'.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
