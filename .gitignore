@@ -1,9 +1,6 @@
-# Binary
+# binary
 /obj
 /bin
 
-# Converted manpages
+# converted manpages
 /doc/out
-
-# vim
-*.swp
