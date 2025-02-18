@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-08-02
+:revdate: 2025-02-18
 :docdate: {revdate}
 
 == NAME
@@ -15,22 +15,21 @@ ____
 
 *#define RANDOM_MAX 65535*
 
-**u16 random(u32 **__bound__**);**
+**i32 random(u32 **__bound__**);**
 **u32 random_seed(u32 **__seed__**);**
 ____
 
 == DESCRIPTION
-The *random*() function returns a pseudo-random unsigned integer with
-value between 0 (inclusive) and _bound_ (exclusive). The _bound_
-argument must be in the range [1, *RANDOM_MAX* + 1].
+The *random*() function returns a pseudo-random integer with value
+between 0 (inclusive) and _bound_ (exclusive). The _bound_ argument must
+be in the range [1, *RANDOM_MAX* + 1].
 
 The *random_seed*() function sets _seed_ as the new generator's seed and
 returns the previously stored seed value.
 
 == RETURN VALUE
-The *random*() function returns a pseudo-random number as a _u16_
-(unsigned 16-bit integer) with value between 0 (inclusive) and _bound_
-(exclusive).
+The *random*() function returns a pseudo-random integer with value
+between 0 (inclusive) and _bound_ (exclusive).
 
 The *random_seed*() function returns the previously stored seed value as
 a _u32_ (unsigned 32-bit integer).

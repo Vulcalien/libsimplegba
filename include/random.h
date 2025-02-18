@@ -22,7 +22,7 @@
 extern u32 _random_seed;
 
 // 'bound' must be in range [1, RANDOM_MAX + 1]
-INLINE u16 random(u32 bound) {
+INLINE i32 random(u32 bound) {
     // source (paper):
     //   Computationally easy, spectrally good multipliers for
     //   congruential pseudorandom number generators
