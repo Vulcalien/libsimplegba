@@ -20,27 +20,23 @@ ____
 ____
 
 == DESCRIPTION
-The *random*() function returns a pseudo-random integer with value
-between 0 (inclusive) and _bound_ (exclusive). The _bound_ argument must
+The *random*() function returns a pseudo-random integer uniformly
+distributed between 0 and _bound_ (exclusive). The _bound_ argument must
 be in the range [1, *RANDOM_MAX* + 1].
 
 The *random_seed*() function sets _seed_ as the new generator's seed and
 returns the previously stored seed value.
 
 == RETURN VALUE
-The *random*() function returns a pseudo-random integer with value
-between 0 (inclusive) and _bound_ (exclusive).
+The *random*() function returns a pseudo-random integer uniformly
+distributed between 0 and _bound_ (exclusive).
 
 The *random_seed*() function returns the previously stored seed value as
 a _u32_ (unsigned 32-bit integer).
 
 == NOTES
-The implementation of the *random*() function does not use the modulo
-operator to reduce its output to the desired range. Instead, it used
-multiplication and bitshift.
-
-While it is allowed, calling *random*() with a _bound_ of 1 makes the
-function always return 0.
+If *random*() is called with a _bound_ of 1, the function always returns
+0.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
