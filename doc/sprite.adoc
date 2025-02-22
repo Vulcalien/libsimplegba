@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-11-26
+:revdate: 2025-02-22
 :docdate: {revdate}
 
 == NAME
@@ -27,9 +27,9 @@ ____
 ____
 
 == DESCRIPTION
-A sprite, also called 'object' in GBA documentation, is a graphical
-element that can be drawn anywhere on the display, without being
-restricted to a grid like background tiles are.
+A sprite, also called 'object', is a graphical element that can be drawn
+anywhere on the display, without being restricted to a grid like
+background tiles are.
 
 To identify which sprites to operate on, these functions take an _id_
 parameter, or a range of IDs. There are *SPRITE_COUNT* (128) sprites
@@ -121,7 +121,11 @@ is used to draw the sprite. Ignored if _colors_ is one (256-color mode).
 The _mosaic_ field specifies whether the mosaic graphic effect is
 applied to the sprite. See *sprite_mosaic*().
 
-The _colors_ field specifies the color mode of the sprite. TODO
+The _colors_ field specifies the color mode of the sprite, determining
+how VRAM data for its tiles is interpreted. In 16-color mode pixels are
+mapped to one 16-color row of the sprite palette, while in 256-color
+mode pixels are mapped to the entire sprite palette. Possible values
+are: *SPRITE_COLORS_16* (0), *SPRITE_COLORS_256* (1).
 
 The _affine_ field specifies whether an affine transformation is applied
 to the sprite (one) or not (zero).
