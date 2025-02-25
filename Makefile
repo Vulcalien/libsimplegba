@@ -14,10 +14,6 @@ BIN_DIR := bin
 
 SRC_SUBDIRS := math memory backup debug
 
-# === Variable Implementations ===
-AUDIO_DRIVER := basic
-SRC_SUBDIRS += audio/$(AUDIO_DRIVER)
-
 # === Compilation ===
 CPPFLAGS := -MMD -MP -Iinclude
 CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
@@ -29,6 +25,11 @@ ifeq ($(TARGET),GBA)
     CC := arm-none-eabi-gcc
     AS := arm-none-eabi-as
 endif
+
+# === Audio Driver ===
+AUDIO_DRIVER := basic
+SRC_SUBDIRS += audio/$(AUDIO_DRIVER)
+CPPFLAGS += -D AUDIO_DRIVER=AUDIO_DRIVER_$(AUDIO_DRIVER)
 
 # === Extensions ===
 ifeq ($(TARGET),GBA)
