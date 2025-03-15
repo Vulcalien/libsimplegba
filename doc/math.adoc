@@ -2,13 +2,13 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-01-24
+:revdate: 2025-03-15
 :docdate: {revdate}
 
 == NAME
 math_min, math_max, math_abs, math_sign, math_pow, math_sqrt, math_clip,
-math_digits, math_brad, math_sin, math_cos - various mathematical
-functions
+math_digits, math_brad, math_sin, math_cos, math_asin, math_acos -
+various mathematical functions
 
 == SYNOPSIS
 [verse]
@@ -31,6 +31,9 @@ ____
 
 **i32 math_sin(u16 **__angle__**);**
 **i32 math_cos(u16 **__angle__**);**
+
+**i32 math_asin(i32 **__val__**);**
+**i32 math_acos(i32 **__val__**);**
 ____
 
 == DESCRIPTION
@@ -53,7 +56,7 @@ result is undefined.
 The *math_sqrt*() function returns the integral part (i.e., floor) of
 the square root of _val_.
 
-The *math_clip*() functions returns the clipped value of _val_ in the
+The *math_clip*() function returns the clipped value of _val_ in the
 range [_min_, _max_]. If _val_ is less than the minimum, _min_ is
 returned. If _val_ is greater than the maximum, _max_ is returned. If
 _val_ is inside the range, _val_ is returned.
@@ -73,6 +76,11 @@ The *math_sin*() and *math_cos*() functions return, respectively,
 approximate values of sine and cosine of _angle_. The returned value is
 an integer in the range [-0x4000, 0x4000], with the lower and upper
 bounds (both included) representing -1 and +1.
+
+The *math_asin*() and *math_acos*() functions return, respectively,
+approximate values of the arcsine and arccosine of _val_. If _val_ is
+outside the range [-0x4000, 0x4000], 0 is returned. The returned value
+is an angle expressed in binary radians.
 
 == NOTES
 The result of *math_pow*(0, 0) is 1.
