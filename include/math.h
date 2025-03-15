@@ -25,14 +25,14 @@ INLINE i32 math_max(i32 a, i32 b) {
     return (a > b ? a : b);
 }
 
-INLINE i32 math_abs(i32 val) {
-    return (val < 0 ? -val : val);
+INLINE i32 math_abs(i32 x) {
+    return (x < 0 ? -x : x);
 }
 
-INLINE i32 math_sign(i32 val) {
-    if(val < 0)
+INLINE i32 math_sign(i32 x) {
+    if(x < 0)
         return -1;
-    if(val > 0)
+    if(x > 0)
         return +1;
     return 0;
 }
@@ -48,22 +48,22 @@ INLINE i32 math_pow(i32 base, u32 exp) {
     return result;
 }
 
-extern i32 math_sqrt(u32 val);
+extern i32 math_sqrt(u32 x);
 
-INLINE i32 math_clip(i32 val, i32 min, i32 max) {
-    if(val < min)
+INLINE i32 math_clip(i32 x, i32 min, i32 max) {
+    if(x < min)
         return min;
-    if(val > max)
+    if(x > max)
         return max;
-    return val;
+    return x;
 }
 
-INLINE i32 math_digits(i32 val, u32 base) {
+INLINE i32 math_digits(i32 x, u32 base) {
     i32 result = 0;
     do {
         result++;
-        val /= (i32) base;
-    } while(val != 0);
+        x /= (i32) base;
+    } while(x != 0);
     return result;
 }
 
@@ -80,8 +80,8 @@ INLINE i32 math_cos(u16 angle) {
     return math_sin(angle + math_brad(90));
 }
 
-extern i32 math_asin(i32 val);
+extern i32 math_asin(i32 x);
 
-INLINE i32 math_acos(i32 val) {
-    return math_brad(90) - math_asin(val);
+INLINE i32 math_acos(i32 x) {
+    return math_brad(90) - math_asin(x);
 }

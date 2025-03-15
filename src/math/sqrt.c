@@ -21,30 +21,30 @@
 // (i.e. 65535, the biggest integer that squared gives a 32-bit number).
 
 IWRAM_SECTION
-i32 math_sqrt(u32 val) {
-    if(val == 0)
+i32 math_sqrt(u32 x) {
+    if(x == 0)
         return 0;
 
-    // If 'val' is greater than 'U16_MAX ^ 2', 32 bits are not enough to
+    // If x is greater than 'U16_MAX ^ 2', 32 bits are not enough to
     // contain intermediate results: return the only possible solution.
-    if(val >= (u32) U16_MAX * U16_MAX)
+    if(x >= (u32) U16_MAX * U16_MAX)
         return U16_MAX;
 
     // Initialize the search boundaries. Note: 'high' cannot be
     // calculated using 'math_min' because of different signedness.
     u32 low  = 1;
-    u32 high = (val < U16_MAX ? val : U16_MAX);
+    u32 high = (x < U16_MAX ? x : U16_MAX);
 
     // Iterate until 'low' and 'high' are equal or differ by one.
     while(high - low > 1) {
         const u32 mid = (low + high) / 2;
         const u32 mid_squared = mid * mid;
 
-        if(mid_squared <= val) low  = mid;
-        if(mid_squared >= val) high = mid;
+        if(mid_squared <= x) low  = mid;
+        if(mid_squared >= x) high = mid;
     }
 
-    // Return the lower bound: if 'low != high' then the 'val' is not a
-    // perfect square and 'low = floor(sqrt(val))'.
+    // Return the lower bound: if low != high, then x is not a perfect
+    // square and 'low = floor(sqrt(x))'.
     return low;
 }

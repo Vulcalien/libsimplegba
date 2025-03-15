@@ -18,34 +18,34 @@ ____
 **i32 math_min(i32 **__a__**, i32 **__b__**);**
 **i32 math_max(i32 **__a__**, i32 **__b__**);**
 
-**i32 math_abs(i32 **__val__**);**
-**i32 math_sign(i32 **__val__**);**
+**i32 math_abs(i32 **__x__**);**
+**i32 math_sign(i32 **__x__**);**
 
 **i32 math_pow(i32 **__base__**, u32 **__exp__**);**
-**i32 math_sqrt(u32 **__val__**);**
+**i32 math_sqrt(u32 **__x__**);**
 
-**i32 math_clip(i32 **__val__**, i32 **__min__**, i32 **__max__**);**
-**i32 math_digits(i32 **__val__**, u32 **__base__**);**
+**i32 math_clip(i32 **__x__**, i32 **__min__**, i32 **__max__**);**
+**i32 math_digits(i32 **__x__**, u32 **__base__**);**
 
 **i32 math_brad(i32 **__angle__**);**
 
 **i32 math_sin(u16 **__angle__**);**
 **i32 math_cos(u16 **__angle__**);**
 
-**i32 math_asin(i32 **__val__**);**
-**i32 math_acos(i32 **__val__**);**
+**i32 math_asin(i32 **__x__**);**
+**i32 math_acos(i32 **__x__**);**
 ____
 
 == DESCRIPTION
 The *math_min*() and *math_max*() functions return, respectively, the
 minimum and maximum between the two values _a_ and _b_.
 
-The *math_abs*() function returns the absolute value of _val_. If _val_
-is the most negative 32-bit integer (*I32_MIN*), the result of this
+The *math_abs*() function returns the absolute value of _x_. If _x_ is
+the most negative 32-bit integer (*I32_MIN*), the result of this
 function is undefined.
 
-The *math_sign*() function returns +1 if _val_ is positive, -1 if _val_
-is negative and 0 if _val_ is zero.
+The *math_sign*() function returns +1 if _x_ is positive, -1 if _x_ is
+negative and 0 if _x_ is zero.
 
 The *math_pow*() function returns the value of _base_ to the power of
 _exp_. If _exp_ is 0, the result is always 1. Since this function
@@ -54,14 +54,14 @@ to the power of _exp_ does not fit within a signed 32-bit integer, the
 result is undefined.
 
 The *math_sqrt*() function returns the integral part (i.e., floor) of
-the square root of _val_.
+the square root of _x_.
 
-The *math_clip*() function returns the clipped value of _val_ in the
-range [_min_, _max_]. If _val_ is less than the minimum, _min_ is
-returned. If _val_ is greater than the maximum, _max_ is returned. If
-_val_ is inside the range, _val_ is returned.
+The *math_clip*() function returns the clipped value of _x_ in the range
+[_min_, _max_]. If _x_ is less than the minimum, _min_ is returned. If
+_x_ is greater than the maximum, _max_ is returned. If _x_ is inside the
+range, _x_ is returned.
 
-The *math_digits*() function returns the number of digits of _val_ when
+The *math_digits*() function returns the number of digits of _x_ when
 written using the specified _base_.
 
 === Trigonometry
@@ -78,7 +78,7 @@ an integer in the range [-0x4000, 0x4000], with the lower and upper
 bounds (both included) representing -1 and +1.
 
 The *math_asin*() and *math_acos*() functions return, respectively,
-approximate values of the arcsine and arccosine of _val_. If _val_ is
+approximate values of the arcsine and arccosine of _x_. If _x_ is
 outside the range [-0x4000, 0x4000], 0 is returned. The returned value
 is an angle expressed in binary radians.
 

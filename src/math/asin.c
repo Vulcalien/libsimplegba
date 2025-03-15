@@ -89,8 +89,8 @@ static const u16 asin_lut[0x4000 / SCALE + 1] = {
 // LUT-based implementation of arcsine. Since asin(-x) = -asin(x), the
 // table only contains entries for non-negative arguments.
 
-i32 math_asin(i32 val) {
-    u32 abs_val = math_abs(val);
+i32 math_asin(i32 x) {
+    u32 abs_val = math_abs(x);
 
     // if argument is outside the domain, return 0
     if(abs_val > 0x4000)
@@ -106,7 +106,7 @@ i32 math_asin(i32 val) {
     i32 result = (left * (SCALE - weight) + right * weight) / SCALE;
 
     // adjust sign
-    if(val < 0)
+    if(x < 0)
         result *= -1;
 
     return result;
