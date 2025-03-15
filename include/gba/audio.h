@@ -25,17 +25,8 @@
 #define AUDIO_PANNING_MIN (-64)
 #define AUDIO_PANNING_MAX (+64)
 
-// driver IDs
-#define AUDIO_DRIVER_basic 1
-#define AUDIO_DRIVER_mixer 2
-
-#if AUDIO_DRIVER == AUDIO_DRIVER_basic
-    #define AUDIO_CHANNEL_COUNT 2
-#elif AUDIO_DRIVER == AUDIO_DRIVER_mixer
-    #define AUDIO_CHANNEL_COUNT 8
-#else
-    #error "Invalid value of AUDIO_DRIVER constant"
-#endif
+// DEBUG
+#define AUDIO_CHANNEL_COUNT 2
 
 extern void audio_init(void);
 extern void audio_update(void);
