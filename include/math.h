@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2024-2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,4 +78,10 @@ extern i32 math_sin(u16 angle);
 
 INLINE i32 math_cos(u16 angle) {
     return math_sin(angle + math_brad(90));
+}
+
+extern i32 math_asin(i32 val);
+
+INLINE i32 math_acos(i32 val) {
+    return math_brad(90) - math_asin(val);
 }
