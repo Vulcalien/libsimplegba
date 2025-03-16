@@ -17,7 +17,12 @@
 
 #define SCALE 32
 
-// lookup table for angles between 0 and 180 degrees
+// Lookup table for angles between 0 and 180 degrees
+//
+// for i = 0 to 0x8000 / SCALE:
+//     x = i * M_PI / (0x8000 / SCALE)
+//     y = sin(x) * 0x4000
+//     LUT[i] = floor(y)
 static const u16 sin_lut[0x8000 / SCALE + 1] = {
     0x0000, 0x0032, 0x0064, 0x0096, 0x00c9, 0x00fb, 0x012d, 0x015f,
     0x0192, 0x01c4, 0x01f6, 0x0228, 0x025b, 0x028d, 0x02bf, 0x02f1,
