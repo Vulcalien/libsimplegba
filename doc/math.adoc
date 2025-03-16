@@ -29,8 +29,8 @@ ____
 
 **i32 math_brad(i32 **__angle__**);**
 
-**i32 math_sin(u16 **__angle__**);**
-**i32 math_cos(u16 **__angle__**);**
+**i32 math_sin(i32 **__angle__**);**
+**i32 math_cos(i32 **__angle__**);**
 **i32 math_tan(i32 **__angle__**);**
 
 **i32 math_asin(i32 **__x__**);**
@@ -67,7 +67,7 @@ written using the specified _base_.
 
 === Trigonometry
 These trigonometric functions use 16-bit binary radians (brad) to
-measure angles, with values in range [0, 0xffff].
+measure angles, with 0x4000 representing 90 degrees.
 
 The *math_brad*() function converts _angle_ from degrees to binary
 radians. Negative input values are allowed and result in negative output
