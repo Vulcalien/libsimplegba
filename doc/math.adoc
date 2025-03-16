@@ -2,13 +2,13 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-03-15
+:revdate: 2025-03-16
 :docdate: {revdate}
 
 == NAME
 math_min, math_max, math_abs, math_sign, math_pow, math_sqrt, math_clip,
-math_digits, math_brad, math_sin, math_cos, math_asin, math_acos -
-various mathematical functions
+math_digits, math_brad, math_sin, math_cos, math_tan, math_asin,
+math_acos - various mathematical functions
 
 == SYNOPSIS
 [verse]
@@ -31,6 +31,7 @@ ____
 
 **i32 math_sin(u16 **__angle__**);**
 **i32 math_cos(u16 **__angle__**);**
+**i32 math_tan(i32 **__angle__**);**
 
 **i32 math_asin(i32 **__x__**);**
 **i32 math_acos(i32 **__x__**);**
@@ -72,10 +73,10 @@ The *math_brad*() function converts _angle_ from degrees to binary
 radians. Negative input values are allowed and result in negative output
 values.
 
-The *math_sin*() and *math_cos*() functions return, respectively,
-approximate values of sine and cosine of _angle_. The returned value is
-an integer in the range [-0x4000, 0x4000], with the lower and upper
-bounds (both included) representing -1 and +1.
+The *math_sin*(), *math_cos*() and *math_tan*() functions return,
+respectively, approximate values of sine, cosine and tangent of _angle_.
+The returned value is a signed fixed-point number with 14 fractional
+bits (1 = 0x4000).
 
 The *math_asin*() and *math_acos*() functions return, respectively,
 approximate values of the arcsine and arccosine of _x_. If _x_ is
