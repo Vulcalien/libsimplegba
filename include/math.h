@@ -80,6 +80,8 @@ INLINE i32 math_cos(u16 angle) {
     return math_sin(angle + math_brad(90));
 }
 
+extern i32 math_tan(i32 angle);
+
 extern i32 math_asin(i32 x);
 
 INLINE i32 math_acos(i32 x) {
