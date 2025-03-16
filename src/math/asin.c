@@ -95,14 +95,12 @@ static const u16 asin_lut[0x4000 / SCALE + 2] = {
 // table only contains entries for non-negative arguments.
 
 i32 math_asin(i32 x) {
-    u32 abs_val = math_abs(x);
-
     // if argument is outside the domain, return 0
-    if(abs_val > 0x4000)
+    if(math_abs(x) > 0x4000)
         return 0;
 
-    u32 index  = abs_val / SCALE;
-    u32 weight = abs_val % SCALE;
+    u32 index  = math_abs(x) / SCALE;
+    u32 weight = math_abs(x) % SCALE;
 
     u16 left  = asin_lut[index];
     u16 right = asin_lut[index + 1];
