@@ -20,7 +20,7 @@
 // Lookup table for angles between 0 and 90 degrees
 //
 // for i = 0 to 0x4000 / SCALE - 1:
-//     x = i * M_PI_2 / (0x4000 / SCALE)
+//     x = i * SCALE * M_PI / 0x8000
 //     y = tan(x) * 0x4000
 //     LUT[i] = floor(y + 0.0001)
 // LUT[0x4000 / SCALE] = TODO

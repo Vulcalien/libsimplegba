@@ -20,8 +20,8 @@
 // Lookup table for values between 0 and 0x4000
 //
 // for i = 0 to 0x4000 / SCALE:
-//     x = i * 1.0 / (0x4000 / SCALE)
-//     y = asin(x) * 0x4000 / M_PI_2
+//     x = i * SCALE * 1.0 / 0x4000
+//     y = asin(x) * 0x8000 / M_PI
 //     LUT[i] = floor(y)
 static const u16 asin_lut[0x4000 / SCALE + 2] = {
     0x0000, 0x0014, 0x0028, 0x003d, 0x0051, 0x0065, 0x007a, 0x008e,

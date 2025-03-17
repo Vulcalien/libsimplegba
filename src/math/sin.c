@@ -20,7 +20,7 @@
 // Lookup table for angles between 0 and 180 degrees
 //
 // for i = 0 to 0x8000 / SCALE:
-//     x = i * M_PI / (0x8000 / SCALE)
+//     x = i * SCALE * M_PI / 0x8000
 //     y = sin(x) * 0x4000
 //     LUT[i] = floor(y)
 static const u16 sin_lut[0x8000 / SCALE + 1] = {
