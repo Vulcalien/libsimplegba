@@ -68,7 +68,7 @@ INLINE void timer_start(u32 id, u32 ticks) {
         return;
 
     vu16 *reload = _TIMER_GET_RELOAD(id);
-    *reload = (TIMER_COUNTER_MAX - ticks) & 0xffff;
+    *reload = TIMER_COUNTER_MAX - ticks;
 
     vu16 *control = _TIMER_GET_CONTROL(id);
     *control |= _TIMER_ENABLE_BIT;
