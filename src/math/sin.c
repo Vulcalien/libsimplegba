@@ -157,7 +157,7 @@ static const u16 sin_lut[0x8000 / SCALE + 1] = {
 
 i32 math_sin(i32 angle) {
     // normalize angle in range [0, 360) degrees
-    angle = (angle % math_brad(360) + math_brad(360)) % math_brad(360);
+    angle &= BITMASK(16);
 
     u32 index = (angle % math_brad(180)) / SCALE;
     u32 weight = angle % SCALE;
