@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-03-16
+:revdate: 2025-03-17
 :docdate: {revdate}
 
 == NAME
@@ -85,10 +85,6 @@ is an angle expressed in binary radians.
 
 == NOTES
 The result of *math_pow*(0, 0) is 1.
-
-While the _angle_ parameter of the *math_sin*() and *math_cos*()
-functions is an unsigned 16-bit integer, in practice these functions can
-also take negative angles and work as expected due to integer overflow.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
