@@ -113,6 +113,9 @@ static const u32 tan_lut[0x4000 / SCALE + 1] = {
     0x28be3f, 0x517cb0, // TODO last entry
 };
 
+// LUT-based implementation of tangent. Since tan(-x) = -tan(x), the
+// table only contains entries for non-negative arguments.
+
 i32 math_tan(i32 angle) {
     // normalize angle in range [-90, 90] degrees
     angle &= BITMASK(15);
