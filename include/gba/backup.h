@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,55 +17,61 @@
 
 #include <base.h>
 
-#include <memory.h>
+extern const struct _BackupDriver {
+    void (*read) (u16 offset, void *buffer, u32 n);
+    void (*write)(u16 offset, const void *buffer, u32 n);
 
-#define _BACKUP_ADDR ((vu8 *) 0x0e000000)
+    u8   (*read_byte) (u16 offset);
+    void (*write_byte)(u16 offset, u8 byte);
 
-// === SRAM ===
+    u16  (*identify)(void);
+    void (*set_bank)(u32 bank);
 
-INLINE u8 backup_sram_read_byte(u16 address) {
-    return _BACKUP_ADDR[address];
+    void (*erase_chip)  (void);
+    void (*erase_sector)(u32 n);
+} *_backup_driver;
+
+INLINE void backup_init(const void *driver) {
+    _backup_driver = (const struct _BackupDriver *) driver;
 }
 
-INLINE void backup_sram_read(u16 offset, void *buffer, u32 n) {
-    memory_copy_8(buffer, _BACKUP_ADDR + offset, n);
+INLINE void backup_read(u16 offset, void *buffer, u32 n) {
+    _backup_driver->read(offset, buffer, n);
 }
 
-INLINE void backup_sram_write_byte(u16 address, u8 byte) {
-    _BACKUP_ADDR[address] = byte;
+INLINE void backup_write(u16 offset, const void *buffer, u32 n) {
+    _backup_driver->write(offset, buffer, n);
 }
 
-INLINE void backup_sram_write(u16 offset, const void *buffer, u32 n) {
-    memory_copy_8(_BACKUP_ADDR + offset, buffer, n);
+INLINE u8 backup_read_byte(u16 offset) {
+    return _backup_driver->read_byte(offset);
 }
 
-// === Flash ROM ===
-
-extern u16 backup_flash_identify(void);
-extern void backup_flash_set_bank(u32 bank);
-
-INLINE u8 backup_flash_read_byte(u16 address) {
-    return _BACKUP_ADDR[address];
+INLINE void backup_write_byte(u16 offset, u8 byte) {
+    _backup_driver->write_byte(offset, byte);
 }
 
-INLINE void backup_flash_read(u16 offset, void *buffer, u32 n) {
-    memory_copy_8(buffer, _BACKUP_ADDR + offset, n);
+INLINE u16 backup_identify(void) {
+    return _backup_driver->identify();
 }
 
-extern void backup_flash_write_byte(u16 address, u8 byte);
-
-INLINE void backup_flash_write(u16 offset, const void *buffer, u32 n) {
-    for(u32 i = 0; i < n; i++)
-        backup_flash_write_byte(offset + i, ((u8 *) buffer)[i]);
+INLINE void backup_set_bank(u32 bank) {
+    _backup_driver->set_bank(bank);
 }
 
-extern void backup_flash_erase_chip(void);
-extern void backup_flash_erase_sector(u32 n);
+INLINE void backup_erase_chip(void) {
+    _backup_driver->erase_chip();
+}
 
-// === EEPROM ===
+INLINE void backup_erase_sector(u32 n) {
+    _backup_driver->erase_sector(n);
+}
 
-// TODO
+extern const struct _BackupDriver
+    _backup_driver_sram,
+    _backup_driver_flash,
+    _backup_driver_eeprom;
 
-// ===== ===== =====
-
-#undef _BACKUP_ADDR
+#define BACKUP_SRAM   (&_backup_driver_sram)
+#define BACKUP_FLASH  (&_backup_driver_flash)
+#define BACKUP_EEPROM (&_backup_driver_eeprom)

@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,65 +15,97 @@
  */
 #include <gba/backup.h>
 
-#define BACKUP_ADDR ((vu8 *) 0x0e000000)
+#include <memory.h>
+
+#define FLASH ((vu8 *) 0x0e000000)
 
 THUMB
-u16 backup_flash_identify(void) {
-    BACKUP_ADDR[0x5555] = 0xaa;
-    BACKUP_ADDR[0x2aaa] = 0x55;
-    BACKUP_ADDR[0x5555] = 0x90;
+static u8 flash_read_byte(u16 offset) {
+    return FLASH[offset];
+}
 
-    u16 result = BACKUP_ADDR[0x0000] | BACKUP_ADDR[0x0001] << 8;
+THUMB
+static void flash_write_byte(u16 offset, u8 byte) {
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0xa0;
 
-    BACKUP_ADDR[0x5555] = 0xaa;
-    BACKUP_ADDR[0x2aaa] = 0x55;
-    BACKUP_ADDR[0x5555] = 0xf0;
+    FLASH[offset] = byte;
+
+    while(FLASH[offset] != byte);
+}
+
+THUMB
+static void flash_read(u16 offset, void *buffer, u32 n) {
+    memory_copy_8(buffer, FLASH + offset, n);
+}
+
+THUMB
+static void flash_write(u16 offset, const void *buffer, u32 n) {
+    for(u32 i = 0; i < n; i++)
+        flash_write_byte(offset + i, ((u8 *) buffer)[i]);
+}
+
+THUMB
+static u16 flash_identify(void) {
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0x90;
+
+    u16 result = FLASH[0x0000] | FLASH[0x0001] << 8;
+
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0xf0;
 
     return result;
 }
 
 THUMB
-void backup_flash_set_bank(u32 bank) {
-    BACKUP_ADDR[0x5555] = 0xaa;
-    BACKUP_ADDR[0x2aaa] = 0x55;
-    BACKUP_ADDR[0x5555] = 0xb0;
+static void flash_set_bank(u32 bank) {
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0xb0;
 
-    BACKUP_ADDR[0x0000] = bank & 1;
+    FLASH[0x0000] = (bank & 1);
 }
 
 THUMB
-void backup_flash_write_byte(u16 address, u8 byte) {
-    BACKUP_ADDR[0x5555] = 0xaa;
-    BACKUP_ADDR[0x2aaa] = 0x55;
-    BACKUP_ADDR[0x5555] = 0xa0;
+static void flash_erase_chip(void) {
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0x80;
 
-    BACKUP_ADDR[address] = byte;
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0x10;
 
-    while(BACKUP_ADDR[address] != byte);
+    while(FLASH[0x0000] != 0xff);
 }
 
 THUMB
-void backup_flash_erase_chip(void) {
-    BACKUP_ADDR[0x5555] = 0xaa;
-    BACKUP_ADDR[0x2aaa] = 0x55;
-    BACKUP_ADDR[0x5555] = 0x80;
+static void flash_erase_sector(u32 n) {
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0x80;
 
-    BACKUP_ADDR[0x5555] = 0xaa;
-    BACKUP_ADDR[0x2aaa] = 0x55;
-    BACKUP_ADDR[0x5555] = 0x10;
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[n << 12] = 0x30;
 
-    while(BACKUP_ADDR[0x0000] != 0xff);
+    while(FLASH[n << 12] != 0xff);
 }
 
-THUMB
-void backup_flash_erase_sector(u32 n) {
-    BACKUP_ADDR[0x5555] = 0xaa;
-    BACKUP_ADDR[0x2aaa] = 0x55;
-    BACKUP_ADDR[0x5555] = 0x80;
+const struct _BackupDriver _backup_driver_flash = {
+    .read  = flash_read,
+    .write = flash_write,
 
-    BACKUP_ADDR[0x5555] = 0xaa;
-    BACKUP_ADDR[0x2aaa] = 0x55;
-    BACKUP_ADDR[n << 12] = 0x30;
+    .read_byte  = flash_read_byte,
+    .write_byte = flash_write_byte,
 
-    while(BACKUP_ADDR[n << 12] != 0xff);
-}
+    .identify = flash_identify,
+    .set_bank = flash_set_bank,
+
+    .erase_chip   = flash_erase_chip,
+    .erase_sector = flash_erase_sector
+};
