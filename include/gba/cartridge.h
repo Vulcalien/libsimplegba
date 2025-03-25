@@ -57,7 +57,7 @@ INLINE void cartridge_gpio_toggle(bool enable) {
 }
 
 // 0=input (Cartridge to GBA), 1=output (GBA to Cartridge)
-INLINE void cartridge_gpio_config(i32 directions) {
+INLINE void cartridge_gpio_config(u32 directions) {
     vu16 *pin_control = (vu16 *) 0x080000c6;
     *pin_control = directions;
 }
