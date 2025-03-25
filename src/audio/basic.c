@@ -1,4 +1,4 @@
-/* Copyright 2023-2024 Vulcalien
+/* Copyright 2023-2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@
 // Each channel is mapped directly to a Direct Sound output, so the CPU
 // usage remains very low.
 
-static_assert(AUDIO_CHANNEL_COUNT == 2, "wrong number of channels");
-
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)
+
+#define CHANNEL_COUNT 2
 
 static const struct Output {
     vi8 *fifo;
@@ -69,7 +69,7 @@ static struct Channel {
 
     u32 loop_length;
     u8 directions;
-} channels[AUDIO_CHANNEL_COUNT];
+} channels[CHANNEL_COUNT];
 
 IWRAM_SECTION
 static NO_INLINE void restart_dma(i32 channel) {
@@ -91,7 +91,7 @@ static NO_INLINE void restart_dma(i32 channel) {
 static INLINE void schedule_timer1_irq(void) {
     // determine how many samples should be played before stopping
     u32 next_stop = TIMER_COUNTER_MAX;
-    for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
+    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
         if(!channel->data)
             continue;
@@ -102,7 +102,7 @@ static INLINE void schedule_timer1_irq(void) {
     }
 
     // add number of samples to be played to data pointers of channels
-    for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
+    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
         if(!channel->data)
             continue;
@@ -112,53 +112,6 @@ static INLINE void schedule_timer1_irq(void) {
 
     // restart Timer 1
     timer_restart(TIMER1, next_stop);
-}
-
-IWRAM_SECTION
-static void timer1_isr(void) {
-    // stop or loop the channels
-    for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
-        struct Channel *channel = &channels[c];
-        if(!channel->data)
-            continue;
-
-        if(channel->data >= channel->end) {
-            if(channel->loop_length != 0) {
-                channel->data = channel->end - channel->loop_length;
-                restart_dma(c);
-            } else {
-                audio_stop(c);
-            }
-        }
-    }
-
-    // schedule the next IRQ
-    schedule_timer1_irq();
-}
-
-void audio_init(void) {
-    MASTER_SOUND_CONTROL = BIT(7);
-    DIRECT_SOUND_CONTROL = 0;
-
-    // configure Timer 0 and Timer 1
-    timer_config(TIMER0, TIMER_PRESCALER_1);
-    timer_config(TIMER1, TIMER_CASCADE);
-
-    // enable Timer 1 interrupt
-    interrupt_toggle(IRQ_TIMER1, true);
-    interrupt_set_isr(IRQ_TIMER1, timer1_isr);
-
-    // setup channels with default configuration
-    audio_loop   (-1, 0);
-    audio_volume (-1, AUDIO_VOLUME_MAX);
-    audio_panning(-1, 0);
-
-    // Set default sample rate. This also starts Timer 0
-    audio_sample_rate(0);
-}
-
-void audio_update(void) {
-    // nothing to do
 }
 
 static INLINE void update_enable_bits(i32 channel) {
@@ -176,23 +129,7 @@ static INLINE void update_enable_bits(i32 channel) {
         DIRECT_SOUND_CONTROL |= (directions << enable_bits);
 }
 
-i32 audio_play(i32 channel, const void *sound, u32 length) {
-    if(channel < 0) {
-        // look for an available channel
-        for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
-            if(!channels[c].data) {
-                channel = c;
-                break;
-            }
-        }
-
-        // if no channel is available, return
-        if(channel < 0)
-            return -1;
-    } else if(channel >= AUDIO_CHANNEL_COUNT) {
-        return -1;
-    }
-
+static i32 basic_play(i32 channel, const void *sound, u32 length) {
     // if sound length is zero, stop the channel
     if(length == 0) {
         audio_stop(channel);
@@ -217,18 +154,18 @@ i32 audio_play(i32 channel, const void *sound, u32 length) {
     return channel;
 }
 
-void _audio_stop(i32 channel) {
+static void basic_stop(i32 channel) {
     channels[channel].data = NULL;
 
     update_enable_bits(channel);
     dma_stop(outputs[channel].dma);
 }
 
-void _audio_loop(i32 channel, u32 loop_length) {
+static void basic_loop(i32 channel, u32 loop_length) {
     channels[channel].loop_length = loop_length;
 }
 
-void _audio_volume(i32 channel, u32 volume) {
+static void basic_volume(i32 channel, u32 volume) {
     const u16 bit = outputs[channel].bits.volume;
     if(volume > AUDIO_VOLUME_MAX / 2) // 100%
         DIRECT_SOUND_CONTROL |= bit;
@@ -236,7 +173,7 @@ void _audio_volume(i32 channel, u32 volume) {
         DIRECT_SOUND_CONTROL &= ~bit;
 }
 
-void _audio_panning(i32 channel, i32 panning) {
+static void basic_panning(i32 channel, i32 panning) {
     // audio only plays on one side if panning is at either extreme
     bool left  = (panning < AUDIO_PANNING_MAX);
     bool right = (panning > AUDIO_PANNING_MIN);
@@ -244,3 +181,74 @@ void _audio_panning(i32 channel, i32 panning) {
 
     update_enable_bits(channel);
 }
+
+IWRAM_SECTION
+static void timer1_isr(void) {
+    // stop or loop the channels
+    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
+        struct Channel *channel = &channels[c];
+        if(!channel->data)
+            continue;
+
+        if(channel->data >= channel->end) {
+            if(channel->loop_length != 0) {
+                channel->data = channel->end - channel->loop_length;
+                restart_dma(c);
+            } else {
+                basic_stop(c);
+            }
+        }
+    }
+
+    // schedule the next IRQ
+    schedule_timer1_irq();
+}
+
+static void basic_init(void) {
+    MASTER_SOUND_CONTROL = BIT(7);
+    DIRECT_SOUND_CONTROL = 0;
+
+    // configure Timer 0 and Timer 1
+    timer_config(TIMER0, TIMER_PRESCALER_1);
+    timer_config(TIMER1, TIMER_CASCADE);
+
+    // enable Timer 1 interrupt
+    interrupt_toggle(IRQ_TIMER1, true);
+    interrupt_set_isr(IRQ_TIMER1, timer1_isr);
+
+    // setup channels with default configuration
+    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
+        basic_loop   (c, 0);
+        basic_volume (c, AUDIO_VOLUME_MAX);
+        basic_panning(c, 0);
+    }
+
+    // Set default sample rate. This also starts Timer 0
+    audio_sample_rate(0);
+}
+
+static void basic_update(void) {
+    // nothing to do
+}
+
+static i32 basic_available_channel(void) {
+    for(u32 c = 0; c < CHANNEL_COUNT; c++)
+        if(!channels[c].data)
+            return c;
+    return -1;
+}
+
+const struct _AudioDriver _audio_driver_basic = {
+    .init   = basic_init,
+    .update = basic_update,
+
+    .play = basic_play,
+    .stop = basic_stop,
+
+    .loop    = basic_loop,
+    .volume  = basic_volume,
+    .panning = basic_panning,
+
+    .channel_count     = CHANNEL_COUNT,
+    .available_channel = basic_available_channel
+};

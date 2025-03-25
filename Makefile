@@ -12,11 +12,7 @@ SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
 
-SRC_SUBDIRS := math memory backup debug
-
-# === Variable Implementations ===
-AUDIO_DRIVER := basic
-SRC_SUBDIRS += audio/$(AUDIO_DRIVER)
+SRC_SUBDIRS := math memory backup audio debug
 
 # === Compilation ===
 CPPFLAGS := -MMD -MP -Iinclude

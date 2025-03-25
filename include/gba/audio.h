@@ -1,4 +1,4 @@
-/* Copyright 2023-2024 Vulcalien
+/* Copyright 2023-2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,51 +25,74 @@
 #define AUDIO_PANNING_MIN (-64)
 #define AUDIO_PANNING_MAX (+64)
 
-// DEBUG
-#define AUDIO_CHANNEL_COUNT 2
+extern const struct _AudioDriver {
+    void (*init)(void);
+    void (*update)(void);
 
-extern void audio_init(void);
-extern void audio_update(void);
+    i32  (*play)(i32 channel, const void *sound, u32 length);
+    void (*stop)(i32 channel);
 
-extern i32 audio_play(i32 channel, const void *sound, u32 length);
+    void (*loop)(i32 channel, u32 loop_length);
+    void (*volume)(i32 channel, u32 volume);
+    void (*panning)(i32 channel, i32 panning);
 
-extern void _audio_stop(i32 channel);
+    // internal use
+    u32 channel_count;
+    i32 (*available_channel)(void); // returns -1 if none available
+} *_audio_driver;
+
+INLINE void audio_init(const void *driver) {
+    _audio_driver = (const struct _AudioDriver *) driver;
+    _audio_driver->init();
+}
+
+INLINE void audio_update(void) {
+    _audio_driver->update();
+}
+
+INLINE i32 audio_play(i32 channel, const void *sound, u32 length) {
+    if(channel < 0)
+        channel = _audio_driver->available_channel();
+
+    if(channel < 0 || channel > _audio_driver->channel_count)
+        return -1;
+
+    return _audio_driver->play(channel, sound, length);
+}
+
 INLINE void audio_stop(i32 channel) {
     if(channel < 0) {
-        for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++)
-            _audio_stop(c);
-    } else if(channel < AUDIO_CHANNEL_COUNT) {
-        _audio_stop(channel);
+        for(u32 c = 0; c < _audio_driver->channel_count; c++)
+            _audio_driver->stop(c);
+    } else if(channel < _audio_driver->channel_count) {
+        _audio_driver->stop(channel);
     }
 }
 
-extern void _audio_loop(i32 channel, u32 loop_length);
 INLINE void audio_loop(i32 channel, u32 loop_length) {
     if(channel < 0) {
-        for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++)
-            _audio_loop(c, loop_length);
-    } else if(channel < AUDIO_CHANNEL_COUNT) {
-        _audio_loop(channel, loop_length);
+        for(u32 c = 0; c < _audio_driver->channel_count; c++)
+            _audio_driver->loop(c, loop_length);
+    } else if(channel < _audio_driver->channel_count) {
+        _audio_driver->loop(channel, loop_length);
     }
 }
 
-extern void _audio_volume(i32 channel, u32 volume);
 INLINE void audio_volume(i32 channel, u32 volume) {
     if(channel < 0) {
-        for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++)
-            _audio_volume(c, volume);
-    } else if(channel < AUDIO_CHANNEL_COUNT) {
-        _audio_volume(channel, volume);
+        for(u32 c = 0; c < _audio_driver->channel_count; c++)
+            _audio_driver->volume(c, volume);
+    } else if(channel < _audio_driver->channel_count) {
+        _audio_driver->volume(channel, volume);
     }
 }
 
-extern void _audio_panning(i32 channel, i32 panning);
 INLINE void audio_panning(i32 channel, i32 panning) {
     if(channel < 0) {
-        for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++)
-            _audio_panning(c, panning);
-    } else if(channel < AUDIO_CHANNEL_COUNT) {
-        _audio_panning(channel, panning);
+        for(u32 c = 0; c < _audio_driver->channel_count; c++)
+            _audio_driver->panning(c, panning);
+    } else if(channel < _audio_driver->channel_count) {
+        _audio_driver->panning(channel, panning);
     }
 }
 
@@ -80,3 +103,10 @@ INLINE void audio_sample_rate(u32 sample_rate) {
     const u32 cycles_per_sample = SYSTEM_FREQUENCY / sample_rate;
     timer_start(TIMER0, cycles_per_sample);
 }
+
+extern const struct _AudioDriver
+    _audio_driver_basic,
+    _audio_driver_mixer;
+
+#define AUDIO_BASIC (&_audio_driver_basic)
+#define AUDIO_MIXER (&_audio_driver_mixer)
