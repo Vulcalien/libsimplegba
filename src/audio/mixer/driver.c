@@ -112,7 +112,7 @@ void audio_update(void) {
 // Note: the effects of play, stop, volume and panning are delayed until
 // the buffer is next updated.
 
-i32 audio_play(i32 channel, const i8 *sound, u32 length) {
+i32 audio_play(i32 channel, const void *sound, u32 length) {
     if(channel < 0) {
         // look for an available channel
         for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
@@ -130,8 +130,8 @@ i32 audio_play(i32 channel, const i8 *sound, u32 length) {
     }
 
     struct Channel *channel_struct = &channels[channel];
-    channel_struct->data = sound;
-    channel_struct->end  = sound + length;
+    channel_struct->data = (const void *) sound;
+    channel_struct->end  = (const void *) sound + length;
 
     return channel;
 }

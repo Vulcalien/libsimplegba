@@ -176,7 +176,7 @@ static INLINE void update_enable_bits(i32 channel) {
         DIRECT_SOUND_CONTROL |= (directions << enable_bits);
 }
 
-i32 audio_play(i32 channel, const i8 *sound, u32 length) {
+i32 audio_play(i32 channel, const void *sound, u32 length) {
     if(channel < 0) {
         // look for an available channel
         for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
@@ -200,8 +200,8 @@ i32 audio_play(i32 channel, const i8 *sound, u32 length) {
     }
 
     struct Channel *channel_struct = &channels[channel];
-    channel_struct->data = sound;
-    channel_struct->end  = sound + length;
+    channel_struct->data = (const i8 *) sound;
+    channel_struct->end  = (const i8 *) sound + length;
 
     restart_dma(channel);
     update_enable_bits(channel);

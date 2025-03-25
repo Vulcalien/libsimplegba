@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-01-17
+:revdate: 2025-03-25
 :docdate: {revdate}
 
 == NAME
@@ -17,7 +17,7 @@ ____
 *void audio_init(void);*
 *void audio_update(void);*
 
-**i32  audio_play(i32 **__channel__**, const i8 +++*+++**__sound__**, u32 **__length__**);**
+**i32  audio_play(i32 **__channel__**, const void +++*+++**__sound__**, u32 **__length__**);**
 **void audio_stop(i32 **__channel__**);**
 
 **void audio_loop(i32 **__channel__**, u32 **__loop_length__**);**
