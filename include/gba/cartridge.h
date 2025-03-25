@@ -44,3 +44,30 @@ struct CartridgeHeader {
 INLINE bool cartridge_missing(void) {
     return CARTRIDGE_HEADER->fixed_value != 0x96;
 }
+
+// === GPIO ===
+
+// Some cartridges offer access to extra devices (RTC, solar sensor...)
+// through a 4-bit GPIO port. Each pin can be configured as input or
+// output.
+
+INLINE void cartridge_gpio_toggle(bool enable) {
+    vu16 *control = (vu16 *) 0x080000c8;
+    *control = enable;
+}
+
+// 0=input (Cartridge to GBA), 1=output (GBA to Cartridge)
+INLINE void cartridge_gpio_config(i32 directions) {
+    vu16 *pin_control = (vu16 *) 0x080000c6;
+    *pin_control = directions;
+}
+
+INLINE u16 cartridge_gpio_read(void) {
+    vu16 *pins = (vu16 *) 0x080000C4;
+    return *pins;
+}
+
+INLINE void cartridge_gpio_write(u16 data) {
+    vu16 *pins = (vu16 *) 0x080000C4;
+    *pins = data;
+}
