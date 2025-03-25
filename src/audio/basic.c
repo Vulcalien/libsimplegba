@@ -130,10 +130,18 @@ static INLINE void update_enable_bits(i32 channel) {
 }
 
 THUMB
+static void basic_stop(i32 channel) {
+    channels[channel].data = NULL;
+
+    update_enable_bits(channel);
+    dma_stop(outputs[channel].dma);
+}
+
+THUMB
 static i32 basic_play(i32 channel, const void *sound, u32 length) {
     // if sound length is zero, stop the channel
     if(length == 0) {
-        audio_stop(channel);
+        basic_stop(channel);
         return channel;
     }
 
@@ -153,14 +161,6 @@ static i32 basic_play(i32 channel, const void *sound, u32 length) {
     schedule_timer1_irq();
 
     return channel;
-}
-
-THUMB
-static void basic_stop(i32 channel) {
-    channels[channel].data = NULL;
-
-    update_enable_bits(channel);
-    dma_stop(outputs[channel].dma);
 }
 
 THUMB
