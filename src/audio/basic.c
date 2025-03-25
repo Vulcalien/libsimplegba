@@ -129,6 +129,7 @@ static INLINE void update_enable_bits(i32 channel) {
         DIRECT_SOUND_CONTROL |= (directions << enable_bits);
 }
 
+THUMB
 static i32 basic_play(i32 channel, const void *sound, u32 length) {
     // if sound length is zero, stop the channel
     if(length == 0) {
@@ -154,6 +155,7 @@ static i32 basic_play(i32 channel, const void *sound, u32 length) {
     return channel;
 }
 
+THUMB
 static void basic_stop(i32 channel) {
     channels[channel].data = NULL;
 
@@ -161,10 +163,12 @@ static void basic_stop(i32 channel) {
     dma_stop(outputs[channel].dma);
 }
 
+THUMB
 static void basic_loop(i32 channel, u32 loop_length) {
     channels[channel].loop_length = loop_length;
 }
 
+THUMB
 static void basic_volume(i32 channel, u32 volume) {
     const u16 bit = outputs[channel].bits.volume;
     if(volume > AUDIO_VOLUME_MAX / 2) // 100%
@@ -173,6 +177,7 @@ static void basic_volume(i32 channel, u32 volume) {
         DIRECT_SOUND_CONTROL &= ~bit;
 }
 
+THUMB
 static void basic_panning(i32 channel, i32 panning) {
     // audio only plays on one side if panning is at either extreme
     bool left  = (panning < AUDIO_PANNING_MAX);
@@ -227,6 +232,7 @@ static void basic_init(void) {
     audio_sample_rate(0);
 }
 
+THUMB
 static void basic_update(void) {
     // nothing to do
 }
