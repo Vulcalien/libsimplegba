@@ -18,6 +18,7 @@
 #include <gba/interrupt.h>
 #include <gba/timer.h>
 #include <gba/dma.h>
+#include <math.h>
 
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)
@@ -119,10 +120,7 @@ static void mixer_volume(i32 channel, u32 volume) {
 
 THUMB
 static void mixer_panning(i32 channel, i32 panning) {
-    if(panning < AUDIO_PANNING_MIN)
-        panning = AUDIO_PANNING_MIN;
-    if(panning > AUDIO_PANNING_MAX)
-        panning = AUDIO_PANNING_MAX;
+    panning = math_clip(panning, AUDIO_PANNING_MIN, AUDIO_PANNING_MAX);
 
     channels[channel].panning = panning;
     update_output_volume(channel);
