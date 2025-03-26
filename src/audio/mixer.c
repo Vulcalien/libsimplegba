@@ -18,6 +18,7 @@
 #include <gba/interrupt.h>
 #include <gba/timer.h>
 #include <gba/dma.h>
+#include <memory.h>
 #include <math.h>
 
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
@@ -169,9 +170,7 @@ static void mixer_update(void) {
     need_new_page = false;
 
     // clear temporary buffers
-    for(u32 s = 0; s < BUFFER_SIZE; s++)
-        for(u32 o = 0; o < OUTPUT_COUNT; o++)
-            temp_buffers[o][s] = 0;
+    memory_set_32(temp_buffers, 0, sizeof(temp_buffers));
 
     // add samples from active channels to temporary buffers
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
