@@ -23,7 +23,7 @@
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)
 
-#define CHANNEL_COUNT 2
+#define CHANNEL_COUNT 8
 #define OUTPUT_COUNT  2
 #define BUFFER_SIZE   768 // enough to last ~47ms at 16384 Hz
 
@@ -161,13 +161,53 @@ static void mixer_init(void) {
     audio_sample_rate(0);
 }
 
+IWRAM_SECTION
 static void mixer_update(void) {
     if(!need_new_page)
         return;
 
     need_new_page = false;
 
-    // TODO
+    // clear temporary buffers
+    for(u32 s = 0; s < BUFFER_SIZE; s++)
+        for(u32 o = 0; o < OUTPUT_COUNT; o++)
+            temp_buffers[o][s] = 0;
+
+    // add samples from active channels to temporary buffers
+    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
+        struct Channel *channel = &channels[c];
+        if(!channel->data)
+            continue;
+
+        for(u32 s = 0; s < BUFFER_SIZE; s++) {
+            // read sample and move data pointer forward
+            const i8 sample = *(channel->data++);
+
+            for(u32 o = 0; o < OUTPUT_COUNT; o++) {
+                const u32 volume = channel->output_volume[o];
+                temp_buffers[o][s] += sample * volume / AUDIO_VOLUME_MAX;
+            }
+
+            // if end of sound is reached, loop or stop
+            if(channel->data >= channel->end) {
+                if(channel->loop_length != 0) {
+                    channel->data = channel->end - channel->loop_length;
+                } else {
+                    channel->data = NULL;
+                    break;
+                }
+            }
+        }
+    }
+
+    // write clipped data from temporary buffers to output buffers
+    for(u32 s = 0; s < BUFFER_SIZE; s++) {
+        for(u32 o = 0; o < OUTPUT_COUNT; o++) {
+            buffers[buffer_page][o][s] = math_clip(
+                temp_buffers[o][s], I8_MIN, I8_MAX
+            );
+        }
+    }
 }
 
 static i32 mixer_available_channel(void) {
