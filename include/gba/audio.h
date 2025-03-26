@@ -54,7 +54,7 @@ INLINE i32 audio_play(i32 channel, const void *sound, u32 length) {
     if(channel < 0)
         channel = _audio_driver->available_channel();
 
-    if(channel < 0 || channel > _audio_driver->channel_count)
+    if(channel < 0 || channel >= _audio_driver->channel_count)
         return -1;
 
     return _audio_driver->play(channel, sound, length);
