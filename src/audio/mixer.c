@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2024-2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,9 @@
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)
 
-#define OUTPUT_COUNT 2
-#define BUFFER_SIZE  768 // enough to last ~47ms at 16384 Hz
+#define CHANNEL_COUNT 2
+#define OUTPUT_COUNT  2
+#define BUFFER_SIZE   768 // enough to last ~47ms at 16384 Hz
 
 static struct Channel {
     const i8 *data; // NULL if channel is inactive
@@ -35,7 +36,7 @@ static struct Channel {
 
     // cached volume per output, obtained from 'volume' and 'panning'
     u8 output_volume[OUTPUT_COUNT];
-} channels[AUDIO_CHANNEL_COUNT];
+} channels[CHANNEL_COUNT];
 
 static u32 buffer_page;
 static bool need_new_page;
@@ -67,80 +68,25 @@ static void timer1_isr(void) {
     need_new_page = true;
 }
 
-void audio_init(void) {
-    MASTER_SOUND_CONTROL = BIT(7);
-
-    #if OUTPUT_COUNT == 2
-    // stereo: enable one direction per Direct Sound output
-    DIRECT_SOUND_CONTROL = BIT(2) | BIT(3)  | // set volume to 100%
-                           BIT(8) | BIT(13);  // enable right and left
-    #else
-    // mono: only enable Direct Sound A
-    DIRECT_SOUND_CONTROL = BIT(2) |         // set volume to 100%
-                           BIT(8) | BIT(9); // enable right and left
-    #endif
-
-    // configure Timer 0 and Timer 1
-    timer_config(TIMER0, TIMER_PRESCALER_1);
-    timer_config(TIMER1, TIMER_CASCADE);
-
-    // enable Timer 1 interrupt
-    interrupt_toggle(IRQ_TIMER1, true);
-    interrupt_set_isr(IRQ_TIMER1, timer1_isr);
-
-    // setup channels with default configuration
-    audio_loop   (-1, 0);
-    audio_volume (-1, AUDIO_VOLUME_MAX);
-    audio_panning(-1, 0);
-
-    // start Timer 1
-    timer_start(TIMER1, BUFFER_SIZE);
-
-    // Set default sample rate. This also starts Timer 0
-    audio_sample_rate(0);
-}
-
-void audio_update(void) {
-    if(!need_new_page)
-        return;
-
-    need_new_page = false;
-
-    // TODO
-}
-
 // Note: the effects of play, stop, volume and panning are delayed until
 // the buffer is next updated.
 
-i32 audio_play(i32 channel, const void *sound, u32 length) {
-    if(channel < 0) {
-        // look for an available channel
-        for(u32 c = 0; c < AUDIO_CHANNEL_COUNT; c++) {
-            if(!channels[c].data) {
-                channel = c;
-                break;
-            }
-        }
-
-        // if no channel is available, return
-        if(channel < 0)
-            return -1;
-    } else if(channel >= AUDIO_CHANNEL_COUNT) {
-        return -1;
-    }
-
+THUMB
+static i32 mixer_play(i32 channel, const void *sound, u32 length) {
     struct Channel *channel_struct = &channels[channel];
-    channel_struct->data = (const void *) sound;
-    channel_struct->end  = (const void *) sound + length;
+    channel_struct->data = (const i8 *) sound;
+    channel_struct->end  = (const i8 *) sound + length;
 
     return channel;
 }
 
-void _audio_stop(i32 channel) {
+THUMB
+static void mixer_stop(i32 channel) {
     channels[channel].data = NULL;
 }
 
-void _audio_loop(i32 channel, u32 loop_length) {
+THUMB
+static void mixer_loop(i32 channel, u32 loop_length) {
     channels[channel].loop_length = loop_length;
 }
 
@@ -162,7 +108,8 @@ static inline void update_output_volume(u32 channel) {
     }
 }
 
-void _audio_volume(i32 channel, u32 volume) {
+THUMB
+static void mixer_volume(i32 channel, u32 volume) {
     if(volume > AUDIO_VOLUME_MAX)
         volume = AUDIO_VOLUME_MAX;
 
@@ -170,7 +117,8 @@ void _audio_volume(i32 channel, u32 volume) {
     update_output_volume(channel);
 }
 
-void _audio_panning(i32 channel, i32 panning) {
+THUMB
+static void mixer_panning(i32 channel, i32 panning) {
     if(panning < AUDIO_PANNING_MIN)
         panning = AUDIO_PANNING_MIN;
     if(panning > AUDIO_PANNING_MAX)
@@ -179,3 +127,69 @@ void _audio_panning(i32 channel, i32 panning) {
     channels[channel].panning = panning;
     update_output_volume(channel);
 }
+
+static void mixer_init(void) {
+    MASTER_SOUND_CONTROL = BIT(7);
+
+    #if OUTPUT_COUNT == 2
+    // stereo: enable one direction per Direct Sound output
+    DIRECT_SOUND_CONTROL = BIT(2) | BIT(3)  | // set volume to 100%
+                           BIT(8) | BIT(13);  // enable right and left
+    #else
+    // mono: only enable Direct Sound A
+    DIRECT_SOUND_CONTROL = BIT(2) |         // set volume to 100%
+                           BIT(8) | BIT(9); // enable right and left
+    #endif
+
+    // configure Timer 0 and Timer 1
+    timer_config(TIMER0, TIMER_PRESCALER_1);
+    timer_config(TIMER1, TIMER_CASCADE);
+
+    // enable Timer 1 interrupt
+    interrupt_toggle(IRQ_TIMER1, true);
+    interrupt_set_isr(IRQ_TIMER1, timer1_isr);
+
+    // setup channels with default configuration
+    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
+        mixer_loop   (c, 0);
+        mixer_volume (c, AUDIO_VOLUME_MAX);
+        mixer_panning(c, 0);
+    }
+
+    // start Timer 1
+    timer_start(TIMER1, BUFFER_SIZE);
+
+    // Set default sample rate. This also starts Timer 0
+    audio_sample_rate(0);
+}
+
+static void mixer_update(void) {
+    if(!need_new_page)
+        return;
+
+    need_new_page = false;
+
+    // TODO
+}
+
+static i32 mixer_available_channel(void) {
+    for(u32 c = 0; c < CHANNEL_COUNT; c++)
+        if(!channels[c].data)
+            return c;
+    return -1;
+}
+
+const struct _AudioDriver _audio_driver_mixer = {
+    .init   = mixer_init,
+    .update = mixer_update,
+
+    .play = mixer_play,
+    .stop = mixer_stop,
+
+    .loop    = mixer_loop,
+    .volume  = mixer_volume,
+    .panning = mixer_panning,
+
+    .channel_count     = CHANNEL_COUNT,
+    .available_channel = mixer_available_channel
+};
