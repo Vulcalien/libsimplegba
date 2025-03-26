@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-03-25
+:revdate: 2025-03-26
 :docdate: {revdate}
 
 == NAME
@@ -37,7 +37,7 @@ function should only be called once. Only one driver is currently
 available: *AUDIO_BASIC*.
 
 The *audio_update*() function updates the internal state of the driver.
-It needs to be called at least 50 times a second.
+This function needs to be called at least 50 times a second.
 
 The *audio_play*() function plays _length_ samples of _sound_ on
 _channel_, or any inactive channel if a negative value is passed.
