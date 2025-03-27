@@ -127,6 +127,7 @@ static void mixer_panning(i32 channel, i32 panning) {
     update_output_volume(channel);
 }
 
+THUMB
 static void mixer_init(void) {
     MASTER_SOUND_CONTROL = BIT(7);
 

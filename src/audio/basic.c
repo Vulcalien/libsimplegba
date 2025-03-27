@@ -209,6 +209,7 @@ static void timer1_isr(void) {
     schedule_timer1_irq();
 }
 
+THUMB
 static void basic_init(void) {
     MASTER_SOUND_CONTROL = BIT(7);
     DIRECT_SOUND_CONTROL = 0;
