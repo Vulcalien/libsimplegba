@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-03-26
+:revdate: 2025-03-27
 :docdate: {revdate}
 
 == NAME
@@ -33,8 +33,8 @@ capable of playing digital audio, encoded as uncompressed *signed 8-bit
 PCM*. Each driver offers various features: see DRIVERS below.
 
 The *audio_init*() function initializes the specified _driver_. This
-function should only be called once. Only one driver is currently
-available: *AUDIO_BASIC*.
+function should only be called once. _driver_ should be either
+*AUDIO_BASIC* or *AUDIO_MIXER*.
 
 The *audio_update*() function updates the internal state of the driver.
 This function needs to be called at least 50 times a second.
@@ -76,6 +76,15 @@ Panning control - limited (-64=left, +64=right)  +
 This driver maps both channels to the GBA's direct sound channels
 directly, so that its CPU usage and RAM usage remain very low, at the
 cost of only offering basic capabilities.
+
+=== AUDIO_MIXER
+Channel count   - 8               +
+Volume  control - fully supported +
+Panning control - fully supported +
+
+This driver mixes its eight channels via software, filling a buffer in
+EWRAM periodically. The CPU usage depends on the number of active
+channels.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
