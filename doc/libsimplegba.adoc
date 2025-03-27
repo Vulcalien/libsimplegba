@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-12-09
+:revdate: 2025-03-27
 :docdate: {revdate}
 
 == NAME
@@ -59,9 +59,8 @@ Pseudorandom number generator, offering the _random_ function and other
 related functions.
 
 *Memory <memory.h>*::
-Manipulate memory. This module contains replacements for some C standard
-library functions like _memset_ and _memcpy_, providing
-alignment-specific versions (e.g., memset16, memcpy32) as well.
+Memory manipulation, including replacements for _memset_ and _memcpy_,
+plus alignment-specific versions of them.
 
 === GBA Hardware
 
@@ -73,23 +72,24 @@ pointer to the bitmap raster. Graphic effects are also included.
 Configure and interact with the GBA display's background layers.
 
 *Sprite <gba/sprite.h>*::
-Configure and interact with the GBA display's sprites (objects).
+Configure and interact with the GBA display's sprites.
 
 *Window <gba/window.h>*::
 Configure the GBA display's windows.
 
 *Audio <gba/audio.h>*::
-Audio driver interface, supporting two direct sound channels.
+Play digital audio on independent channels, with options to loop, change
+volume and change panning.
 
 *Timer <gba/timer.h>*::
-Configure and interact with the GBA's four timers.
+Interface with the GBA's hardware timers.
 
 *DMA <gba/dma.h>*::
 Configure and interact with the GBA's four DMA channels, using them to
 make memory transfers.
 
 *Input <gba/input.h>*::
-Interact with the GBA's buttons and D-Pad.
+Interface with the GBA's buttons and D-Pad.
 
 *Interrupt <gba/interrupt.h>*::
 Enable or disable interrupt requests and set callback functions (ISRs)
@@ -103,7 +103,7 @@ frequency.
 Access information about the cartridge, such as its header.
 
 *Backup <gba/backup.h>*::
-Store data to and retrieve data from the cartridge's backup chip.
+Transfer data between memory and the cartridge's backup chip.
 
 === Debug
 
