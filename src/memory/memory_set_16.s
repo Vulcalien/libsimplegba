@@ -18,7 +18,6 @@
 @ --- memory_set_16 --- @
 .global memory_set_16
 .text
-THUMB_FUNC
 
 @ This function fills a memory area with a given byte value, using only
 @ 16-bit writes.
@@ -44,7 +43,7 @@ THUMB_FUNC
 @   r2 = n    : unsigned 32-bit
 @ output:
 @   r0 = dest : pointer
-memory_set_16:
+BEGIN_FUNC THUMB memory_set_16
     push    {r0}
 
     @ duplicate 'byte' to fill 16 bits
@@ -89,7 +88,6 @@ memory_set_16:
     @ return original value of dest
     pop     {r0}
     bx      lr
-
-.size memory_set_16, .-memory_set_16
+END_FUNC memory_set_16
 
 .end

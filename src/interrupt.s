@@ -28,7 +28,6 @@ isr_table:
 
 @ --- interrupt_handler --- @
 .section .iwram, "ax"
-ARM_FUNC
 
 @ Handle IRQs by calling the matching ISR.
 @ Tasks of this function:
@@ -46,7 +45,7 @@ ARM_FUNC
 @ that other bits were to be set, the BIOS would simply call this
 @ function again.
 
-interrupt_handler:
+BEGIN_FUNC ARM interrupt_handler
     @ load (IE & IF)
     ldr     r0, =0x04000200             @ r0 = pointer to IE_IF
     ldr     r1, [r0]                    @ r1 = IE_IF
@@ -102,18 +101,13 @@ interrupt_handler:
     msr     cpsr, r1
 
     bx      lr
-
-.size interrupt_handler, .-interrupt_handler
-
-.align
-.pool
+END_FUNC interrupt_handler
 
 @ --- _interrupt_init --- @
 .global _interrupt_init
 .text
-THUMB_FUNC
 
-_interrupt_init:
+BEGIN_FUNC THUMB _interrupt_init
     @ set interrupt vector
     ldr     r0, =0x03007ffc             @ r0 = pointer to master ISR
     ldr     r1, =interrupt_handler
@@ -125,20 +119,15 @@ _interrupt_init:
     str     r1, [r0]
 
     bx      lr
-
-.size _interrupt_init, .-_interrupt_init
-
-.align
-.pool
+END_FUNC _interrupt_init
 
 @ --- interrupt_set_isr --- @
 .global interrupt_set_isr
 .text
-ARM_FUNC
 
 @ r0 = irq
 @ r1 = isr
-interrupt_set_isr:
+BEGIN_FUNC ARM interrupt_set_isr
     @ check if the given IRQ is valid
     cmp     r0, #(INTERRUPT_COUNT)
 
@@ -147,7 +136,6 @@ interrupt_set_isr:
     strlo   r1, [r2, r0, lsl #2]
 
     bx      lr
-
-.size interrupt_set_isr, .-interrupt_set_isr
+END_FUNC interrupt_set_isr
 
 .end

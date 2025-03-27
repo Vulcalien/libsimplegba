@@ -18,7 +18,6 @@
 @ --- memory_copy_32 --- @
 .global memory_copy_32
 .text
-THUMB_FUNC
 
 @ This function copies data from one memory area to another, using only
 @ 32-bit reads and writes.
@@ -45,7 +44,7 @@ THUMB_FUNC
 @   r2 = n    : unsigned 32-bit
 @ output:
 @   r0 = dest : pointer
-memory_copy_32:
+BEGIN_FUNC THUMB memory_copy_32
     push    {r0, r4-r7}
 
     @ calculate number of words and 4-word blocks
@@ -81,7 +80,6 @@ memory_copy_32:
     @ return original value of dest
     pop     {r0, r4-r7}
     bx      lr
-
-.size memory_copy_32, .-memory_copy_32
+END_FUNC memory_copy_32
 
 .end

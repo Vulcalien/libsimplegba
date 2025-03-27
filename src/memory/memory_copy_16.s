@@ -18,7 +18,6 @@
 @ --- memory_copy_16 --- @
 .global memory_copy_16
 .text
-THUMB_FUNC
 
 @ This function copies data from one memory area to another, using only
 @ 16-bit reads and writes.
@@ -43,7 +42,7 @@ THUMB_FUNC
 @   r2 = n    : unsigned 32-bit
 @ output:
 @   r0 = dest : pointer
-memory_copy_16:
+BEGIN_FUNC THUMB memory_copy_16
     push    {r0, r4}
 
     @ calculate number of halfwords and 4-halfword blocks
@@ -94,7 +93,6 @@ memory_copy_16:
     @ return original value of dest
     pop     {r0, r4}
     bx      lr
-
-.size memory_copy_16, .-memory_copy_16
+END_FUNC memory_copy_16
 
 .end

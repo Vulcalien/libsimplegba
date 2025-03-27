@@ -18,7 +18,6 @@
 @ --- memset --- @
 .global memset
 .text
-THUMB_FUNC
 
 @ Fill a memory area with a given byte value. This is an implementation
 @ of the C standard function 'memset'.
@@ -39,7 +38,7 @@ THUMB_FUNC
 @   r2 = n    : unsigned 32-bit
 @ output:
 @   r0 = dest : pointer
-memset:
+BEGIN_FUNC THUMB memset
     mov     r3, lr                      @ r3 = lr
     push    {r0, r3}
 
@@ -129,7 +128,6 @@ memset:
 
     @ return
     b       2b @ unaligned end return
-
-.size memset, .-memset
+END_FUNC memset
 
 .end

@@ -1,4 +1,4 @@
-@ Copyright 2024 Vulcalien
+@ Copyright 2024-2025 Vulcalien
 @
 @ This program is free software: you can redistribute it and/or modify
 @ it under the terms of the GNU General Public License as published by
@@ -13,13 +13,26 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-.macro THUMB_FUNC
-    .thumb
-    .thumb_func
-    .align 1
+.macro BEGIN_FUNC isa:req name:req
+    .if \isa == ARM
+        .arm
+        .align 2
+    .elseif \isa == THUMB
+        .thumb
+        .thumb_func
+        .align 1
+    .else
+        .err "selected ISA is neither ARM nor THUMB"
+    .endif
+
+    .func \name, \name
+    .type \name, %function
+
+    \name\():
 .endm
 
-.macro ARM_FUNC
-    .arm
-    .align 2
+.macro END_FUNC name:req
+    .pool
+    .size \name, .-\name
+    .endfunc
 .endm
