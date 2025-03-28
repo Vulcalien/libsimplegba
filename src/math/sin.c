@@ -155,6 +155,7 @@ static const u16 sin_lut[0x8000 / SCALE + 1] = {
     0x0000
 };
 
+THUMB
 i32 math_sin(i32 angle) {
     // normalize angle in range [0, 360) degrees
     angle &= BITMASK(16);

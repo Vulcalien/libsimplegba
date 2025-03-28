@@ -94,6 +94,7 @@ static const u16 asin_lut[0x4000 / SCALE + 2] = {
 // LUT-based implementation of arcsine. Since asin(-x) = -asin(x), the
 // table only contains entries for non-negative arguments.
 
+THUMB
 i32 math_asin(i32 x) {
     // if argument is outside the domain, return 0
     if(math_abs(x) > 0x4000)
