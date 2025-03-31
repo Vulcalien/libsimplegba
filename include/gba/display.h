@@ -82,6 +82,9 @@ INLINE void display_force_blank(bool flag) {
         _DISPLAY_CONTROL &= ~BIT(7);
 }
 
+// TODO This function remains undocumented: should it really exist?
+// What about setting the VCount in the DISPLAY_STATUS register?
+// Or reading the VBlank/HBlank/VCount flags in DISPLAY_STATUS?
 INLINE u16 display_vcount(void) {
     return *(vu16 *) 0x04000006;
 }
