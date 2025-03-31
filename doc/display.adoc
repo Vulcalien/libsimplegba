@@ -29,11 +29,13 @@ ____
 == DESCRIPTION
 === Display configuration
 The *display_config*() function configures the display to the specified
-__video_mode__. The video mode changes how the display is drawn.
+__video_mode__. The video mode changes how the display is drawn, and how
+video memory is allocated.
 
 Video modes 0-2 use tiled backgrounds (tilemaps). Which backgrounds are
-available, and how they are treated (regular or affine), depends on the
-video mode selected.
+available, and how they are treated (regular or affine), depend on the
+video mode selected. Charblocks are allocated as follows: 0-3 background
+tilesets, 4-5 sprite tileset.
 
 .Tilemap video modes
 [cols="1,1,1,1,1"]
@@ -46,7 +48,8 @@ video mode selected.
 |===
 
 Video modes 3-5 use bitmaps. The size, BPP (bits-per-pixel), and number
-of pages depends on the video mode selected.
+of pages depend on the video mode selected. Charblocks are allocated as
+follows: 0-4 raster, 5 sprite tileset.
 
 .Bitmap video modes
 [cols="1,1,1,1"]
@@ -65,8 +68,8 @@ of the display are set to white.
 === Video memory
 The *display_charblock*() function returns a pointer to the charblock of
 index _block_. Charblocks are 16 KB areas of video memory used to store
-tilesets. The value of _block_ should be in the range [0, 5].
-TODO explain how charblocks behave in tilemap/bitmap modes
+tilesets. See *display_config*() to see how charblocks are allocated.
+The value of _block_ should be in the range [0, 5].
 
 The *display_screenblock*() function returns a pointer to the
 screenblock of index _block_. Screenblocks are 2 KB areas of video
@@ -79,7 +82,11 @@ currently being shown. The *display_set_page*() function sets the
 display page to show to _page_.
 
 The *display_get_raster*() function returns a pointer to the raster of
-the specified _page_.
+the specified _page_. The raster is an array of colors, with size and
+bits-per-pixel that depend on the video mode.
+
+== NOTES
+Video memory should only be written to using 16-bit or 32-bit writes.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
