@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-02-22
+:revdate: 2025-04-01
 :docdate: {revdate}
 
 == NAME
@@ -27,7 +27,7 @@ ____
 ____
 
 == DESCRIPTION
-A sprite, also called 'object', is a graphical element that can be drawn
+Sprites, also called objects, are graphical elements that can be drawn
 anywhere on the display, without being restricted to a grid like
 background tiles are.
 

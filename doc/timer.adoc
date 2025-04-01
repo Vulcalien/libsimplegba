@@ -27,11 +27,11 @@ ____
 ____
 
 == DESCRIPTION
-A timer is a hardware component that precisely measures time. It is
+Timers are hardware components that precisely measure time. They are
 composed of a *counter* and a *reload register*, with values between 1
 and *TIMER_COUNTER_MAX* (65536). Each time a timer ticks, its counter is
-decremented until it reaches zero: once that occurs, the counter is
-immediately reset to the reload value, and the timer continues running.
+decremented. When the counter reaches zero, the counter is immediately
+reset to the reload value, and the timer continues running.
 
 When the counter of a timer reaches zero, an interrupt request tied to
 that timer is raised, if enabled: see *interrupt_enable(3)*.
@@ -42,9 +42,7 @@ This can be an integer between 0 and 3, or one of these constants:
 
 === Timer configuration
 The *timer_config*() function configures the timer and, if running,
-stops it.
-
-The _config_ argument can be any of these constants:
+stops it. The _config_ argument can be any of these constants:
 *TIMER_PRESCALER_1*, *TIMER_PRESCALER_64*, *TIMER_PRESCALER_256*,
 *TIMER_PRESCALER_1024*, *TIMER_CASCADE*.
 
