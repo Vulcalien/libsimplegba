@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-03-25
+:revdate: 2025-04-02
 :docdate: {revdate}
 
 == NAME
@@ -33,8 +33,7 @@ ____
 == DESCRIPTION
 The *backup_init*() function initializes the specified _driver_. This
 function should only be called once. Based on the backup chip being
-used, _driver_ should be either *BACKUP_SRAM*, *BACKUP_FLASH* or
-*BACKUP_EEPROM*.
+used, _driver_ should be either *BACKUP_SRAM* or *BACKUP_FLASH*.
 
 The *backup_read*() and *backup_write*() functions, respectively, read
 from and write to backup memory, transferring _n_ bytes between _buffer_
