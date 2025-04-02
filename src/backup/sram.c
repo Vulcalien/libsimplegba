@@ -39,23 +39,6 @@ static void sram_write_byte(u16 offset, u8 byte) {
     SRAM[offset] = byte;
 }
 
-THUMB
-static u16 sram_identify(void) {
-    return 0;
-}
-
-THUMB
-static void sram_set_bank(u32 bank) {
-}
-
-THUMB
-static void sram_erase_chip(void) {
-}
-
-THUMB
-static void sram_erase_sector(u32 n) {
-}
-
 const struct _BackupDriver _backup_driver_sram = {
     .read  = sram_read,
     .write = sram_write,
@@ -63,9 +46,9 @@ const struct _BackupDriver _backup_driver_sram = {
     .read_byte  = sram_read_byte,
     .write_byte = sram_write_byte,
 
-    .identify = sram_identify,
-    .set_bank = sram_set_bank,
+    .identify = NULL,
+    .set_bank = NULL,
 
-    .erase_chip   = sram_erase_chip,
-    .erase_sector = sram_erase_sector
+    .erase_chip   = NULL,
+    .erase_sector = NULL
 };
