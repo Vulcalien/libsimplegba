@@ -44,11 +44,5 @@ const struct _BackupDriver _backup_driver_sram = {
     .write = sram_write,
 
     .read_byte  = sram_read_byte,
-    .write_byte = sram_write_byte,
-
-    .identify = NULL,
-    .set_bank = NULL,
-
-    .erase_chip   = NULL,
-    .erase_sector = NULL
+    .write_byte = sram_write_byte
 };
