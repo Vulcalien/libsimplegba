@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-03-27
+:revdate: 2025-04-02
 :docdate: {revdate}
 
 == NAME
@@ -19,6 +19,9 @@ ____
 
 **i32  audio_play(i32 **__channel__**, const void +++*+++**__sound__**, u32 **__length__**);**
 **void audio_stop(i32 **__channel__**);**
+
+**void audio_pause(i32 **__channel__**);**
+**void audio_resume(i32 **__channel__**);**
 
 **void audio_loop(i32 **__channel__**, u32 **__loop_length__**);**
 **void audio_volume(i32 **__channel__**, u32 **__volume__**);**
@@ -40,10 +43,14 @@ The *audio_update*() function updates the internal state of the driver.
 This function needs to be called at least 50 times a second.
 
 The *audio_play*() function plays _length_ samples of _sound_ on
-_channel_, or any inactive channel if a negative value is passed.
+_channel_, or any available channel if a negative value is passed. If
+the channel is already in use, the currently playing sound is replaced.
 
 The *audio_stop*() function stops _channel_, or all channels if a
 negative value is passed.
+
+The *audio_pause*() and *audio_resume*() functions, respectively, pause
+and resume _channel_, or all channels if a negative value is passed.
 
 The *audio_loop*() function loops the last __loop_length__ samples of
 the sound playing on _channel_, or all channels if a negative value is
