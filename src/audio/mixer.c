@@ -36,6 +36,8 @@ static struct Channel {
     u8 volume;
     i8 panning;
 
+    bool paused;
+
     // cached volume per output, obtained from 'volume' and 'panning'
     u8 output_volume[OUTPUT_COUNT];
 } channels[CHANNEL_COUNT];
@@ -70,8 +72,8 @@ static void timer1_isr(void) {
     need_new_page = true;
 }
 
-// Note: the effects of play, stop, volume and panning are delayed until
-// the buffer is next updated.
+// Note: the effects of play, stop, pause, resume, volume and panning
+// are delayed until the buffer is next updated.
 
 THUMB
 static i32 mixer_play(i32 channel, const void *sound, u32 length) {
@@ -79,12 +81,25 @@ static i32 mixer_play(i32 channel, const void *sound, u32 length) {
     channel_struct->data = (const i8 *) sound;
     channel_struct->end  = (const i8 *) sound + length;
 
+    // make sure channel is not paused
+    channel_struct->paused = false;
+
     return channel;
 }
 
 THUMB
 static void mixer_stop(i32 channel) {
     channels[channel].data = NULL;
+}
+
+THUMB
+static void mixer_pause(i32 channel) {
+    channels[channel].paused = true;
+}
+
+THUMB
+static void mixer_resume(i32 channel) {
+    channels[channel].paused = false;
 }
 
 THUMB
@@ -176,7 +191,7 @@ static void mixer_update(void) {
     // add samples from active channels to temporary buffers
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
-        if(!channel->data)
+        if(!channel->data || channel->paused)
             continue;
 
         for(u32 s = 0; s < BUFFER_SIZE; s++) {
@@ -223,6 +238,9 @@ const struct _AudioDriver _audio_driver_mixer = {
 
     .play = mixer_play,
     .stop = mixer_stop,
+
+    .pause  = mixer_pause,
+    .resume = mixer_resume,
 
     .loop    = mixer_loop,
     .volume  = mixer_volume,
