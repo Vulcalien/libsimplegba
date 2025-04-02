@@ -32,6 +32,9 @@ extern const struct _AudioDriver {
     i32  (*play)(i32 channel, const void *sound, u32 length);
     void (*stop)(i32 channel);
 
+    void (*pause)(i32 channel);
+    void (*resume)(i32 channel);
+
     void (*loop)(i32 channel, u32 loop_length);
     void (*volume)(i32 channel, u32 volume);
     void (*panning)(i32 channel, i32 panning);
@@ -66,6 +69,24 @@ INLINE void audio_stop(i32 channel) {
             _audio_driver->stop(c);
     } else if(channel < _audio_driver->channel_count) {
         _audio_driver->stop(channel);
+    }
+}
+
+INLINE void audio_pause(i32 channel) {
+    if(channel < 0) {
+        for(u32 c = 0; c < _audio_driver->channel_count; c++)
+            _audio_driver->pause(c);
+    } else if(channel < _audio_driver->channel_count) {
+        _audio_driver->pause(channel);
+    }
+}
+
+INLINE void audio_resume(i32 channel) {
+    if(channel < 0) {
+        for(u32 c = 0; c < _audio_driver->channel_count; c++)
+            _audio_driver->resume(c);
+    } else if(channel < _audio_driver->channel_count) {
+        _audio_driver->resume(channel);
     }
 }
 
