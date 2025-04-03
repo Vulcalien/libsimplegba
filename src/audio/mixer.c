@@ -185,16 +185,13 @@ static INLINE void mix_channel(struct Channel *channel, bool near_end) {
             temp_buffers[o][s] += sample * volume / AUDIO_VOLUME_MAX;
         }
 
-        // if the sound is near the end, check if it has reached it
-        if(near_end) {
-            // if end of sound is reached, loop or stop
-            if(channel->data >= channel->end) {
-                if(channel->loop_length != 0) {
-                    channel->data = channel->end - channel->loop_length;
-                } else {
-                    channel->data = NULL;
-                    return;
-                }
+        // if end of sound is reached, loop or stop
+        if(near_end && channel->data >= channel->end) {
+            if(channel->loop_length != 0) {
+                channel->data = channel->end - channel->loop_length;
+            } else {
+                channel->data = NULL;
+                return;
             }
         }
     }
