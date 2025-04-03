@@ -116,17 +116,15 @@ static INLINE void schedule_timer1_irq(void) {
 
 static INLINE void update_enable_bits(i32 channel) {
     const u32 enable_bits = outputs[channel].enable_bits;
-    struct Channel *channel_struct = &channels[channel];
 
-    // Clear enable bits. It is important to always clear the bits,
-    // even before setting them, in case the directions changed.
+    // clear enable bits (needed if directions changed)
     DIRECT_SOUND_CONTROL &= ~(3 << enable_bits);
 
-    const u32 directions = channel_struct->directions;
-
     // if playing, set enable bits
-    if(channel_struct->data)
+    if(channels[channel].data) {
+        const u32 directions = channels[channel].directions;
         DIRECT_SOUND_CONTROL |= (directions << enable_bits);
+    }
 }
 
 THUMB
