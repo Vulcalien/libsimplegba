@@ -89,7 +89,7 @@ static NO_INLINE void restart_dma(i32 channel) {
 }
 
 static INLINE void schedule_timer1_irq(void) {
-    // determine how many samples should be played before stopping
+    // determine how many samples to play before the next interrupt
     u32 next_stop = TIMER_COUNTER_MAX;
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
@@ -97,11 +97,11 @@ static INLINE void schedule_timer1_irq(void) {
             continue;
 
         const u32 remaining = channel->end - channel->data;
-        if(remaining < next_stop)
+        if(next_stop > remaining)
             next_stop = remaining;
     }
 
-    // add number of samples to be played to data pointers of channels
+    // move forward data pointers of channels
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
         if(!channel->data)
