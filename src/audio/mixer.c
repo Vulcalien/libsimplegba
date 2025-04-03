@@ -175,6 +175,31 @@ static void mixer_init(void) {
     audio_sample_rate(0);
 }
 
+static INLINE void mix_channel(struct Channel *channel, bool near_end) {
+    for(u32 s = 0; s < BUFFER_SIZE; s++) {
+        // read sample and move data pointer forward
+        const i8 sample = *(channel->data++);
+
+        for(u32 o = 0; o < OUTPUT_COUNT; o++) {
+            const u32 volume = channel->output_volume[o];
+            temp_buffers[o][s] += sample * volume / AUDIO_VOLUME_MAX;
+        }
+
+        // if the sound is near the end, check if it has reached it
+        if(near_end) {
+            // if end of sound is reached, loop or stop
+            if(channel->data >= channel->end) {
+                if(channel->loop_length != 0) {
+                    channel->data = channel->end - channel->loop_length;
+                } else {
+                    channel->data = NULL;
+                    return;
+                }
+            }
+        }
+    }
+}
+
 IWRAM_SECTION
 static void mixer_update(void) {
     if(!need_new_page)
@@ -191,25 +216,13 @@ static void mixer_update(void) {
         if(!channel->data || channel->paused)
             continue;
 
-        for(u32 s = 0; s < BUFFER_SIZE; s++) {
-            // read sample and move data pointer forward
-            const i8 sample = *(channel->data++);
-
-            for(u32 o = 0; o < OUTPUT_COUNT; o++) {
-                const u32 volume = channel->output_volume[o];
-                temp_buffers[o][s] += sample * volume / AUDIO_VOLUME_MAX;
-            }
-
-            // if end of sound is reached, loop or stop
-            if(channel->data >= channel->end) {
-                if(channel->loop_length != 0) {
-                    channel->data = channel->end - channel->loop_length;
-                } else {
-                    channel->data = NULL;
-                    break;
-                }
-            }
-        }
+        // Mix the channel's sound.
+        // It is important to pass a literal value as the 'near_end'
+        // argument, so that the compiler generates specialized code.
+        if(channel->data + BUFFER_SIZE < channel->end)
+            mix_channel(channel, false);
+        else
+            mix_channel(channel, true);
     }
 
     // write clipped data from temporary buffers to output buffers
