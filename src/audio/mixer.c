@@ -77,12 +77,11 @@ static void timer1_isr(void) {
 
 THUMB
 static i32 mixer_play(i32 channel, const void *sound, u32 length) {
-    struct Channel *channel_struct = &channels[channel];
-    channel_struct->data = (const i8 *) sound;
-    channel_struct->end  = (const i8 *) sound + length;
+    channels[channel].data = (const i8 *) sound;
+    channels[channel].end  = (const i8 *) sound + length;
 
     // make sure channel is not paused
-    channel_struct->paused = false;
+    channels[channel].paused = false;
 
     return channel;
 }
@@ -108,10 +107,8 @@ static void mixer_loop(i32 channel, u32 loop_length) {
 }
 
 static inline void update_output_volume(u32 channel) {
-    struct Channel *channel_struct = &channels[channel];
-
-    const u32 volume  = channel_struct->volume;
-    const i32 panning = channel_struct->panning;
+    const u32 volume  = channels[channel].volume;
+    const i32 panning = channels[channel].panning;
 
     for(u32 o = 0; o < OUTPUT_COUNT; o++) {
         // calculate weight by either subtracting or adding panning
@@ -121,7 +118,7 @@ static inline void update_output_volume(u32 channel) {
             weight = AUDIO_VOLUME_MAX;
 
         const u32 output_volume = weight * volume / AUDIO_VOLUME_MAX;
-        channel_struct->output_volume[o] = output_volume;
+        channels[channel].output_volume[o] = output_volume;
     }
 }
 
@@ -186,7 +183,7 @@ static void mixer_update(void) {
     need_new_page = false;
 
     // clear temporary buffers
-    memory_set_32(temp_buffers, 0, sizeof(temp_buffers));
+    memory_clear_32(temp_buffers, sizeof(temp_buffers));
 
     // add samples from active channels to temporary buffers
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
