@@ -112,7 +112,7 @@ static inline void update_output_volume(u32 channel) {
 
     for(u32 o = 0; o < OUTPUT_COUNT; o++) {
         // calculate weight by either subtracting or adding panning
-        u32 weight = AUDIO_VOLUME_MAX + (o == 0 ? -panning : +panning);
+        u32 weight = AUDIO_VOLUME_MAX + (o == 0 ? +panning : -panning);
 
         if(weight > AUDIO_VOLUME_MAX)
             weight = AUDIO_VOLUME_MAX;
