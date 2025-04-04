@@ -2,12 +2,13 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-04-02
+:revdate: 2025-04-04
 :docdate: {revdate}
 
 == NAME
-audio_init, audio_update, audio_play, audio_stop, audio_loop,
-audio_volume, audio_panning, audio_sample_rate - audio driver
+audio_init, audio_update, audio_play, audio_stop, audio_pause,
+audio_resume, audio_loop, audio_pitch, audio_volume, audio_panning,
+audio_sample_rate - audio driver
 
 == SYNOPSIS
 [verse]
@@ -23,8 +24,9 @@ ____
 **void audio_pause(i32 **__channel__**);**
 **void audio_resume(i32 **__channel__**);**
 
-**void audio_loop(i32 **__channel__**, u32 **__loop_length__**);**
-**void audio_volume(i32 **__channel__**, u32 **__volume__**);**
+**void audio_loop   (i32 **__channel__**, u32 **__loop_length__**);**
+**void audio_pitch  (i32 **__channel__**, u32 **__pitch__**);**
+**void audio_volume (i32 **__channel__**, u32 **__volume__**);**
 **void audio_panning(i32 **__channel__**, i32 **__panning__**);**
 
 **void audio_sample_rate(u32 **__sample_rate__**);**
@@ -55,6 +57,11 @@ and resume _channel_, or all channels if a negative value is passed.
 The *audio_loop*() function loops the last __loop_length__ samples of
 the sound playing on _channel_, or all channels if a negative value is
 passed. If __loop_length__ is zero, looping is disabled on that channel.
+
+The *audio_pitch*() function sets the pitch of _channel_, or all
+channels if a negative value is passed. The normal pitch is
+*AUDIO_PITCH_NORMAL* (0x1000), and the maximum is *AUDIO_PITCH_MAX*
+(0xffff).
 
 The *audio_volume*() function sets the volume of _channel_, or all
 channels if a negative value is passed. The maximum volume is
