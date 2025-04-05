@@ -32,6 +32,9 @@ static struct Channel {
     const i8 *data; // NULL if channel is inactive
     const i8 *end;
 
+    u16 position;  // fixed-point, 1 = 0x1000
+    u16 increment; // fixed-point, 1 = 0x1000
+
     u32 loop_length;
     u8 volume;
     i8 panning;
@@ -106,6 +109,14 @@ static void mixer_loop(i32 channel, u32 loop_length) {
     channels[channel].loop_length = loop_length;
 }
 
+THUMB
+static void mixer_pitch(i32 channel, u32 pitch) {
+    if(pitch > AUDIO_PITCH_MAX)
+        pitch = AUDIO_PITCH_MAX;
+
+    channels[channel].increment = pitch;
+}
+
 static inline void update_output_volume(u32 channel) {
     const u32 volume  = channels[channel].volume;
     const i32 panning = channels[channel].panning;
@@ -164,6 +175,7 @@ static void mixer_init(void) {
     // setup channels with default configuration
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         mixer_loop   (c, 0);
+        mixer_pitch  (c, AUDIO_PITCH_NORMAL);
         mixer_volume (c, AUDIO_VOLUME_MAX);
         mixer_panning(c, 0);
     }
@@ -250,6 +262,7 @@ const struct _AudioDriver _audio_driver_mixer = {
     .resume = mixer_resume,
 
     .loop    = mixer_loop,
+    .pitch   = mixer_pitch,
     .volume  = mixer_volume,
     .panning = mixer_panning,
 
