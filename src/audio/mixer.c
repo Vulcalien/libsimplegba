@@ -42,6 +42,7 @@ static struct Channel {
     bool paused;
 
     // cached volume per output, obtained from 'volume' and 'panning'
+    ALIGNED(2)
     u8 output_volume[OUTPUT_COUNT];
 } channels[CHANNEL_COUNT];
 
@@ -49,7 +50,7 @@ static u32 buffer_page;
 static bool need_new_page;
 
 SBSS_SECTION
-static i16 temp_buffers[OUTPUT_COUNT][BUFFER_SIZE];
+static i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT];
 
 SBSS_SECTION
 static i8 buffers[2][OUTPUT_COUNT][BUFFER_SIZE];
@@ -187,61 +188,20 @@ static void mixer_init(void) {
     audio_sample_rate(0);
 }
 
-static INLINE void mix_channel(struct Channel *channel, bool near_end) {
-    for(u32 s = 0; s < BUFFER_SIZE; s++) {
-        // read sample and move data pointer forward
-        const i8 sample = *(channel->data++);
+extern void _mixer_update(struct Channel *channels,
+                          i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT]);
 
-        for(u32 o = 0; o < OUTPUT_COUNT; o++) {
-            const u32 volume = channel->output_volume[o];
-            temp_buffers[o][s] += sample * volume / AUDIO_VOLUME_MAX;
-        }
+extern void _mixer_clip(i8 buffers[OUTPUT_COUNT][BUFFER_SIZE],
+                        i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT]);
 
-        // if end of sound is reached, loop or stop
-        if(near_end && channel->data >= channel->end) {
-            if(channel->loop_length != 0) {
-                channel->data = channel->end - channel->loop_length;
-            } else {
-                channel->data = NULL;
-                return;
-            }
-        }
-    }
-}
-
-IWRAM_SECTION
+THUMB
 static void mixer_update(void) {
     if(!need_new_page)
         return;
-
     need_new_page = false;
 
-    // clear temporary buffers
-    memory_clear_32(temp_buffers, sizeof(temp_buffers));
-
-    // add samples from active channels to temporary buffers
-    for(u32 c = 0; c < CHANNEL_COUNT; c++) {
-        struct Channel *channel = &channels[c];
-        if(!channel->data || channel->paused)
-            continue;
-
-        // Mix the channel's sound.
-        // It is important to pass a literal value as the 'near_end'
-        // argument, so that the compiler generates specialized code.
-        if(channel->data + BUFFER_SIZE < channel->end)
-            mix_channel(channel, false);
-        else
-            mix_channel(channel, true);
-    }
-
-    // write clipped data from temporary buffers to output buffers
-    for(u32 s = 0; s < BUFFER_SIZE; s++) {
-        for(u32 o = 0; o < OUTPUT_COUNT; o++) {
-            buffers[buffer_page][o][s] = math_clip(
-                temp_buffers[o][s], I8_MIN, I8_MAX
-            );
-        }
-    }
+    _mixer_update(channels, temp_buffers);
+    _mixer_clip(buffers[buffer_page], temp_buffers);
 }
 
 static i32 mixer_available_channel(void) {
