@@ -28,6 +28,13 @@
 #define OUTPUT_COUNT  2
 #define BUFFER_SIZE   768 // enough to last ~47ms at 16384 Hz
 
+#define VOLUME_LEVELS 32
+static_assert(
+    -128 * VOLUME_LEVELS * CHANNEL_COUNT >= I16_MIN &&
+    127 * VOLUME_LEVELS * CHANNEL_COUNT <= I16_MAX,
+    "driver configuration allows overflow in temporary buffers"
+);
+
 static struct Channel {
     const i8 *data; // NULL if channel is inactive
     const i8 *end;
@@ -129,7 +136,8 @@ static inline void update_output_volume(u32 channel) {
         if(weight > AUDIO_VOLUME_MAX)
             weight = AUDIO_VOLUME_MAX;
 
-        const u32 output_volume = weight * volume / AUDIO_VOLUME_MAX;
+        u32 output_volume = weight * volume / AUDIO_VOLUME_MAX;
+        output_volume /= (AUDIO_VOLUME_MAX / VOLUME_LEVELS);
         channels[channel].output_volume[o] = output_volume;
     }
 }

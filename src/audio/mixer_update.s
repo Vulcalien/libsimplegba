@@ -102,13 +102,13 @@ BEGIN_FUNC ARM _mixer_update
     @ add sample to temp_buffers[0]
     ldrh    r12, [r1]
     mul     r14, r11, r8                @ sample * volume[0]
-    add     r12, r14, lsr #6            @ sample * volume[0] / VOLUME_MAX
+    add     r12, r14, lsr #5            @ sample * volume[0] / VOLUME_LEVELS
     strh    r12, [r1], #2               @ temp_buffers += 2
 
     @ add sample to temp_buffers[1]
     ldrh    r12, [r1]
     mul     r14, r11, r9                @ sample * volume[1]
-    add     r12, r14, lsr #6            @ sample * volume[1] / VOLUME_MAX
+    add     r12, r14, lsr #5            @ sample * volume[1] / VOLUME_LEVELS
     strh    r12, [r1], #2               @ temp_buffers += 2
 
     @ if data >= end, loop or stop the channel
