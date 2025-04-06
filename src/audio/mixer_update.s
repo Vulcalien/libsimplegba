@@ -31,17 +31,16 @@
 @   r5  = end
 @   r6  = position
 @   r7  = increment
-@   r8  = volume[0]
-@   r9  = volume[1]
-@   r10 = remaining
-@   r11 = sample
-@   r12 = loop_length
+@   r8  = volume
+@   r9  = remaining
+@   r10 = sample
+@   r11 = loop_length
 
 @ input:
 @   r0 = channels     : struct Channel *
 @   r1 = temp_buffers : i16 [BUFFER_SIZE][OUTPUT_COUNT]
 BEGIN_FUNC ARM _mixer_update
-    push    {r4-r12, r14}
+    push    {r4-r11}
 
 @ ==================================================================== @
 @                             clear buffer                             @
@@ -53,11 +52,11 @@ BEGIN_FUNC ARM _mixer_update
     mov     r5, #0
 
     mov     r6, r1                      @ (r6) to_clear = temp_buffers
-    mov     r10, #BUFFER_SIZE           @ (r10) remaining = BUFFER_SIZE
+    mov     r9, #BUFFER_SIZE            @ (r9) remaining = BUFFER_SIZE
 .L_clear_loop:
     stm     r6!, {r2-r5}
 
-    subs    r10, #4                     @ (r10) remaining -= 4
+    subs    r9, #4                      @ (r9) remaining -= 4
     bgt     .L_clear_loop               @ if remaining > 0, repeat loop
 .L_exit_clear_loop:
 
@@ -81,42 +80,41 @@ BEGIN_FUNC ARM _mixer_update
     cmp     r5, #0
     bne     .L_continue_channels_loop
 
-    @ retrieve end pointer, position, increment and volume
+    @ retrieve end pointer, position and increment
     ldr     r5, [r3, #4]                @ (r5) end
     ldrh    r6, [r3, #8]                @ (r6) position
     ldrh    r7, [r3, #10]               @ (r7) increment
-    ldrb    r8, [r3, #20]               @ (r8) volume[0]
-    ldrb    r9, [r3, #21]               @ (r9) volume[1]
+
+    @ retrieve volume vector
+    ldrh    r8, [r3, #20]               @ 00 00 RR LL
+    orr     r8, r8, lsl #8              @ 00 RR xx LL
+    bic     r8, #0x0000ff00             @ (r8) volume (00 RR 00 LL)
 
     @ save value of temp_buffers
     push    {r1}
 
-    mov     r10, #BUFFER_SIZE           @ (r10) remaining = BUFFER_SIZE
+    mov     r9, #BUFFER_SIZE            @ (r9) remaining = BUFFER_SIZE
 .L_samples_loop:
     @ retrieve sample and update position
-    ldrsb   r11, [r4]                   @ (r11) sample = *data
+    ldrsb   r10, [r4]                   @ (r10) sample = *data
     add     r6, r7                      @ (r6) position += increment
     add     r4, r6, lsr #12             @ (r4) data += position / 0x1000
     bic     r6, #0x000ff000             @ (r6) position &= 0xfff
 
-    @ add sample to temp_buffers[0]
-    ldrh    r12, [r1]
-    mul     r14, r11, r8                @ sample * volume[0]
-    add     r12, r14, lsr #5            @ sample * volume[0] / VOLUME_LEVELS
-    strh    r12, [r1], #2               @ temp_buffers += 2
-
-    @ add sample to temp_buffers[1]
-    ldrh    r12, [r1]
-    mul     r14, r11, r9                @ sample * volume[1]
-    add     r12, r14, lsr #5            @ sample * volume[1] / VOLUME_LEVELS
-    strh    r12, [r1], #2               @ temp_buffers += 2
+    @ Add sample to temp_buffers: instead of working on two 16-bit
+    @ values separately, work on them combined into a 32-bit value, in a
+    @ way similar to vector arithmetic. The driver must be setup so that
+    @ 16-bit overflow does not happen, or else artifacts would appear.
+    ldr     r11, [r1]
+    mla     r11, r10, r8, r11           @ tmp += sample * volume
+    str     r11, [r1], #4
 
     @ if data >= end, loop or stop the channel
     cmp     r4, r5
     bge     .L_loop_or_stop
 
 .L_continue_samples_loop:
-    subs    r10, #1                     @ (r10) remaining--
+    subs    r9, #1                      @ (r9) remaining--
     bgt     .L_samples_loop             @ if remaining > 0, repeat loop
 .L_exit_samples_loop:
 
@@ -130,7 +128,7 @@ BEGIN_FUNC ARM _mixer_update
     bge     .L_channels_loop            @ if c >= 0, repeat loop
 .L_exit_channels_loop:
 
-    pop     {r4-r12, r14}
+    pop     {r4-r11}
     bx      lr
 
 @ ==================================================================== @
@@ -142,11 +140,11 @@ BEGIN_FUNC ARM _mixer_update
     mov     r6, #0                      @ (r6) position = 0
 
     @ retrieve loop_length
-    ldr     r12, [r3, #12]              @ (r12) loop_length
-    cmp     r12, #0
+    ldr     r11, [r3, #12]              @ (r11) loop_length
+    cmp     r11, #0
 
     @ if loop_length != 0, loop channel and continue sample loop
-    subne   r4, r5, r12                 @ (r4) data = end - loop_length
+    subne   r4, r5, r11                 @ (r4) data = end - loop_length
     bne     .L_continue_samples_loop
 
     @ if loop_length == 0, stop channel and break sample loop

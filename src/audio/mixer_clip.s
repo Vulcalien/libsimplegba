@@ -35,6 +35,7 @@ BEGIN_FUNC ARM _mixer_clip
 .L_samples_loop:
     @ clip samples[1]
     ldrsh   r3, [r1, #2]                @ (r3) samples[1]
+    asr     r3, #5                      @ samples[1] /= VOLUME_LEVELS
     cmp     r3, #-128                   @ ========
     movlt   r3, #-128                   @   clip
     cmp     r3, #127                    @  sample
@@ -43,6 +44,7 @@ BEGIN_FUNC ARM _mixer_clip
 
     @ clip samples[0] and increment pointers
     ldrsh   r3, [r1], #4                @ (r3) samples[0]
+    asr     r3, #5                      @ samples[0] /= VOLUME_LEVELS
     cmp     r3, #-128                   @ ========
     movlt   r3, #-128                   @   clip
     cmp     r3, #127                    @  sample
