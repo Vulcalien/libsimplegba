@@ -105,8 +105,13 @@ BEGIN_FUNC ARM _mixer_update
     @ values separately, work on them combined into a 32-bit value, in a
     @ way similar to vector arithmetic. The driver must be setup so that
     @ 16-bit overflow does not happen, or else artifacts would appear.
+    @
+    @ Note that, if sample is negative, the top 16-bit value is off by
+    @ one, so it should be adjusted to prevent noise.
     ldr     r11, [r1]
-    mla     r11, r10, r8, r11           @ tmp += sample * volume
+    muls    r10, r8                     @ sample * volume
+    add     r11, r10                    @ tmp += sample * volume
+    addlt   r11, #0x00010000            @ if sample < 0, fix top value
     str     r11, [r1], #4
 
     @ if data >= end, loop or stop the channel
