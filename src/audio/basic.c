@@ -167,6 +167,11 @@ static void basic_loop(i32 channel, u32 loop_length) {
 }
 
 THUMB
+static void basic_pitch(i32 channel, u32 pitch) {
+    // operation not supported
+}
+
+THUMB
 static void basic_volume(i32 channel, u32 volume) {
     const u16 bit = outputs[channel].bits.volume;
     if(volume > AUDIO_VOLUME_MAX / 2) // 100%
@@ -223,6 +228,7 @@ static void basic_init(void) {
     // setup channels with default configuration
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         basic_loop   (c, 0);
+        basic_pitch  (c, AUDIO_PITCH_NORMAL);
         basic_volume (c, AUDIO_VOLUME_MAX);
         basic_panning(c, 0);
     }
@@ -251,6 +257,7 @@ const struct _AudioDriver _audio_driver_basic = {
     .stop = basic_stop,
 
     .loop    = basic_loop,
+    .pitch   = basic_pitch,
     .volume  = basic_volume,
     .panning = basic_panning,
 
