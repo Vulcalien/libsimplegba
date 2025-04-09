@@ -16,7 +16,6 @@
 .include "macros.inc"
 
 .equ CHANNEL_COUNT, 8
-.equ BUFFER_SIZE, 768
 
 @ --- _mixer_update --- @
 .global _mixer_update
@@ -25,6 +24,7 @@
 @ register allocation:
 @   r0  = channels
 @   r1  = temp_buffers
+@   r2  = length
 @   r3  = c (channel index)
 @   r4  = channel (struct pointer)
 @   r5  = data
@@ -37,8 +37,9 @@
 @   r12 = loop_length
 
 @ input:
-@   r0 = channels     : struct Channel *
+@   r0 = channels     : struct Channel [CHANNEL_COUNT]
 @   r1 = temp_buffers : i16 [BUFFER_SIZE][OUTPUT_COUNT]
+@   r2 = length       : u32 in range [4, BUFFER_SIZE], multiple of 4
 BEGIN_FUNC ARM _mixer_update
     push    {r4-r12}
 
@@ -52,7 +53,7 @@ BEGIN_FUNC ARM _mixer_update
     mov     r6, #0
 
     mov     r7, r1                      @ (r7) to_clear = temp_buffers
-    mov     r10, #BUFFER_SIZE           @ (r10) remaining = BUFFER_SIZE
+    mov     r10, r2                     @ (r10) remaining = length
 .L_clear_loop:
     stm     r7!, {r3-r6}
 
@@ -93,7 +94,7 @@ BEGIN_FUNC ARM _mixer_update
     @ save value of temp_buffers
     push    {r1}
 
-    mov     r10, #BUFFER_SIZE           @ (r10) remaining = BUFFER_SIZE
+    mov     r10, r2                     @ (r10) remaining = length
 .L_samples_loop:
     @ retrieve sample and update position
     ldrsb   r11, [r5]                   @ (r11) sample = *data

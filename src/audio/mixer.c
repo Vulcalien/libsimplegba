@@ -197,10 +197,12 @@ static void mixer_init(void) {
 }
 
 extern void _mixer_update(struct Channel *channels,
-                          i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT]);
+                          i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT],
+                          u32 length);
 
 extern void _mixer_clip(i8 buffers[OUTPUT_COUNT][BUFFER_SIZE],
-                        i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT]);
+                        i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT],
+                        u32 length);
 
 THUMB
 static void mixer_update(void) {
@@ -208,8 +210,8 @@ static void mixer_update(void) {
         return;
     need_new_page = false;
 
-    _mixer_update(channels, temp_buffers);
-    _mixer_clip(buffers[buffer_page], temp_buffers);
+    _mixer_update(channels, temp_buffers, BUFFER_SIZE);
+    _mixer_clip(buffers[buffer_page], temp_buffers, BUFFER_SIZE);
 }
 
 static i32 mixer_available_channel(void) {

@@ -24,14 +24,15 @@
 @ register allocation:
 @   r0 = buffers
 @   r1 = temp_buffers
-@   r2 = remaining
+@   r2 = length, remaining
 @   r3 = samples[0], samples[1]
 
 @ input:
 @   r0 = buffers      : i8  [OUTPUT_COUNT][BUFFER_SIZE]
 @   r1 = temp_buffers : i16 [BUFFER_SIZE][OUTPUT_COUNT]
+@   r2 = length       : u32 in range [4, BUFFER_SIZE], multiple of 4
 BEGIN_FUNC ARM _mixer_clip
-    mov     r2, #BUFFER_SIZE            @ (r2) remaining = BUFFER_SIZE
+    @ (r2) remaining = length
 .L_samples_loop:
     @ clip samples[1]
     ldrsh   r3, [r1, #2]                @ (r3) samples[1]
