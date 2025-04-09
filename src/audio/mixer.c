@@ -162,16 +162,8 @@ static void mixer_panning(i32 channel, i32 panning) {
 THUMB
 static void mixer_init(void) {
     MASTER_SOUND_CONTROL = BIT(7);
-
-    #if OUTPUT_COUNT == 2
-    // stereo: enable one direction per Direct Sound output
     DIRECT_SOUND_CONTROL = BIT(2) | BIT(3)  | // set volume to 100%
                            BIT(8) | BIT(13);  // enable right and left
-    #else
-    // mono: only enable Direct Sound A
-    DIRECT_SOUND_CONTROL = BIT(2) |         // set volume to 100%
-                           BIT(8) | BIT(9); // enable right and left
-    #endif
 
     // configure Timer 0 and Timer 1
     timer_config(TIMER0, TIMER_PRESCALER_1);
