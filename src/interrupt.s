@@ -25,9 +25,10 @@
 
 isr_table:
     .space (INTERRUPT_COUNT * 4)
+.size isr_table, .-isr_table
 
 @ --- interrupt_handler --- @
-.section .iwram, "ax"
+.section .iwram, "ax", %progbits
 
 @ Handle IRQs by calling the matching ISR.
 @ Tasks of this function:
