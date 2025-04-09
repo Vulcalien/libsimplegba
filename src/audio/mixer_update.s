@@ -23,14 +23,14 @@
 .section .sbss, "aw", %nobits
 .align 2
 
-@ temp_buffers[sample][output]
+@ i16 temp_buffers[sample][output]
 temp_buffers:
     .space (BUFFER_SIZE * OUTPUT_COUNT * 2)
 .size temp_buffers, .-temp_buffers
 
 @ --- _mixer_update --- @
 .global _mixer_update
-.section .iwram, "ax"
+.section .iwram, "ax", %progbits
 
 @ register allocation:
 @   r0  = channels
