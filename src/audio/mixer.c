@@ -57,9 +57,6 @@ static u32 buffer_page;
 static bool need_new_page;
 
 SBSS_SECTION
-static i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT];
-
-SBSS_SECTION
 static i8 buffers[2][OUTPUT_COUNT][BUFFER_SIZE];
 
 IWRAM_SECTION
@@ -188,13 +185,8 @@ static void mixer_init(void) {
     audio_sample_rate(0);
 }
 
-extern void _mixer_update(struct Channel *channels,
-                          i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT],
+extern void _mixer_update(struct Channel *channels, void *buffers,
                           u32 length);
-
-extern void _mixer_clip(i8 buffers[OUTPUT_COUNT][BUFFER_SIZE],
-                        i16 temp_buffers[BUFFER_SIZE][OUTPUT_COUNT],
-                        u32 length);
 
 THUMB
 static void mixer_update(void) {
@@ -202,8 +194,7 @@ static void mixer_update(void) {
         return;
     need_new_page = false;
 
-    _mixer_update(channels, temp_buffers, BUFFER_SIZE);
-    _mixer_clip(buffers[buffer_page], temp_buffers, BUFFER_SIZE);
+    _mixer_update(channels, buffers[buffer_page], BUFFER_SIZE);
 }
 
 static i32 mixer_available_channel(void) {
