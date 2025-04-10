@@ -19,8 +19,7 @@
 OUTPUT_FORMAT(elf32-littlearm)
 ENTRY(_start)
 
-MEMORY
-{
+MEMORY {
     ROM   : ORIGIN = 0x08000000, LENGTH = 32M
     IWRAM : ORIGIN = 0x03000000, LENGTH = 32K
     EWRAM : ORIGIN = 0x02000000, LENGTH = 256K
@@ -29,14 +28,13 @@ MEMORY
 __sp_usr = ORIGIN(IWRAM) + LENGTH(IWRAM) - 0x100;
 __sp_irq = ORIGIN(IWRAM) + LENGTH(IWRAM) - 0x60;
 
-SECTIONS
-{
-    /* --------------- */
-    /* ----- ROM ----- */
-    /* --------------- */
+SECTIONS {
 
-    .text : ALIGN(4)
-    {
+    /* ========================================================== */
+    /*                            ROM                             */
+    /* ========================================================== */
+
+    .text : ALIGN(4) {
         __text_start = ABSOLUTE(.);
 
         *(.header)
@@ -53,8 +51,7 @@ SECTIONS
     } >ROM =0xff
     __text_size = SIZEOF(.text);
 
-    .rodata : ALIGN(4)
-    {
+    .rodata : ALIGN(4) {
         __rodata_start = ABSOLUTE(.);
 
         *(.rodata)
@@ -65,12 +62,11 @@ SECTIONS
     } >ROM =0xff
     __rodata_size = SIZEOF(.rodata);
 
-    /* ----------------- */
-    /* ----- IWRAM ----- */
-    /* ----------------- */
+    /* ========================================================== */
+    /*                           IWRAM                            */
+    /* ========================================================== */
 
-    .iwram : ALIGN(4)
-    {
+    .iwram : ALIGN(4) {
         __iwram_start = ABSOLUTE(.);
 
         *(.iwram)
@@ -82,8 +78,7 @@ SECTIONS
     __iwram_size = SIZEOF(.iwram);
     __iwram_lma = LOADADDR(.iwram);
 
-    .bss : ALIGN(4)
-    {
+    .bss : ALIGN(4) {
         __bss_start = ABSOLUTE(.);
 
         *(.bss)
@@ -96,8 +91,7 @@ SECTIONS
     } >IWRAM
     __bss_size = SIZEOF(.bss);
 
-    .data : ALIGN(4)
-    {
+    .data : ALIGN(4) {
         __data_start = ABSOLUTE(.);
 
         *(.data)
@@ -109,12 +103,11 @@ SECTIONS
     __data_size = SIZEOF(.data);
     __data_lma = LOADADDR(.data);
 
-    /* ----------------- */
-    /* ----- EWRAM ----- */
-    /* ----------------- */
+    /* ========================================================== */
+    /*                           EWRAM                            */
+    /* ========================================================== */
 
-    .ewram : ALIGN(4)
-    {
+    .ewram : ALIGN(4) {
         __ewram_start = ABSOLUTE(.);
 
         *(.ewram)
@@ -126,8 +119,7 @@ SECTIONS
     __ewram_size = SIZEOF(.ewram);
     __ewram_lma = LOADADDR(.ewram);
 
-    .sbss : ALIGN(4)
-    {
+    .sbss : ALIGN(4) {
         __sbss_start = ABSOLUTE(.);
 
         *(.sbss)
