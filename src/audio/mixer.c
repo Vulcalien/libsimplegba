@@ -53,11 +53,8 @@ static struct Channel {
     u8 output_volume[OUTPUT_COUNT];
 } channels[CHANNEL_COUNT];
 
-static u32 buffer_page;
-static bool need_new_page;
-
 SBSS_SECTION
-static i8 buffers[2][OUTPUT_COUNT][BUFFER_SIZE];
+static i8 buffers[OUTPUT_COUNT][BUFFER_SIZE];
 
 IWRAM_SECTION
 static void timer1_isr(void) {
@@ -73,11 +70,8 @@ static void timer1_isr(void) {
             .start_timing = DMA_START_SPECIAL,
             .repeat = true
         });
-        dma_transfer(dma, fifo, buffers[buffer_page][o], 0);
+        dma_transfer(dma, fifo, buffers[o], 0);
     }
-
-    buffer_page ^= 1;
-    need_new_page = true;
 }
 
 // Note: the effects of play, stop, pause, resume, volume and panning
@@ -190,11 +184,25 @@ extern void _mixer_update(struct Channel *channels, void *buffers,
 
 THUMB
 static void mixer_update(void) {
-    if(!need_new_page)
-        return;
-    need_new_page = false;
+    // These are indexes of the buffer, rounded down to a multiple of 4.
+    // - start = first sample that needs updating
+    // - stop  = sample about to be played, that should NOT be updated
+    static u32 start = 0;
+    const u32 stop = (BUFFER_SIZE - timer_get_counter(TIMER1)) & ~3;
 
-    _mixer_update(channels, buffers[buffer_page], BUFFER_SIZE);
+    if(start < stop) {
+        // update start...stop
+        _mixer_update(channels, (u8 *) buffers + start, stop - start);
+    } else if(start > stop) {
+        // update start...BUFFER_SIZE
+        _mixer_update(channels, (u8 *) buffers + start, BUFFER_SIZE - start);
+
+        // update 0...stop
+        _mixer_update(channels, buffers, stop);
+    }
+
+    // move 'start' forward
+    start = stop;
 }
 
 static i32 mixer_available_channel(void) {
