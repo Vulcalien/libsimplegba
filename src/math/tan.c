@@ -17,13 +17,21 @@
 
 #define SCALE 32
 
-// Lookup table for angles between 0 and 90 degrees
+// Lookup table for angles between 0 and 90 degrees.
+// The last entry is the largest u32 that doesn't cause overflow.
+//
+// Note: the tangent function is convex between 0 and 90 degrees, so
+// linear interpolation between two samples is always greater than or
+// equal to the correct value (except errors due to rounding down).
 //
 // for i = 0 to 0x4000 / SCALE - 1:
 //     x = i * SCALE * M_PI / 0x8000
 //     y = tan(x) * 0x4000
 //     LUT[i] = floor(y + 0.0001)
-// LUT[0x4000 / SCALE] = TODO
+//
+// LUT[0x4000 / SCALE] = floor(
+//    (U32_MAX - LUT[0x4000 / SCALE - 1]) / (SCALE - 1)
+// )
 static const u32 tan_lut[0x4000 / SCALE + 1] = {
     0x000000, 0x000032, 0x000064, 0x000096, 0x0000c9, 0x0000fb,
     0x00012d, 0x00015f, 0x000192, 0x0001c4, 0x0001f6, 0x000229,
@@ -110,7 +118,7 @@ static const u32 tan_lut[0x4000 / SCALE + 1] = {
     0x0411ba, 0x0448b0, 0x0485c0, 0x04c9fd, 0x0516bf, 0x056dbc,
     0x05d123, 0x0643d2, 0x06c99c, 0x0767b6, 0x08256b, 0x090d45,
     0x0a2f12, 0x0ba3a6, 0x0d9466, 0x104bd2, 0x145eed, 0x1b2963,
-    0x28be3f, 0x517cb0, // TODO last entry
+    0x28be3f, 0x517cb0, 0x83f6f97
 };
 
 // LUT-based implementation of tangent. Since tan(-x) = -tan(x), the
