@@ -58,13 +58,10 @@ static i8 buffers[OUTPUT_COUNT][BUFFER_SIZE];
 
 IWRAM_SECTION
 static void timer1_isr(void) {
-    // reset FIFOs
-    DIRECT_SOUND_CONTROL |= BIT(11) | BIT(15);
-
     // configure DMA transfers for each output
     for(u32 o = 0; o < OUTPUT_COUNT; o++) {
         u32 dma = (o == 0 ? DMA1 : DMA2);
-        vi8 *fifo = (vi8 *) (o == 0 ? 0x040000a0 : 0x040000a4);
+        void *fifo = (void *) (o == 0 ? 0x040000a0 : 0x040000a4);
 
         dma_config(dma, &(struct DMA) {
             .start_timing = DMA_START_SPECIAL,
@@ -153,8 +150,9 @@ static void mixer_panning(i32 channel, i32 panning) {
 THUMB
 static void mixer_init(void) {
     MASTER_SOUND_CONTROL = BIT(7);
-    DIRECT_SOUND_CONTROL = BIT(2) | BIT(3)  | // set volume to 100%
-                           BIT(8) | BIT(13);  // enable right and left
+    DIRECT_SOUND_CONTROL = BIT(2)  | BIT(3)  | // set volume to 100%
+                           BIT(8)  | BIT(13) | // enable right and left
+                           BIT(11) | BIT(15);  // reset FIFOs
 
     // configure Timer 0 and Timer 1
     timer_config(TIMER0, TIMER_PRESCALER_1);
