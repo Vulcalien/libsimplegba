@@ -79,7 +79,7 @@ static i32 mixer_play(i32 channel, const void *sound, u32 length) {
     channels[channel].data = (const i8 *) sound;
     channels[channel].end  = (const i8 *) sound + length;
 
-    // make sure channel is not paused
+    channels[channel].position = 0;
     channels[channel].paused = false;
 
     return channel;
