@@ -2,11 +2,11 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-10-30
+:revdate: 2025-04-13
 :docdate: {revdate}
 
 == NAME
-dma_config, dma_transfer, dma_stop - DMA functions
+dma_config, dma_transfer, dma_stop - direct memory access
 
 == SYNOPSIS
 [verse]

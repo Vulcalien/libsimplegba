@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-04-01
+:revdate: 2025-04-13
 :docdate: {revdate}
 
 == NAME
 timer_config, timer_start, timer_stop, timer_restart, timer_get_counter
-- timer functions
+- hardware timers
 
 == SYNOPSIS
 [verse]

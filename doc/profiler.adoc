@@ -2,11 +2,11 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2024-06-24
+:revdate: 2025-04-13
 :docdate: {revdate}
 
 == NAME
-profiler_start, profiler_stop - profiling functions
+profiler_start, profiler_stop - code profiler
 
 == SYNOPSIS
 [verse]
