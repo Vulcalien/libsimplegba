@@ -62,8 +62,7 @@ BEGIN_FUNC THUMB memset
 
     @ return original value of dest
     pop     {r0, r3}
-    mov     lr, r3                      @ lr = r3
-    bx      lr
+    bx      r3                          @ r3 = original value of lr
 
 @ - unaligned start - @
 @ handle cases where the first bytes are unaligned
