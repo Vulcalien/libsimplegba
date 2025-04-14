@@ -76,5 +76,3 @@ INLINE void interrupt_toggle(u32 irq, bool enable) {
 }
 
 extern void interrupt_set_isr(u32 irq, void (*isr)(void));
-
-#undef _INTERRUPT_IE
