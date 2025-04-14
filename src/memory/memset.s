@@ -42,6 +42,10 @@ BEGIN_FUNC THUMB memset
     mov     r3, lr                      @ r3 = lr
     push    {r0, r3}
 
+    @ make sure 'byte' is actually 8-bit
+    lsl     r1, #24                     @ xx 00 00 00
+    lsr     r1, #24                     @ 00 00 00 xx
+
     @ if dest is unaligned, handle that case
     mov     r3, #3                      @ (r3) mask = 3
     tst     r0, r3

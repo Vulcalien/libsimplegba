@@ -46,6 +46,10 @@
 BEGIN_FUNC THUMB memory_set_32
     push    {r0, r4-r6}
 
+    @ make sure 'byte' is actually 8-bit
+    lsl     r1, #24                     @ xx 00 00 00
+    lsr     r1, #24                     @ 00 00 00 xx
+
     @ duplicate 'byte' to fill 32 bits
     lsl     r3, r1, #8                  @ r3 = 00 00 xx 00
     orr     r1, r3                      @ r1 = 00 00 xx xx
