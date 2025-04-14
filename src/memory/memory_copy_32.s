@@ -39,11 +39,11 @@
 @   copied efficiently.
 
 @ input:
-@   r0 = dest : pointer
-@   r1 = src  : pointer
-@   r2 = n    : unsigned 32-bit
+@   r0 = dest : void *
+@   r1 = src  : const void *
+@   r2 = n    : u32
 @ output:
-@   r0 = dest : pointer
+@   r0 = dest : void *
 BEGIN_FUNC THUMB memory_copy_32
     push    {r0, r4-r7}
 

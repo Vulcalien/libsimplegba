@@ -33,11 +33,11 @@
 @ 'dest' and remaining 'n' bytes.
 
 @ input:
-@   r0 = dest : pointer
-@   r1 = byte : signed 32-bit
-@   r2 = n    : unsigned 32-bit
+@   r0 = dest : void *
+@   r1 = byte : i32
+@   r2 = n    : u32
 @ output:
-@   r0 = dest : pointer
+@   r0 = dest : void *
 BEGIN_FUNC THUMB memset
     mov     r3, lr                      @ r3 = lr
     push    {r0, r3}
