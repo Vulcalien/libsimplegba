@@ -20,12 +20,12 @@
 #define FLASH ((vu8 *) 0x0e000000)
 
 THUMB
-static u8 flash_read_byte(u16 offset) {
+static i32 flash_read_byte(u16 offset) {
     return FLASH[offset];
 }
 
 THUMB
-static void flash_write_byte(u16 offset, u8 byte) {
+static void flash_write_byte(u16 offset, i32 byte) {
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
     FLASH[0x5555] = 0xa0;

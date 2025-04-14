@@ -30,12 +30,12 @@ static void sram_write(u16 offset, const void *buffer, u32 n) {
 }
 
 THUMB
-static u8 sram_read_byte(u16 offset) {
+static i32 sram_read_byte(u16 offset) {
     return SRAM[offset];
 }
 
 THUMB
-static void sram_write_byte(u16 offset, u8 byte) {
+static void sram_write_byte(u16 offset, i32 byte) {
     SRAM[offset] = byte;
 }
 

@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-04-02
+:revdate: 2025-04-14
 :docdate: {revdate}
 
 == NAME
@@ -20,8 +20,8 @@ ____
 **void backup_read(u16 **__offset__**, void +++*+++**__buffer__**, u32 **__n__**);**
 **void backup_write(u16 **__offset__**, const void +++*+++**__buffer__**, u32 **__n__**);**
 
-**u8 backup_read_byte(u16 **__offset__**);**
-**void backup_write_byte(u16 **__offset__**, u8 **__byte__**);**
+**i32 backup_read_byte(u16 **__offset__**);**
+**void backup_write_byte(u16 **__offset__**, i32 **__byte__**);**
 
 *u16 backup_identify(void);*
 **void backup_set_bank(u32 **__bank__**);**
@@ -39,9 +39,9 @@ The *backup_read*() and *backup_write*() functions, respectively, read
 from and write to backup memory, transferring _n_ bytes between _buffer_
 and the backup memory area starting at _offset_.
 
-The *backup_read_byte*() function reads one byte from backup memory at
-address _offset_ and returns it. The *backup_write_byte*() function
-writes _byte_ into backup memory at address _offset_.
+The *backup_read_byte*() function reads one unsigned byte from backup
+memory at address _offset_ and returns it. The *backup_write_byte*()
+function writes _byte_ into backup memory at address _offset_.
 
 === Flash ROM functions
 These functions are specific to the Flash ROM driver. When called in

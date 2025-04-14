@@ -21,8 +21,8 @@ extern const struct _BackupDriver {
     void (*read) (u16 offset, void *buffer, u32 n);
     void (*write)(u16 offset, const void *buffer, u32 n);
 
-    u8   (*read_byte) (u16 offset);
-    void (*write_byte)(u16 offset, u8 byte);
+    i32  (*read_byte) (u16 offset);
+    void (*write_byte)(u16 offset, i32 byte);
 
     u16  (*identify)(void);
     void (*set_bank)(u32 bank);
@@ -43,11 +43,11 @@ INLINE void backup_write(u16 offset, const void *buffer, u32 n) {
     _backup_driver->write(offset, buffer, n);
 }
 
-INLINE u8 backup_read_byte(u16 offset) {
+INLINE i32 backup_read_byte(u16 offset) {
     return _backup_driver->read_byte(offset);
 }
 
-INLINE void backup_write_byte(u16 offset, u8 byte) {
+INLINE void backup_write_byte(u16 offset, i32 byte) {
     _backup_driver->write_byte(offset, byte);
 }
 
