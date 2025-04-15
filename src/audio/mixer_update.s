@@ -99,9 +99,9 @@ BEGIN_FUNC ARM _mixer_update
     ldrh    r8, [r4, #10]               @ (r8) increment
 
     @ retrieve volume vector
-    ldrh    r9, [r4, #20]               @ 00 00 RR LL
-    orr     r9, r9, lsl #8              @ 00 RR xx LL
-    bic     r9, #0x0000ff00             @ (r9) volume (00 RR 00 LL)
+    ldrh    r9, [r4, #20]               @ 00 00 LL RR
+    orr     r9, r9, lsl #8              @ 00 LL xx RR
+    bic     r9, #0x0000ff00             @ (r9) volume (00 LL 00 RR)
 
     ldr     r10, =temp_buffers          @ (r10) temp_buffers
     mov     r11, r2                     @ (r11) remaining = length
