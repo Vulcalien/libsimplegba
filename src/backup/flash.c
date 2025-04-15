@@ -26,6 +26,8 @@ static i32 flash_read_byte(u16 offset) {
 
 THUMB
 static void flash_write_byte(u16 offset, i32 byte) {
+    byte &= 0xff;
+
     // prepare to write byte
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
@@ -91,6 +93,8 @@ static void flash_erase_chip(void) {
 
 THUMB
 static void flash_erase_sector(u32 n) {
+    n %= 16;
+
     // prepare to erase
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
