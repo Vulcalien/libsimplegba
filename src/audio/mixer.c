@@ -49,27 +49,11 @@ static struct Channel {
     bool paused;
 
     // cached volume per output, obtained from 'volume' and 'panning'
-    ALIGNED(2)
-    u8 output_volume[OUTPUT_COUNT];
+    u8 output_volume[OUTPUT_COUNT] ALIGNED(2);
 } channels[CHANNEL_COUNT];
 
 SBSS_SECTION
 static i8 buffers[OUTPUT_COUNT][BUFFER_SIZE];
-
-IWRAM_SECTION
-static void timer1_isr(void) {
-    // configure DMA transfers for each output
-    for(u32 o = 0; o < OUTPUT_COUNT; o++) {
-        u32 dma = (o == 0 ? DMA1 : DMA2);
-        void *fifo = (void *) (o == 0 ? 0x040000a0 : 0x040000a4);
-
-        dma_config(dma, &(struct DMA) {
-            .start_timing = DMA_START_SPECIAL,
-            .repeat = true
-        });
-        dma_transfer(dma, fifo, buffers[o], 0);
-    }
-}
 
 // Note: the effects of play, stop, pause, resume, volume and panning
 // are delayed until the buffer is next updated.
@@ -145,6 +129,21 @@ static void mixer_panning(i32 channel, i32 panning) {
 
     channels[channel].panning = panning;
     update_output_volume(channel);
+}
+
+IWRAM_SECTION
+static void timer1_isr(void) {
+    // configure DMA transfers for each output
+    for(u32 o = 0; o < OUTPUT_COUNT; o++) {
+        u32 dma = (o == 0 ? DMA1 : DMA2);
+        void *fifo = (void *) (o == 0 ? 0x040000a0 : 0x040000a4);
+
+        dma_config(dma, &(struct DMA) {
+            .start_timing = DMA_START_SPECIAL,
+            .repeat = true
+        });
+        dma_transfer(dma, fifo, buffers[o], 0);
+    }
 }
 
 THUMB
