@@ -54,40 +54,34 @@ BEGIN_FUNC THUMB memory_set_16
     lsl     r3, r1, #8                  @ r3 = xx 00
     orr     r1, r3                      @ r1 = xx xx
 
-    @ calculate number of halfwords and 4-halfword blocks
+    @ calculate number of units and blocks
     lsr     r2, #1                      @ (r2) n /= 2
     lsr     r3, r2, #2                  @ (r3) blocks = n / 4
+    beq     .L_exit_block_loop          @ if blocks == 0, skip block loop
 
-    @ if blocks == 0, skip the multi-store loop
-    beq     2f @ exit multi-store loop
-
-1: @ multi-store loop
+.L_block_loop:
     strh    r1, [r0, #0]
     strh    r1, [r0, #2]
     strh    r1, [r0, #4]
     strh    r1, [r0, #6]
 
     add     r0, #8                      @ (r0) dest += 8
+    sub     r3, #1                      @ (r3) blocks--
+    bne     .L_block_loop               @ if blocks != 0, repeat loop
+.L_exit_block_loop:
 
-    sub     r3, #1                      @ (r3) blocks -= 1
-    bne     1b @ multi-store loop       @ if blocks != 0, repeat loop
-2: @ exit multi-store loop
-
-    @ calculate n % 4
+    @ calculate remaining units
     lsl     r2, #30
-    lsr     r2, #30
+    lsr     r2, #30                     @ (r2) n %= 4
+    beq     .L_exit_single_loop         @ if n == 0, skip single loop
 
-    @ if n == 0, skip the single-store loop
-    beq     4f @ exit single-store loop
-
-3: @ single-store loop
+.L_single_loop:
     strh    r1, [r0]
 
     add     r0, #2                      @ (r0) dest += 2
-
-    sub     r2, #1                      @ (r2) n -= 1
-    bne     3b @ single-store loop      @ if n != 0, repeat loop
-4: @ exit single-store loop
+    sub     r2, #1                      @ (r2) n--
+    bne     .L_single_loop              @ if n != 0, repeat loop
+.L_exit_single_loop:
 
     @ return original value of dest
     pop     {r0}

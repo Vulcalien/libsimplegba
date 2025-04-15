@@ -30,7 +30,7 @@
 @ - The 'dest' and 'src' pointers must be 4-byte aligned.
 @
 @ Notes:
-@ - The lowest 2 bites of 'n' are ignored.
+@ - The lowest 2 bits of 'n' are ignored.
 @
 @ Implementation:
 @   Data is copied left-to-right: at first, in blocks of 4 units at a
@@ -47,35 +47,31 @@
 BEGIN_FUNC THUMB memory_copy_32
     push    {r0, r4-r7}
 
-    @ calculate number of words and 4-word blocks
+    @ calculate number of units and blocks
     lsr     r2, #2                      @ (r2) n /= 4
     lsr     r3, r2, #2                  @ (r3) blocks = n / 4
+    beq     .L_exit_block_loop          @ if blocks == 0, skip block loop
 
-    @ if blocks == 0, skip the multi-copy loop
-    beq     2f @ exit multi-copy loop
-
-1: @ multi-copy loop
+.L_block_loop:
     ldmia   r1!, {r4-r7}                @ (r1) src  += 16
     stmia   r0!, {r4-r7}                @ (r0) dest += 16
 
-    sub     r3, #1                      @ (r3) blocks -= 1
-    bne     1b @ multi-copy loop        @ if blocks != 0, repeat loop
-2: @ exit multi-copy loop
+    sub     r3, #1                      @ (r3) blocks--
+    bne     .L_block_loop               @ if blocks != 0, repeat loop
+.L_exit_block_loop:
 
-    @ calculate n % 4
+    @ calculate remaining units
     lsl     r2, #30
-    lsr     r2, #30
+    lsr     r2, #30                     @ (r2) n %= 4
+    beq     .L_exit_single_loop         @ if n == 0, skip single loop
 
-    @ if n == 0, skip the single-copy loop
-    beq     4f @ exit single-copy loop
-
-3: @ single-copy loop
+.L_single_loop:
     ldmia   r1!, {r4}                   @ (r1) src  += 4
     stmia   r0!, {r4}                   @ (r0) dest += 4
 
-    sub     r2, #1                      @ (r2) n -= 1
-    bne     3b @ sigle-copy loop        @ if n != 0, repeat loop
-4: @ exit single-copy loop
+    sub     r2, #1                      @ (r2) n--
+    bne     .L_single_loop              @ if n != 0, repeat loop
+.L_exit_single_loop:
 
     @ return original value of dest
     pop     {r0, r4-r7}

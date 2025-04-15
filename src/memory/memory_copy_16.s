@@ -45,14 +45,12 @@
 BEGIN_FUNC THUMB memory_copy_16
     push    {r0, r4}
 
-    @ calculate number of halfwords and 4-halfword blocks
+    @ calculate number of units and blocks
     lsr     r2, #1                      @ (r2) n /= 2
     lsr     r3, r2, #2                  @ (r3) blocks = n / 4
+    beq     .L_exit_block_loop          @ if blocks == 0, skip block loop
 
-    @ if blocks == 0, skip the multi-copy loop
-    beq     2f @ exit multi-copy loop
-
-1: @ multi-copy loop
+.L_block_loop:
     ldrh    r4, [r1, #0]
     strh    r4, [r0, #0]
 
@@ -68,27 +66,25 @@ BEGIN_FUNC THUMB memory_copy_16
     add     r1, #8                      @ (r1) src  += 8
     add     r0, #8                      @ (r0) dest += 8
 
-    sub     r3, #1                      @ (r3) blocks -= 1
-    bne     1b @ multi-copy loop        @ if blocks != 0, repeat loop
-2: @ exit multi-copy loop
+    sub     r3, #1                      @ (r3) blocks--
+    bne     .L_block_loop               @ if blocks != 0, repeat loop
+.L_exit_block_loop:
 
-    @ calculate n % 4
+    @ calculate remaining units
     lsl     r2, #30
-    lsr     r2, #30
+    lsr     r2, #30                     @ (r2) n %= 4
+    beq     .L_exit_single_loop         @ if n == 0, skip single loop
 
-    @ if n == 0, skip the single-copy loop
-    beq     4f @ exit single-copy loop
-
-3: @ single-copy loop
+.L_single_loop:
     ldrh    r4, [r1]
     strh    r4, [r0]
 
     add     r1, #2                      @ (r1) src  += 2
     add     r0, #2                      @ (r0) dest += 2
 
-    sub     r2, #1                      @ (r2) n -= 1
-    bne     3b @ sigle-copy loop        @ if n != 0, repeat loop
-4: @ exit single-copy loop
+    sub     r2, #1                      @ (r2) n--
+    bne     .L_single_loop              @ if n != 0, repeat loop
+.L_exit_single_loop:
 
     @ return original value of dest
     pop     {r0, r4}

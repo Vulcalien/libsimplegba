@@ -30,7 +30,7 @@
 @
 @ Notes:
 @ - Only the lowest 8 bits of 'byte' are used.
-@ - The lowest 2 bites of 'n' are ignored.
+@ - The lowest 2 bits of 'n' are ignored.
 @
 @ Implementation:
 @   Memory is filled left-to-right: at first, with 4 writes at a time
@@ -56,36 +56,32 @@ BEGIN_FUNC THUMB memory_set_32
     lsl     r3, r1, #16                 @ r3 = xx xx 00 00
     orr     r1, r3                      @ r1 = xx xx xx xx
 
-    @ calculate number of words and 4-word blocks
+    @ calculate number of units and blocks
     lsr     r2, #2                      @ (r2) n /= 4
     lsr     r3, r2, #2                  @ (r3) blocks = n / 4
-
-    @ if blocks == 0, skip the multi-store loop
-    beq     2f @ exit multi-store loop
+    beq     .L_exit_block_loop          @ if blocks == 0, skip block loop
 
     @ copy content word into r4-r6
     mov     r4, r1                      @ r4 = content
     mov     r5, r1                      @ r5 = content
     mov     r6, r1                      @ r6 = content
 
-1: @ multi-store loop
+.L_block_loop:
     stmia   r0!, {r1, r4-r6}            @ (r0) dest += 16
-    sub     r3, #1                      @ (r3) blocks -= 1
-    bne     1b @ multi-store loop       @ if blocks != 0, repeat loop
-2: @ exit multi-store loop
+    sub     r3, #1                      @ (r3) blocks--
+    bne     .L_block_loop               @ if blocks != 0, repeat loop
+.L_exit_block_loop:
 
-    @ calculate n % 4
+    @ calculate remaining units
     lsl     r2, #30
-    lsr     r2, #30
+    lsr     r2, #30                     @ (r2) n %= 4
+    beq     .L_exit_single_loop         @ if n == 0, skip single loop
 
-    @ if n == 0, skip the single-store loop
-    beq     4f @ exit single-store loop
-
-3: @ single-store loop
+.L_single_loop:
     stmia   r0!, {r1}                   @ (r0) dest += 4
-    sub     r2, #1                      @ (r2) n -= 1
-    bne     3b @ single-store loop      @ if n != 0, repeat loop
-4: @ exit single-store loop
+    sub     r2, #1                      @ (r2) n--
+    bne     .L_single_loop              @ if n != 0, repeat loop
+.L_exit_single_loop:
 
     @ return original value of dest
     pop     {r0, r4-r6}
