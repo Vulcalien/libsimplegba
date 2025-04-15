@@ -121,8 +121,8 @@ BEGIN_FUNC ARM _mixer_update
     @ one, so it should be adjusted to prevent noise.
     ldr     r14, [r10]                  @ tmp = *temp_buffers
     muls    r12, r9                     @ sample * volume
+    addlt   r12, #0x00010000            @ if sample < 0, fix top value
     add     r14, r12                    @ tmp += sample * volume
-    addlt   r14, #0x00010000            @ if sample < 0, fix top value
     str     r14, [r10], #4              @ *(temp_buffers++) = tmp
 
     @ if data >= end, loop or stop the channel
