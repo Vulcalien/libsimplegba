@@ -26,6 +26,7 @@ static i32 flash_read_byte(u16 offset) {
 
 THUMB
 static void flash_write_byte(u16 offset, i32 byte) {
+    // prepare to write byte
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
     FLASH[0x5555] = 0xa0;
@@ -48,12 +49,14 @@ static void flash_write(u16 offset, const void *buffer, u32 n) {
 
 THUMB
 static u16 flash_identify(void) {
+    // enter chip identification mode
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
     FLASH[0x5555] = 0x90;
 
     u16 result = FLASH[0x0000] | FLASH[0x0001] << 8;
 
+    // exit chip identification mode
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
     FLASH[0x5555] = 0xf0;
@@ -63,6 +66,7 @@ static u16 flash_identify(void) {
 
 THUMB
 static void flash_set_bank(u32 bank) {
+    // prepare to set memory bank
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
     FLASH[0x5555] = 0xb0;
@@ -72,10 +76,12 @@ static void flash_set_bank(u32 bank) {
 
 THUMB
 static void flash_erase_chip(void) {
+    // prepare to erase
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
     FLASH[0x5555] = 0x80;
 
+    // erase entire chip
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
     FLASH[0x5555] = 0x10;
@@ -85,10 +91,12 @@ static void flash_erase_chip(void) {
 
 THUMB
 static void flash_erase_sector(u32 n) {
+    // prepare to erase
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
     FLASH[0x5555] = 0x80;
 
+    // erase n-th sector
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
     FLASH[n << 12] = 0x30;
