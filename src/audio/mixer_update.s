@@ -117,11 +117,23 @@ BEGIN_FUNC ARM _mixer_update
     @ way similar to vector arithmetic. The driver must be setup so that
     @ 16-bit overflow does not happen, or else artifacts would appear.
     @
-    @ Note that, if sample is negative, the top 16-bit value is off by
-    @ one, so it should be adjusted to prevent noise.
+    @ Note that treating 32-bit integers as 16-bit vectors sometimes
+    @ introduces calculation errors in the top value.
+    @
+    @ If sample is negative and the right volume is not zero, the high
+    @ 16-bit value of (sample * volume) will be off by one. This noise
+    @ is particularly noticeable when sound is only playing on the right
+    @ output. To compensate for this, one is added to the high 16-bit
+    @ value if (sample * volume) is negative, ignoring the case in which
+    @ right_volume == 0 but left_volume != 0 for performance reasons.
+    @
+    @ When adding (sample * volume) to the temporary buffer's value, if
+    @ the resulting low 16-bit value overflows, the high 16-bit value
+    @ will be off by one. This noise should be hardly noticeable, so no
+    @ attempt is made to compensate for it.
     ldr     r14, [r10]                  @ tmp = *temp_buffers
     muls    r12, r9                     @ sample * volume
-    addlt   r12, #0x00010000            @ if sample < 0, fix top value
+    addlt   r12, #0x00010000            @ if (sample * volume) < 0, fix top value
     add     r14, r12                    @ tmp += sample * volume
     str     r14, [r10], #4              @ *(temp_buffers++) = tmp
 
