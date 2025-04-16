@@ -19,11 +19,7 @@
 .global memory_set_32
 .text
 
-@ This function fills a memory area with a given byte value, using only
-@ 32-bit writes.
-@
-@ Return value:
-@   The 'dest' pointer.
+@ Fill a memory area with a given byte, using only 32-bit writes.
 @
 @ Constraints:
 @ - The 'dest' pointer must be 4-byte aligned.
@@ -31,11 +27,6 @@
 @ Notes:
 @ - Only the lowest 8 bits of 'byte' are used.
 @ - The lowest 2 bits of 'n' are ignored.
-@
-@ Implementation:
-@   Memory is filled left-to-right: at first, with 4 writes at a time
-@   (to reduce branching) for as much as possible; at the end, with
-@   single writes.
 
 @ input:
 @   r0 = dest : void *

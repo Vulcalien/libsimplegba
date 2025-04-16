@@ -19,11 +19,8 @@
 .global memory_copy_32
 .text
 
-@ This function copies data from one memory area to another, using only
-@ 32-bit reads and writes.
-@
-@ Return value:
-@   The 'dest' pointer.
+@ Copy data from one memory area to another, using only 32-bit reads and
+@ writes.
 @
 @ Constraints:
 @ - The two memory areas must not overlap.
@@ -31,12 +28,6 @@
 @
 @ Notes:
 @ - The lowest 2 bits of 'n' are ignored.
-@
-@ Implementation:
-@   Data is copied left-to-right: at first, in blocks of 4 units at a
-@   time for as much as possible; at the end, one unit at a time.
-@   By using the 'ldm' and 'stm' instructions, the blocks of 4 units are
-@   copied efficiently.
 
 @ input:
 @   r0 = dest : void *

@@ -19,21 +19,11 @@
 .global memory_copy_8
 .text
 
-@ This function copies data from one memory area to another, using only
-@ 8-bit reads and writes.
-@
-@ Return value:
-@   The 'dest' pointer.
+@ Copy data from one memory area to another, using only 8-bit reads and
+@ writes.
 @
 @ Constraints:
 @ - The two memory areas must not overlap.
-@
-@ Notes:
-@ - Any alignment is allowed for 'dest' and 'src'.
-@
-@ Implementation:
-@   Data is copied left-to-right: at first, in blocks of 4 units at a
-@   time for as much as possible; at the end, one unit at a time.
 
 @ input:
 @   r0 = dest : void *
