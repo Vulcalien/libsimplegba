@@ -78,8 +78,11 @@ static NO_INLINE void restart_dma(i32 channel) {
 
     // reset DMA
     dma_config(outputs[channel].dma, &(struct DMA) {
+        .dest_control = DMA_ADDR_FIXED,
+        .src_control  = DMA_ADDR_INCREMENT,
+        .chunk        = DMA_CHUNK_32_BIT,
         .start_timing = DMA_START_SPECIAL,
-        .repeat = true
+        .repeat       = true
     });
     dma_transfer(
         outputs[channel].dma,

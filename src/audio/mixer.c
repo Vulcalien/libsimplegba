@@ -139,8 +139,11 @@ static void timer1_isr(void) {
         void *fifo = (void *) (o == 0 ? 0x040000a0 : 0x040000a4);
 
         dma_config(dma, &(struct DMA) {
+            .dest_control = DMA_ADDR_FIXED,
+            .src_control  = DMA_ADDR_INCREMENT,
+            .chunk        = DMA_CHUNK_32_BIT,
             .start_timing = DMA_START_SPECIAL,
-            .repeat = true
+            .repeat       = true
         });
         dma_transfer(dma, fifo, buffers[o], 0);
     }
