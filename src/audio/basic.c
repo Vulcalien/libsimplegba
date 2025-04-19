@@ -151,6 +151,29 @@ static INLINE void playback_stop(i32 channel) {
 }
 
 THUMB
+static void basic_pause(i32 c) {
+    struct Channel *channel = &channels[c];
+    if(!channel->data || channel->paused)
+        return;
+
+    channel->paused = true;
+    playback_stop(c);
+
+    // give back unplayed samples
+    channel->data -= timer_get_counter(TIMER1);
+}
+
+THUMB
+static void basic_resume(i32 c) {
+    struct Channel *channel = &channels[c];
+    if(!channel->data || !channel->paused)
+        return;
+
+    channel->paused = false;
+    playback_start(c);
+}
+
+THUMB
 static void basic_stop(i32 channel) {
     channels[channel].data = NULL;
     playback_stop(channel);
@@ -267,6 +290,9 @@ const struct _AudioDriver _audio_driver_basic = {
 
     .play = basic_play,
     .stop = basic_stop,
+
+    .pause  = basic_pause,
+    .resume = basic_resume,
 
     .loop    = basic_loop,
     .pitch   = basic_pitch,
