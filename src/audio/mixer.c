@@ -135,17 +135,22 @@ IWRAM_SECTION
 static void timer1_isr(void) {
     // configure DMA transfers for each output
     for(u32 o = 0; o < OUTPUT_COUNT; o++) {
-        u32 dma = (o == 0 ? DMA1 : DMA2);
-        void *fifo = (void *) (o == 0 ? 0x040000a0 : 0x040000a4);
+        const struct {
+            void *fifo;
+            u32 dma;
+        } outputs[2] = {
+            { .fifo = (void *) 0x040000a0, .dma = DMA1 },
+            { .fifo = (void *) 0x040000a4, .dma = DMA2 }
+        };
 
-        dma_config(dma, &(struct DMA) {
+        dma_config(outputs[o].dma, &(struct DMA) {
             .dest_control = DMA_ADDR_FIXED,
             .src_control  = DMA_ADDR_INCREMENT,
             .chunk        = DMA_CHUNK_32_BIT,
             .start_timing = DMA_START_SPECIAL,
             .repeat       = true
         });
-        dma_transfer(dma, fifo, buffers[o], 0);
+        dma_transfer(outputs[o].dma, outputs[o].fifo, buffers[o], 0);
     }
 }
 
