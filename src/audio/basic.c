@@ -132,13 +132,28 @@ static INLINE void update_enable_bits(i32 c) {
     }
 }
 
+static INLINE void playback_start(i32 channel) {
+    restart_dma(channel);
+    update_enable_bits(channel);
+
+    // give back unplayed samples to other channel
+    struct Channel *other = &channels[channel ^ 1];
+    if(other->data && !other->paused)
+        other->data -= timer_get_counter(TIMER1);
+
+    // reschedule the next IRQ
+    schedule_timer1_irq();
+}
+
+static INLINE void playback_stop(i32 channel) {
+    update_enable_bits(channel);
+    dma_stop(outputs[channel].dma);
+}
+
 THUMB
 static void basic_stop(i32 channel) {
     channels[channel].data = NULL;
-
-    // stop playback
-    update_enable_bits(channel);
-    dma_stop(outputs[channel].dma);
+    playback_stop(channel);
 }
 
 THUMB
@@ -152,17 +167,8 @@ static i32 basic_play(i32 channel, const void *sound, u32 length) {
     channels[channel].data = (const i8 *) sound;
     channels[channel].end  = (const i8 *) sound + length;
 
-    // start playback
-    restart_dma(channel);
-    update_enable_bits(channel);
-
-    // give back unplayed samples to other channel
-    struct Channel *other = &channels[channel ^ 1];
-    if(other->data && !other->paused)
-        other->data -= timer_get_counter(TIMER1);
-
-    // reschedule the next IRQ
-    schedule_timer1_irq();
+    channels[channel].paused = false;
+    playback_start(channel);
 
     return channel;
 }
