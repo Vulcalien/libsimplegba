@@ -69,6 +69,7 @@ static struct Channel {
 
     u32 loop_length;
     u8 directions;
+    bool paused;
 } channels[CHANNEL_COUNT];
 
 IWRAM_SECTION
@@ -96,7 +97,7 @@ static INLINE void schedule_timer1_irq(void) {
     u32 next_stop = TIMER_COUNTER_MAX;
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
-        if(!channel->data)
+        if(!channel->data || channel->paused)
             continue;
 
         const u32 remaining = channel->end - channel->data;
@@ -107,7 +108,7 @@ static INLINE void schedule_timer1_irq(void) {
     // move forward data pointers of channels
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
-        if(!channel->data)
+        if(!channel->data || channel->paused)
             continue;
 
         channel->data += next_stop;
@@ -117,15 +118,16 @@ static INLINE void schedule_timer1_irq(void) {
     timer_restart(TIMER1, next_stop);
 }
 
-static INLINE void update_enable_bits(i32 channel) {
-    const u32 enable_bits = outputs[channel].enable_bits;
+static INLINE void update_enable_bits(i32 c) {
+    const u32 enable_bits = outputs[c].enable_bits;
+    struct Channel *channel = &channels[c];
 
     // clear enable bits (needed if directions changed)
     DIRECT_SOUND_CONTROL &= ~(3 << enable_bits);
 
     // if playing, set enable bits
-    if(channels[channel].data) {
-        const u32 directions = channels[channel].directions;
+    if(channel->data && !channel->paused) {
+        const u32 directions = channel->directions;
         DIRECT_SOUND_CONTROL |= (directions << enable_bits);
     }
 }
@@ -134,6 +136,7 @@ THUMB
 static void basic_stop(i32 channel) {
     channels[channel].data = NULL;
 
+    // stop playback
     update_enable_bits(channel);
     dma_stop(outputs[channel].dma);
 }
@@ -146,17 +149,17 @@ static i32 basic_play(i32 channel, const void *sound, u32 length) {
         return channel;
     }
 
-    struct Channel *channel_struct = &channels[channel];
-    channel_struct->data = (const i8 *) sound;
-    channel_struct->end  = (const i8 *) sound + length;
+    channels[channel].data = (const i8 *) sound;
+    channels[channel].end  = (const i8 *) sound + length;
 
+    // start playback
     restart_dma(channel);
     update_enable_bits(channel);
 
-    // add unplayed samples back into the other channel's data pointer
-    struct Channel *other_channel = &channels[channel ^ 1];
-    if(other_channel->data)
-        other_channel->data -= timer_get_counter(TIMER1);
+    // give back unplayed samples to other channel
+    struct Channel *other = &channels[channel ^ 1];
+    if(other->data && !other->paused)
+        other->data -= timer_get_counter(TIMER1);
 
     // reschedule the next IRQ
     schedule_timer1_irq();
@@ -198,7 +201,7 @@ static void timer1_isr(void) {
     // stop or loop the channels
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
         struct Channel *channel = &channels[c];
-        if(!channel->data)
+        if(!channel->data || channel->paused)
             continue;
 
         if(channel->data >= channel->end) {
