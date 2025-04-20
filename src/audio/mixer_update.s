@@ -19,6 +19,8 @@
 .equ OUTPUT_COUNT,  2
 .equ BUFFER_SIZE,   768
 
+.equ STRUCT_CHANNEL_SIZE, 24
+
 @ --- temp_buffers --- @
 .section .sbss, "aw", %nobits
 .align 2
@@ -33,11 +35,10 @@ temp_buffers:
 .section .iwram, "ax", %progbits
 
 @ register allocation:
-@   r0  = channels
+@   r0  = channels, channel (struct pointer)
 @   r1  = buffers
 @   r2  = length
 @   r3  = c (channel index)
-@   r4  = channel (struct pointer)
 @   r5  = data
 @   r6  = end
 @   r7  = position
@@ -78,28 +79,26 @@ BEGIN_FUNC ARM _mixer_update
 @ ==================================================================== @
 
     mov     r3, #(CHANNEL_COUNT - 1)    @ (r3) c = CHANNEL_COUNT - 1
+    mov     r4, #STRUCT_CHANNEL_SIZE
+    mla     r0, r3, r4, r0              @ (r0) channel = &channels[c]
 .L_channels_loop:
-    @ get pointer to channel's struct
-    mov     r4, #24
-    mla     r4, r3, r4, r0              @ (r4) channel = &channels[c]
-
     @ retrieve data pointer; if NULL, continue
-    ldr     r5, [r4, #0]                @ (r5) data
+    ldr     r5, [r0, #0]                @ (r5) data
     cmp     r5, #0
     beq     .L_continue_channels_loop
 
     @ if channel is paused, continue
-    ldrb    r6, [r4, #18]               @ (r6) paused
+    ldrb    r6, [r0, #18]               @ (r6) paused
     cmp     r6, #0
     bne     .L_continue_channels_loop
 
     @ retrieve end pointer, position and increment
-    ldr     r6, [r4, #4]                @ (r6) end
-    ldrh    r7, [r4, #8]                @ (r7) position
-    ldrh    r8, [r4, #10]               @ (r8) increment
+    ldr     r6, [r0, #4]                @ (r6) end
+    ldrh    r7, [r0, #8]                @ (r7) position
+    ldrh    r8, [r0, #10]               @ (r8) increment
 
     @ retrieve volume vector
-    ldrh    r9, [r4, #20]               @ 00 00 LL RR
+    ldrh    r9, [r0, #20]               @ 00 00 LL RR
     orr     r9, r9, lsl #8              @ 00 LL xx RR
     bic     r9, #0x0000ff00             @ (r9) volume (00 LL 00 RR)
 
@@ -147,10 +146,11 @@ BEGIN_FUNC ARM _mixer_update
 .L_exit_samples_loop:
 
     @ write back data pointer and position
-    str     r5, [r4, #0]                @ channel->data = data
-    strh    r7, [r4, #8]                @ channel->position = position
+    str     r5, [r0, #0]                @ channel->data = data
+    strh    r7, [r0, #8]                @ channel->position = position
 
 .L_continue_channels_loop:
+    sub     r0, #STRUCT_CHANNEL_SIZE    @ (r0) channel--
     subs    r3, #1                      @ (r3) c--
     bge     .L_channels_loop            @ if c >= 0, repeat loop
 .L_exit_channels_loop:
@@ -195,7 +195,7 @@ BEGIN_FUNC ARM _mixer_update
     mov     r7, #0                      @ (r7) position = 0
 
     @ retrieve loop_length
-    ldr     r14, [r4, #12]              @ (r14) loop_length
+    ldr     r14, [r0, #12]              @ (r14) loop_length
     cmp     r14, #0
 
     @ if loop_length != 0, loop channel and continue sample loop
