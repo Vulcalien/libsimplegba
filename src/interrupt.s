@@ -57,7 +57,7 @@ BEGIN_FUNC ARM interrupt_handler
     mov     r3, #1                      @ r3 = IRQ bit (1)
 1: @ loop
     @ if IRQ id >= INTERRUPT_COUNT, return
-    cmp     r2, #(INTERRUPT_COUNT)
+    cmp     r2, #INTERRUPT_COUNT
     bxge    lr
 
     @ check if the IRQ bit in (IE & IF) is set
@@ -126,11 +126,12 @@ END_FUNC _interrupt_init
 .global interrupt_set_isr
 .text
 
-@ r0 = irq
-@ r1 = isr
+@ input:
+@   r0 = irq : u32
+@   r1 = isr : function pointer
 BEGIN_FUNC ARM interrupt_set_isr
     @ check if the given IRQ is valid
-    cmp     r0, #(INTERRUPT_COUNT)
+    cmp     r0, #INTERRUPT_COUNT
 
     @ isr_table[irq] = irq
     ldrlo   r2, =isr_table
