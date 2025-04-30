@@ -23,7 +23,7 @@ i32 math_sqrt(u32 x) {
 
     // try to shrink bounds using powers of two (up to 2^15)
     #pragma GCC unroll 0 // tell compiler not to unroll this loop
-    for(u32 i = 0; i < 16; i++) {
+    for(u32 i = 4; i < 16; i++) {
         u32 guess = (1 << i);             // 2^i
         u32 guess_squared = (guess << i); // 2^i * 2^i
 
