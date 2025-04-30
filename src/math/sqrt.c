@@ -28,7 +28,7 @@ i32 math_sqrt(u32 x) {
         u32 guess_squared = (guess << i); // 2^i * 2^i
 
         // update bounds
-        if(guess_squared < x) {
+        if(guess_squared <= x) {
             low = guess;
         } else {
             high = guess;
@@ -36,7 +36,7 @@ i32 math_sqrt(u32 x) {
         }
     }
 
-    // use binary search within bounds
+    // use binary search in range [low, high)
     while(high - low > 1) {
         const u32 mid = (low + high) / 2;
         const u32 mid_squared = mid * mid;
