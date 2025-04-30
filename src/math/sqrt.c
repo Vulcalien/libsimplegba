@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2024-2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,36 +15,37 @@
  */
 #include <math.h>
 
-// This function calculates the integral part (i.e. floor) of the square
-// root of any unsigned 32-bit integer. It is based on the Binary Search
-// algorithm. The initial upper bound is either the argument or U16_MAX
-// (i.e. 65535, the biggest integer that squared gives a 32-bit number).
-
 IWRAM_SECTION
 i32 math_sqrt(u32 x) {
-    if(x == 0)
-        return 0;
+    // set initial bounds so that every possible result is included
+    u32 low = 0;
+    u32 high = U16_MAX + 1;
 
-    // If x is greater than 'U16_MAX ^ 2', 32 bits are not enough to
-    // contain intermediate results: return the only possible solution.
-    if(x >= (u32) U16_MAX * U16_MAX)
-        return U16_MAX;
+    // try to shrink bounds using powers of two (up to 2^15)
+    #pragma GCC unroll 0 // tell compiler not to unroll this loop
+    for(u32 i = 0; i < 16; i++) {
+        u32 guess = (1 << i);             // 2^i
+        u32 guess_squared = (guess << i); // 2^i * 2^i
 
-    // Initialize the search boundaries. Note: 'high' cannot be
-    // calculated using 'math_min' because of different signedness.
-    u32 low  = 1;
-    u32 high = (x < U16_MAX ? x : U16_MAX);
+        // update bounds
+        if(guess_squared < x) {
+            low = guess;
+        } else {
+            high = guess;
+            break;
+        }
+    }
 
-    // Iterate until 'low' and 'high' are equal or differ by one.
+    // use binary search within bounds
     while(high - low > 1) {
         const u32 mid = (low + high) / 2;
         const u32 mid_squared = mid * mid;
 
+        // update bounds
         if(mid_squared <= x) low  = mid;
         if(mid_squared >= x) high = mid;
     }
 
-    // Return the lower bound: if low != high, then x is not a perfect
-    // square and 'low = floor(sqrt(x))'.
+    // return low = floor(sqrt(x))
     return low;
 }
