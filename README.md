@@ -47,24 +47,21 @@ An overview of the library and a brief description of each module can be
 found in the [libsimplegba](doc/libsimplegba.adoc) manual.
 
 ## Building
-To build the library, run `make`. This will generate the static library
-file `bin/libsimplegba.a`.
+First, make sure the *arm-none-eabi-gcc* compiler and *make* tool are
+installed. Then, run `make` to generate the static library file
+`bin/libsimplegba.a`.
 
-## Using libsimplegba
-### CPPFLAGS
-To gain access to the library's header files, add the `include`
-directory to the include search path (`-I<lib-path>/include`).
+## Usage
+Follow these steps to use the library:
+- Obtain *libsimplegba* (for example, by adding it as a git submodule).
+- Add the `include` directory to the include path.
+- Add the `bin` directory to the library search path.
+- Add `libsimplegba` to the list of libraries to link against.
+- Add the `-nostartfiles` and `-T<lib-path>/lnkscript` linker flags.
 
-### LDFLAGS and LDLIBS
-To statically link against `bin/libsimplegba.a`, add the `bin` directory
-to the library search path (`-L<lib-path>/bin`) and the `libsimplegba.a`
-file to the list of libraries (`-lsimplegba`).
-
-To use the linker script provided by this library, add these linker
-flags: `-nostartfiles` and `-T<lib-path>/lnkscript`.
-
-### Example
-Assuming the library is located at `lib/libsimplegba`:
+### Makefile example
+Assuming the library is located at `lib/libsimplegba`, add these lines
+to `Makefile`:
 
 ```Makefile
 # linker script
