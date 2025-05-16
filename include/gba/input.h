@@ -43,23 +43,20 @@ INLINE void input_update(void) {
     _input_is_down  = _INPUT_KEY_INPUT ^ 0x3ff;
 }
 
-INLINE bool input_down(u16 key) {
+INLINE bool input_down(u32 key) {
     bool is_down = (_input_is_down & key);
-
     return is_down;
 }
 
-INLINE bool input_pressed(u16 key) {
+INLINE bool input_pressed(u32 key) {
     bool is_down  = (_input_is_down  & key);
     bool was_down = (_input_was_down & key);
-
     return is_down && !was_down;
 }
 
-INLINE bool input_released(u16 key) {
+INLINE bool input_released(u32 key) {
     bool is_down  = (_input_is_down  & key);
     bool was_down = (_input_was_down & key);
-
     return !is_down && was_down;
 }
 
@@ -67,7 +64,7 @@ INLINE bool input_released(u16 key) {
 //           time to raise the interrupt; if false, any of the specified
 //           keys will raise the interrupt.
 // keys: list of keys joined using logical OR (e.g. KEY_A | KEY_START).
-INLINE void input_irq_config(bool all_keys, u16 keys) {
+INLINE void input_irq_config(bool all_keys, u32 keys) {
     // clear all bits, except IRQ enable
     u16 val = _INPUT_KEY_CONTROL & _INPUT_IRQ_BIT;
 
