@@ -2,37 +2,43 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-05-16
+:revdate: 2025-05-17
 :docdate: {revdate}
 
 == NAME
-input_update, input_down, input_pressed, input_released,
-input_irq_config - input detection
+input_init, input_update, input_down, input_pressed, input_released,
+input_repeated, input_irq_config - input detection
 
 == SYNOPSIS
 [verse]
 ____
 *#include <gba/input.h>*
 
-*void input_update(void);*
+**void input_init(i32 **__repeat_delay__**, i32 **__repeat_interval__**);**
+**void input_update(void);**
 
 **bool input_down    (u32 **__key__**);**
 **bool input_pressed (u32 **__key__**);**
 **bool input_released(u32 **__key__**);**
+**bool input_repeated(u32 **__key__**);**
 
 **void input_irq_config(bool **__all_keys__**, u32 **__keys__**);**
 ____
 
 == DESCRIPTION
+The *input_init*() function initializes the module, setting repeat delay
+and repeat interval to the specified values measured in update cycles.
+Both values must be in the range [1, 240] and __repeat_delay__ must be
+higher than or equal to __repeat_interval__.
+
 The *input_update*() function updates the module's internal state to
 match the one of the GBA buttons. This function should be called once at
 the beginning of every tick (game update), before any input processing
 is done.
 
 The *input_down*(), *input_pressed*() and *input_released*() functions
-return true if the specified _key_ is currently in the matching state
-(i.e. down, pressed, released). _key_ can be any of the constants listed
-below.
+return true if the specified _key_ is currently in the matching state.
+_key_ can be any of the constants listed below.
 
 .Key identifiers
 [cols="1,1,1,1"]
@@ -42,6 +48,11 @@ below.
 |KEY_RIGHT |KEY_LEFT |KEY_UP     |KEY_DOWN
 |KEY_R     |KEY_L    |           |
 |===
+
+The *input_repeated*() function returns true if the specified _key_ has
+just been pressed or is being repeated. A key is repeated, with a period
+equal to the repeat interval, if it has been held down for longer than
+the repeat delay. See *input_init*() above.
 
 The *input_irq_config*() function configures the keypad interrupt
 condition. If __all_keys__ is true, the interrupt is raised if all of
@@ -53,9 +64,9 @@ must also be enabled by calling the *interrupt_toggle*(3) function
 passing *IRQ_KEYPAD* as argument.
 
 == RETURN VALUE
-The *input_down*(), *input_pressed*() and *input_released*() functions
-return true if the specified _key_ is currently in the matching state,
-false otherwise.
+The *input_down*(), *input_pressed*(), *input_released*() and
+*input_repeated*() functions return true if the specified _key_ is
+currently in the matching state, false otherwise.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
