@@ -64,19 +64,19 @@ INLINE bool input_down(u32 key) {
     return is_down;
 }
 
-INLINE bool input_pressed(u32 key) {
+INLINE bool input_press(u32 key) {
     bool is_down  = (_input_is_down  & key);
     bool was_down = (_input_was_down & key);
     return is_down && !was_down;
 }
 
-INLINE bool input_released(u32 key) {
+INLINE bool input_release(u32 key) {
     bool is_down  = (_input_is_down  & key);
     bool was_down = (_input_was_down & key);
     return !is_down && was_down;
 }
 
-INLINE bool input_repeated(u32 key) {
+INLINE bool input_repeat(u32 key) {
     bool is_repeated = (_input_repeated & key);
     return is_repeated;
 }
