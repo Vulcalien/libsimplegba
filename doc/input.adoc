@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-05-17
+:revdate: 2025-05-19
 :docdate: {revdate}
 
 == NAME
@@ -31,16 +31,14 @@ and repeat interval to the specified values measured in update cycles.
 Both values must be in the range [1, 240] and __repeat_delay__ must be
 higher than or equal to __repeat_interval__.
 
-The *input_update*() function updates the module's internal state to
-match the one of the GBA buttons. This function should be called once at
-the beginning of every tick (game update), before any input processing
-is done.
+The *input_update*() function updates the module's internal state. This
+function should be called once at the beginning of every game update,
+before any input processing is done.
 
-The *input_down*(), *input_press*() and *input_release*() functions
-return true if the specified _key_ is currently in the matching state.
-_key_ can be any of the constants listed below.
+=== Button status
+These functions take the _key_ argument, used to identify GBA buttons.
+This can be any of the following constants:
 
-.Key identifiers
 [cols="1,1,1,1"]
 |===
 
@@ -49,11 +47,21 @@ _key_ can be any of the constants listed below.
 |KEY_R     |KEY_L    |           |
 |===
 
+The *input_down*() function returns true if the specified _key_ is being
+held down.
+
+The *input_press*() function returns true if the specified _key_ has
+just been pressed.
+
+The *input_release*() function returns true if the specified _key_ has
+just been released.
+
 The *input_repeat*() function returns true if the specified _key_ has
 just been pressed or is being repeated. A key is repeated, with a period
 equal to the repeat interval, if it has been held down for longer than
 the repeat delay. See *input_init*() above.
 
+=== Input interrupt
 The *input_irq_config*() function configures the keypad interrupt
 condition. If __all_keys__ is true, the interrupt is raised if all of
 the specified keys are down at the same time; if __all_keys__ is false,
