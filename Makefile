@@ -5,7 +5,10 @@
 
 TARGET := GBA
 
-# === Basic Info ===
+# ==================================================================== #
+#                              Basic Info                              #
+# ==================================================================== #
+
 OUT_FILENAME := libsimplegba
 
 SRC_DIR := src
@@ -14,7 +17,10 @@ BIN_DIR := bin
 
 SRC_SUBDIRS := math memory backup audio debug
 
-# === Compilation ===
+# ==================================================================== #
+#                             Compilation                              #
+# ==================================================================== #
+
 CPPFLAGS := -MMD -MP -Iinclude
 CFLAGS   := -O3 -fomit-frame-pointer -marm -mcpu=arm7tdmi\
             -Wall -pedantic
@@ -26,17 +32,21 @@ ifeq ($(TARGET),GBA)
     AS := arm-none-eabi-as
 endif
 
-# === Extensions ===
+# ==================================================================== #
+#                        Extensions & Commands                         #
+# ==================================================================== #
+
 ifeq ($(TARGET),GBA)
     OBJ_EXT := o
     LIB_EXT := a
 endif
 
-# === Commands ===
 MKDIR := mkdir -p
 RM    := rm -rfv
 
-# === Resources ===
+# ==================================================================== #
+#                              Resources                               #
+# ==================================================================== #
 
 # list of source file extensions
 SRC_EXT := c s
@@ -59,7 +69,9 @@ OBJ := $(SRC:%=$(OBJ_DIR)/%.$(OBJ_EXT))
 # output file
 OUT := $(BIN_DIR)/$(OUT_FILENAME).$(LIB_EXT)
 
-# === Targets ===
+# ==================================================================== #
+#                               Targets                                #
+# ==================================================================== #
 
 .PHONY: all build clean
 
