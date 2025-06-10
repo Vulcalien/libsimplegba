@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-04-01
+:revdate: 2025-06-10
 :docdate: {revdate}
 
 == NAME
@@ -20,7 +20,7 @@ ____
 
 **void sprite_hide(u32 **__id__**);**
 **void sprite_hide_range(u32 **__start__**, u32 **__stop__**);**
-*void sprite_hide_all(void);*
+**void sprite_hide_all(void);**
 
 **void sprite_mosaic(u32 **__x__**, u32 **__y__**);**
 **void sprite_affine(u32 **__parameter__**, i16 **__matrix__**[4]);**
@@ -74,8 +74,8 @@ The _disable_ field specifies whether a sprite is hidden (one) or not
 *sprite_hide*() on the same sprite ID. Ignored if _affine_ is one.
 
 The _mode_ field specifies the sprite's mode. Possible values are:
-*SPRITE_MODE_NORMAL* (0), *SPRITE_MODE_SEMI_TRANSPARENT* (1),
-*SPRITE_MODE_WINDOW* (2).
+*SPRITE_MODE_NORMAL*, *SPRITE_MODE_SEMI_TRANSPARENT*,
+*SPRITE_MODE_WINDOW*.
 
 The _priority_ field specifies the drawing priority of the sprite
 relative to background layers. The sprite will be drawn on top of
@@ -97,9 +97,8 @@ following sizes:
 |===
 
 The _flip_ field specifies if and how the sprite is flipped. Ignored if
-_affine_ is one. Possible values are: *SPRITE_FLIP_NONE* (0),
-*SPRITE_FLIP_HORIZONTAL* (1), *SPRITE_FLIP_VERTICAL* (2),
-*SPRITE_FLIP_BOTH* (3).
+_affine_ is one. Possible values are: *SPRITE_FLIP_NONE*,
+*SPRITE_FLIP_HORIZONTAL*, *SPRITE_FLIP_VERTICAL*, *SPRITE_FLIP_BOTH*.
 
 The _tile_ field specifies the top-left tile number, thus selecting the
 image used to draw the sprite. The range of this value is affected by
@@ -125,7 +124,7 @@ The _colors_ field specifies the color mode of the sprite, determining
 how VRAM data for its tiles is interpreted. In 16-color mode pixels are
 mapped to one 16-color row of the sprite palette, while in 256-color
 mode pixels are mapped to the entire sprite palette. Possible values
-are: *SPRITE_COLORS_16* (0), *SPRITE_COLORS_256* (1).
+are: *SPRITE_COLORS_16*, *SPRITE_COLORS_256*.
 
 The _affine_ field specifies whether an affine transformation is applied
 to the sprite (one) or not (zero).
