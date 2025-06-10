@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-03-31
+:revdate: 2025-06-10
 :docdate: {revdate}
 
 == NAME
@@ -18,12 +18,12 @@ ____
 **void display_config(u32 **__video_mode__**);**
 **void display_force_blank(bool **__flag__**);**
 
-**vu16 +++*+++display_charblock(u32 **__block__**);**
-**vu16 +++*+++display_screenblock(u32 **__block__**);**
+**vu16 +++*+++display_charblock(i32 **__block__**);**
+**vu16 +++*+++display_screenblock(i32 **__block__**);**
 
-**u32 display_get_page(void);**
-**void display_set_page(u32 **__page__**);**
-**vu16 +++*+++display_get_raster(u32 **__page__**);**
+**i32 display_get_page(void);**
+**void display_set_page(i32 **__page__**);**
+**vu16 +++*+++display_get_raster(i32 **__page__**);**
 ____
 
 == DESCRIPTION

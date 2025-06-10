@@ -93,29 +93,29 @@ INLINE u16 display_vcount(void) {
 //
 // Tilemap modes: 0-3 background tilesets, 4-5 sprite tileset.
 // Bitmap modes: 0-4 raster, 5 sprite tileset.
-INLINE vu16 *display_charblock(u32 block) {
+INLINE vu16 *display_charblock(i32 block) {
     return (vu16 *) (0x06000000 + block * 0x4000);
 }
 
 // Screenblocks 0-31 are 2 KB areas of VRAM used to store tilemaps.
-INLINE vu16 *display_screenblock(u32 block) {
+INLINE vu16 *display_screenblock(i32 block) {
     return (vu16 *) (0x06000000 + block * 0x800);
 }
 
 // === Bitmap-specific ===
 
-INLINE u32 display_get_page(void) {
+INLINE i32 display_get_page(void) {
     return (_DISPLAY_CONTROL >> 4) & 1;
 }
 
-INLINE void display_set_page(u32 page) {
+INLINE void display_set_page(i32 page) {
     if(page & 1)
         _DISPLAY_CONTROL |= BIT(4);
     else
         _DISPLAY_CONTROL &= ~BIT(4);
 }
 
-INLINE vu16 *display_get_raster(u32 page) {
+INLINE vu16 *display_get_raster(i32 page) {
     return (vu16 *) (0x06000000 + (page & 1) * 0xa000);
 }
 
