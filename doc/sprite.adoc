@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-10
+:revdate: 2025-06-17
 :docdate: {revdate}
 
 == NAME
@@ -84,7 +84,7 @@ _priority_. Note that sprites with lower IDs always have priority over
 sprites with higher IDs, regardless of their _priority_ values.
 
 The _size_ field specifies the size of the sprite. Its value can be any
-of the *SPRITE_SIZE_X* constants, with *X* replaced by one of the
+of the *SPRITE_SIZE_x* constants, with *x* replaced by one of the
 following sizes:
 
 .Sprite sizes
