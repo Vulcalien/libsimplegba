@@ -27,9 +27,7 @@ struct Window {
     u8 bg1 : 1;
     u8 bg2 : 1;
     u8 bg3 : 1;
-
     u8 sprites : 1;
-
     u8 effects : 1;
 };
 

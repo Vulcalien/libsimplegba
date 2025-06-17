@@ -1,0 +1,62 @@
+= window(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2025-06-17
+:docdate: {revdate}
+
+== NAME
+window_config, window_viewport, window_toggle - display windows
+
+== SYNOPSIS
+[verse]
+____
+*#include <gba/window.h>*
+
+**void window_config(u32 **__id__**, const struct Window +++*+++**__config__**);**
+**void window_viewport(u32 **__id__**, u32 **__x__**, u32 **__y__**, u32 **__width__**, u32 **__height__**);**
+**void window_toggle(u32 **__id__**, bool **__enable__**);**
+____
+
+== DESCRIPTION
+Windows are areas of the display in which graphical elements can be
+selectively shown or hidden.
+
+*WINDOW_0* and *WINDOW_1* cover rectangular areas selected using the
+*window_viewport*() function. *WINDOW_SPR* covers areas where sprites in
+window mode have a non-transparent pixel. *WINDOW_OUT* covers all pixels
+outside other windows.
+
+The *window_config*() function configures the window identified by _id_
+with the settings in the _config_ structure. Each flag in _config_
+specifies whether a graphical element should be shown (1) or hidden (0)
+within the window. The structure is defined as follows:
+
+[source,c]
+----
+struct Window {
+    u8 bg0 : 1;
+    u8 bg1 : 1;
+    u8 bg2 : 1;
+    u8 bg3 : 1;
+    u8 sprites : 1;
+    u8 effects : 1;
+};
+----
+
+The *window_viewport*() function sets the viewport of the window
+identified by _id_. The viewport is a rectangular area with its top-left
+corner at (_x_, _y_) and a size of _width_ by _height_. This function
+only affects *WINDOW_0* and *WINDOW_1*.
+
+The *window_toggle*() function enables or disables the window identified
+by _id_, based on the value of _enable_. This function does not affect
+*WINDOW_OUT*, which is automatically enabled whenever any other window
+is enabled.
+
+== NOTES
+TODO windows priority in cases of overlap
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
