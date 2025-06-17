@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-10
+:revdate: 2025-06-17
 :docdate: {revdate}
 
 == NAME
@@ -28,9 +28,10 @@ ____
 
 == DESCRIPTION
 === Display configuration
-The *display_config*() function configures the display to the specified
-__video_mode__. The video mode changes how the display is drawn, and how
-video memory is allocated.
+The *display_config*() function sets the __video_mode__ of the display.
+The video mode determines how the display is drawn and how video memory
+is allocated. The __video_mode__ argument can be any of the
+*DISPLAY_MODE_x* constants, with *x* replaced by the video mode number.
 
 Video modes 0-2 use tiled backgrounds (tilemaps). Which backgrounds are
 available, and how they are treated (regular or affine), depend on the
