@@ -24,14 +24,17 @@
 #define DMA2 2
 #define DMA3 3
 
+// Address control
 #define DMA_ADDR_INCREMENT 0
 #define DMA_ADDR_DECREMENT 1
 #define DMA_ADDR_FIXED     2
 #define DMA_ADDR_RELOAD    3
 
+// Chunk size
 #define DMA_CHUNK_16_BIT 0
 #define DMA_CHUNK_32_BIT 1
 
+// Start timing
 #define DMA_START_IMMEDIATELY 0
 #define DMA_START_VBLANK      1
 #define DMA_START_HBLANK      2
@@ -59,13 +62,12 @@ INLINE void dma_config(u32 id, const struct DMA *config) {
     // clear all bits, except IRQ enable
     u16 val = *control & _DMA_IRQ_BIT;
 
-    if(config) {
-        val |= config->dest_control << 5  |
-               config->src_control  << 7  |
-               config->repeat       << 9  |
-               config->chunk        << 10 |
-               config->start_timing << 12;
-    }
+    val |= config->dest_control << 5  |
+           config->src_control  << 7  |
+           config->repeat       << 9  |
+           config->chunk        << 10 |
+           config->start_timing << 12;
+
     *control = val;
 }
 

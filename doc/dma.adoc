@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-04-13
+:revdate: 2025-06-18
 :docdate: {revdate}
 
 == NAME
@@ -31,9 +31,7 @@ these constants: *DMA0*, *DMA1*, *DMA2*, *DMA3*.
 === DMA configuration
 The *dma_config*() function configures the DMA channel with the settings
 specified in the _config_ structure. If currently enabled, the DMA
-channel will be disabled. Passing NULL as _config_ is equivalent to
-passing the structure with all fields set to zero. The structure is
-defined as follows:
+channel will be disabled. The structure is defined as follows:
 
 [source,c]
 ----
