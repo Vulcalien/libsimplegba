@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-04-13
+:revdate: 2025-06-18
 :docdate: {revdate}
 
 == NAME
@@ -14,7 +14,11 @@ timer_config, timer_start, timer_stop, timer_restart, timer_get_counter
 ____
 *#include <gba/timer.h>*
 
-*#define TIMER_COUNT 4*
+*#define TIMER0*
+*#define TIMER1*
+*#define TIMER2*
+*#define TIMER3*
+
 *#define TIMER_COUNTER_MAX 65536*
 
 **void timer_config(u32 **__id__**, u16 **__config__**);**
@@ -35,10 +39,6 @@ reset to the reload value, and the timer continues running.
 
 When the counter of a timer reaches zero, an interrupt request tied to
 that timer is raised, if enabled: see *interrupt_enable(3)*.
-
-These functions take the _id_ argument, used to identify the timers.
-This can be an integer between 0 and 3, or one of these constants:
-*TIMER0*, *TIMER1*, *TIMER2*, *TIMER3*.
 
 === Timer configuration
 The *timer_config*() function configures the timer and, if running,

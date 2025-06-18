@@ -13,7 +13,10 @@ dma_config, dma_transfer, dma_stop - direct memory access
 ____
 *#include <gba/dma.h>*
 
-*#define DMA_COUNT 4*
+*#define DMA0*
+*#define DMA1*
+*#define DMA2*
+*#define DMA3*
 
 **void dma_config(u32 **__id__**, const struct DMA +++*+++**__config__**);**
 
@@ -24,10 +27,6 @@ ____
 ____
 
 == DESCRIPTION
-All of these functions take the _id_ parameter, used to identify the DMA
-channel to operate on. This can be an integer between 0 and 3 or one of
-these constants: *DMA0*, *DMA1*, *DMA2*, *DMA3*.
-
 === DMA configuration
 The *dma_config*() function configures the DMA channel with the settings
 specified in the _config_ structure. If currently enabled, the DMA
@@ -71,14 +70,14 @@ transfer will be made every time the start event occurs. This bit is
 ignored if the start timing is 'immediately'.
 
 === DMA operation
-The *dma_transfer*() function enables the DMA channel identified by _id_
-and sets the initial destination address to _dest_, the initial source
-address to _source_ and the number of chunks (not bytes) to transfer to
-_n_. Before being enabled, The DMA channel should be properly configured
-by calling *dma_config*().
+The *dma_transfer*() function enables the DMA channel and sets the
+initial destination address to _dest_, the initial source address to
+_source_ and the number of chunks (not bytes) to transfer to _n_. Before
+being enabled, The DMA channel should be properly configured by calling
+*dma_config*().
 
-The *dma_stop*() function disables the DMA channel identified by _id_.
-This operation does not affect the channel's configuration.
+The *dma_stop*() function disables the DMA channel. This operation does
+not affect the channel's configuration.
 
 == NOTES
 The source and destination addresses should be properly aligned to match
