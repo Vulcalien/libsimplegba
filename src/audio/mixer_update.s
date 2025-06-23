@@ -48,7 +48,7 @@ temp_buffers:
 @   r10 = remaining
 @   r11 = data_plus_pos
 @   r12 = sample
-@   r14 = loop_length
+@   r14 = tmp, loop_length
 
 @ input:
 @   r0 = channels : struct Channel [CHANNEL_COUNT]
@@ -106,45 +106,11 @@ BEGIN_FUNC ARM _mixer_update
     ldr     r9, =temp_buffers           @ (r9) temp_buffers
     mov     r10, r2                     @ (r10) remaining = length
     mov     r11, r4                     @ (r11) data_plus_pos = data
-.L_samples_loop:
-    @ retrieve sample and update position
-    ldrsb   r12, [r11]                  @ (r12) sample = *data_plus_pos
-    add     r6, r7                      @ (r6) position += increment
-    add     r11, r4, r6, lsr #12        @ (r11) data_plus_pos = data + position / 0x1000
 
-    @ Add sample to temp_buffers: instead of working on two 16-bit
-    @ values separately, work on them combined into a 32-bit value, in a
-    @ way similar to vector arithmetic. The driver must be setup so that
-    @ 16-bit overflow does not happen, or else artifacts would appear.
-    @
-    @ Note that treating 32-bit integers as 16-bit vectors sometimes
-    @ introduces calculation errors in the top value.
-    @
-    @ If sample is negative and the right volume is not zero, the high
-    @ 16-bit value of (sample * volume) will be off by one. This noise
-    @ is particularly noticeable when sound is only playing on the right
-    @ output. To compensate for this, one is added to the high 16-bit
-    @ value if (sample * volume) is negative, ignoring the case in which
-    @ right_volume == 0 but left_volume != 0 for performance reasons.
-    @
-    @ When adding (sample * volume) to the temporary buffer's value, if
-    @ the resulting low 16-bit value overflows, the high 16-bit value
-    @ will be off by one. This noise should be hardly noticeable, so no
-    @ attempt is made to compensate for it.
-    ldr     r14, [r9]                   @ tmp = *temp_buffers
-    muls    r12, r8                     @ sample * volume
-    addlt   r12, #0x00010000            @ if (sample * volume) < 0, fix top value
-    add     r14, r12                    @ tmp += sample * volume
-    str     r14, [r9], #4               @ *(temp_buffers++) = tmp
-
-    @ if data_plus_pos >= end, loop or stop the channel
-    cmp     r11, r5
-    bge     .L_loop_or_stop
-
-.L_continue_samples_loop:
-    subs    r10, #1                     @ (r10) remaining--
-    bgt     .L_samples_loop             @ if remaining > 0, repeat loop
-.L_exit_samples_loop:
+    @ call mix_channel pseudo-function
+    @ TODO select the most efficient one
+    b       mix_channel_pitch_near_end
+.L_mix_channel_return:
 
     @ write data pointer and position
     str     r11, [r0, #0]               @ channel->data = data_plus_pos
@@ -190,25 +156,92 @@ BEGIN_FUNC ARM _mixer_update
     bx      lr
 
 @ ==================================================================== @
-@                             loop or stop                             @
+@                     mix channel pseudo-functions                     @
 @ ==================================================================== @
 
-.L_loop_or_stop:
-    @ reset position
-    mov     r6, #0                      @ (r6) position = 0
+.macro MIX_CHANNEL pitch:req near_end:req
+1: @ samples loop
+    @ retrieve sample and update position
+    .if \pitch == 1
+        ldrsb   r12, [r11]              @ (r12) sample = *data_plus_pos
+        add     r6, r7                  @ (r6) position += increment
+        add     r11, r4, r6, lsr #12    @ (r11) data_plus_pos = data + position / 0x1000
+    .else
+        ldrsb   r12, [r11], #1          @ (r12) sample = *(data_plus_pos++)
+    .endif
 
-    @ retrieve loop_length
-    ldr     r14, [r0, #12]              @ (r14) loop_length
-    cmp     r14, #0
+    @ Add sample to temp_buffers: instead of working on two 16-bit
+    @ values separately, work on them combined into a 32-bit value, in a
+    @ way similar to vector arithmetic. The driver must be setup so that
+    @ 16-bit overflow does not happen, or else artifacts would appear.
+    @
+    @ Note that treating 32-bit integers as 16-bit vectors sometimes
+    @ introduces calculation errors in the top value.
+    @
+    @ If sample is negative and the right volume is not zero, the high
+    @ 16-bit value of (sample * volume) will be off by one. This noise
+    @ is particularly noticeable when sound is only playing on the right
+    @ output. To compensate for this, one is added to the high 16-bit
+    @ value if (sample * volume) is negative, ignoring the case in which
+    @ right_volume == 0 but left_volume != 0 for performance reasons.
+    @
+    @ When adding (sample * volume) to the temporary buffer's value, if
+    @ the resulting low 16-bit value overflows, the high 16-bit value
+    @ will be off by one. This noise should be hardly noticeable, so no
+    @ attempt is made to compensate for it.
+    ldr     r14, [r9]                   @ tmp = *temp_buffers
+    muls    r12, r8                     @ sample * volume
+    addlt   r12, #0x00010000            @ if (sample * volume) < 0, fix top value
+    add     r14, r12                    @ tmp += sample * volume
+    str     r14, [r9], #4               @ *(temp_buffers++) = tmp
 
-    @ if loop_length != 0, loop channel and continue sample loop
-    subne   r4, r5, r14                 @ (r4) data = end - loop_length
-    movne   r11, r4                     @ (r11) data_plus_pos = data
-    bne     .L_continue_samples_loop
+    .if \near_end == 1
+        @ if data_plus_pos >= end, loop or stop the channel
+        cmp     r11, r5
+        bge     3f @ loop or stop
+    .endif
 
-    @ if loop_length == 0, stop channel and break sample loop
-    moveq   r11, #0                     @ (r11) data_plus_pos = NULL
-    beq     .L_exit_samples_loop
+2: @ continue samples loop
+    subs    r10, #1                     @ (r10) remaining--
+    bgt     1b @ samples loop           @ if remaining > 0, repeat loop
+    b       .L_mix_channel_return       @ otherwise, return
+
+    .if \near_end == 1
+3: @ loop or stop
+        @ reset position
+        mov     r6, #0                  @ (r6) position = 0
+
+        @ retrieve loop_length
+        ldr     r14, [r0, #12]          @ (r14) loop_length
+        cmp     r14, #0
+
+        @ if loop_length != 0, loop channel and continue samples loop
+        subne   r11, r5, r14            @ (r11) data_plus_pos = end - loop_length
+        .if \pitch == 1
+            @ When pitch control is enabled, data is used as base to
+            @ calculate data_plus_pos, so it must also be reset.
+            movne   r4, r11             @ (r4) data = data_plus_pos
+        .endif
+        bne     2b @ continue samples loop
+
+        @ if loop_length == 0, stop channel and break samples loop
+        moveq   r11, #0                 @ (r11) data_plus_pos = NULL
+        beq     .L_mix_channel_return
+    .endif
+.endm
+
+mix_channel:
+    MIX_CHANNEL 0 0
+
+mix_channel_pitch:
+    MIX_CHANNEL 1 0
+
+mix_channel_near_end:
+    MIX_CHANNEL 0 1
+
+mix_channel_pitch_near_end:
+    MIX_CHANNEL 1 1
+
 END_FUNC _mixer_update
 
 .end
