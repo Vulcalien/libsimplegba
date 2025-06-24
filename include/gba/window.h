@@ -31,8 +31,8 @@ struct Window {
     u8 effects : 1;
 };
 
-INLINE void window_config(u32 id, const struct Window *config) {
-    if(id >= WINDOW_COUNT)
+INLINE void window_config(i32 id, const struct Window *config) {
+    if(id < 0 || id >= WINDOW_COUNT)
         return;
 
     // if config is NULL, use a default configuration instead
@@ -52,7 +52,7 @@ INLINE void window_config(u32 id, const struct Window *config) {
     );
 }
 
-INLINE void window_viewport(u32 id, u32 x, u32 y,
+INLINE void window_viewport(i32 id, u32 x, u32 y,
                             u32 width, u32 height) {
     if(id != WINDOW_0 && id != WINDOW_1)
         return;
@@ -64,8 +64,8 @@ INLINE void window_viewport(u32 id, u32 x, u32 y,
     *vertical   = ((y & 0xff) << 8 | ((y + height) & 0xff));
 }
 
-INLINE void window_toggle(u32 id, bool enable) {
-    if(id >= WINDOW_COUNT)
+INLINE void window_toggle(i32 id, bool enable) {
+    if(id < 0 || id >= WINDOW_COUNT)
         return;
 
     const u16 bit = (u16 [WINDOW_COUNT]) {

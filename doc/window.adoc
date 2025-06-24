@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-18
+:revdate: 2025-06-24
 :docdate: {revdate}
 
 == NAME
@@ -18,9 +18,9 @@ ____
 *#define WINDOW_SPR*
 *#define WINDOW_OUT*
 
-**void window_config(u32 **__id__**, const struct Window +++*+++**__config__**);**
-**void window_viewport(u32 **__id__**, u32 **__x__**, u32 **__y__**, u32 **__width__**, u32 **__height__**);**
-**void window_toggle(u32 **__id__**, bool **__enable__**);**
+**void window_config(i32 **__id__**, const struct Window +++*+++**__config__**);**
+**void window_viewport(i32 **__id__**, u32 **__x__**, u32 **__y__**, u32 **__width__**, u32 **__height__**);**
+**void window_toggle(i32 **__id__**, bool **__enable__**);**
 ____
 
 == DESCRIPTION
