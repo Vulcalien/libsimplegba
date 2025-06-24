@@ -53,8 +53,8 @@ struct DMA {
 #define _DMA_IRQ_BIT    BIT(14)
 #define _DMA_ENABLE_BIT BIT(15)
 
-INLINE void dma_config(u32 id, const struct DMA *config) {
-    if(id >= DMA_COUNT)
+INLINE void dma_config(i32 id, const struct DMA *config) {
+    if(id < 0 || id >= DMA_COUNT)
         return;
 
     vu16 *control = _DMA_GET_CONTROL(id);
@@ -71,9 +71,9 @@ INLINE void dma_config(u32 id, const struct DMA *config) {
     *control = val;
 }
 
-INLINE void dma_transfer(u32 id, volatile void *dest,
+INLINE void dma_transfer(i32 id, volatile void *dest,
                          volatile const void *src, u32 n) {
-    if(id >= DMA_COUNT)
+    if(id < 0 || id >= DMA_COUNT)
         return;
 
     vu32 *src_addr   = (vu32 *) (0x040000b0 + id * 12);
@@ -88,8 +88,8 @@ INLINE void dma_transfer(u32 id, volatile void *dest,
     *control |= _DMA_ENABLE_BIT;
 }
 
-INLINE void dma_stop(u32 id) {
-    if(id >= DMA_COUNT)
+INLINE void dma_stop(i32 id) {
+    if(id < 0 || id >= DMA_COUNT)
         return;
 
     vu16 *control = _DMA_GET_CONTROL(id);
