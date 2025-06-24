@@ -76,8 +76,8 @@ struct Sprite {
 
 #define _SPRITE_OAM ((vu16 *) 0x07000000)
 
-INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
-    if(id >= SPRITE_COUNT)
+INLINE void sprite_config(i32 id, const struct Sprite *sprite) {
+    if(id < 0 || id >= SPRITE_COUNT)
         return;
 
     vu16 *attribs = &_SPRITE_OAM[id * 4];

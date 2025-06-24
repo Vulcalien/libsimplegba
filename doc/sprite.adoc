@@ -14,9 +14,7 @@ sprite_affine - sprite functions
 ____
 *#include <gba/sprite.h>*
 
-*#define SPRITE_COUNT 128*
-
-**void sprite_config(u32 **__id__**, const struct Sprite +++*+++**__sprite__**);**
+**void sprite_config(i32 **__id__**, const struct Sprite +++*+++**__sprite__**);**
 
 **void sprite_hide(i32 **__id__**);**
 **void sprite_hide_range(i32 **__start__**, i32 **__stop__**);**
@@ -28,16 +26,12 @@ ____
 == DESCRIPTION
 Sprites, also called objects, are graphical elements that can be drawn
 anywhere on the display, without being restricted to a grid like
-background tiles are.
-
-To identify which sprites to operate on, these functions take an _id_
-parameter, or a range of IDs. There are *SPRITE_COUNT* (128) sprites
-available.
+background tiles are. There are *SPRITE_COUNT* (128) sprites.
 
 === Sprite configuration
-The *sprite_config*() function configures the sprite with the settings
-specified in the _config_ structure. The structure is defined as
-follows:
+The *sprite_config*() function configures the sprite identified by _id_
+with the settings specified in the _config_ structure. The structure is
+defined as follows:
 
 [source,c]
 ----
