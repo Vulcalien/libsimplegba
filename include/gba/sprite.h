@@ -1,4 +1,4 @@
-/* Copyright 2023-2024 Vulcalien
+/* Copyright 2023-2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,22 +116,24 @@ INLINE void sprite_config(u32 id, const struct Sprite *sprite) {
                  sprite->palette  << 12;
 }
 
-INLINE void sprite_hide(u32 id) {
-    if(id >= SPRITE_COUNT)
-        return;
-
-    vu16 *attribs = &_SPRITE_OAM[id * 4];
-    attribs[0] = BIT(9);
-}
-
 // 'start' is included, 'stop' is not included
-INLINE void sprite_hide_range(u32 start, u32 stop) {
-    for(u32 i = start; i < stop; i++)
-        sprite_hide(i);
+INLINE void sprite_hide_range(i32 start, i32 stop) {
+    if(start < 0)
+        start = 0;
+    if(stop > SPRITE_COUNT)
+        stop = SPRITE_COUNT;
+
+    for(i32 i = start; i < stop; i++) {
+        vu16 *attribs = &_SPRITE_OAM[i * 4];
+        attribs[0] = BIT(9);
+    }
 }
 
-INLINE void sprite_hide_all(void) {
-    sprite_hide_range(0, SPRITE_COUNT);
+INLINE void sprite_hide(i32 id) {
+    if(id < 0)
+        sprite_hide_range(0, SPRITE_COUNT);
+    else if(id < SPRITE_COUNT)
+        sprite_hide_range(id, id + 1);
 }
 
 INLINE void sprite_mosaic(u32 x, u32 y) {

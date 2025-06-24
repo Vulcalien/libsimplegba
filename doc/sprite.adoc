@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-17
+:revdate: 2025-06-24
 :docdate: {revdate}
 
 == NAME
-sprite_config, sprite_hide, sprite_hide_range, sprite_hide_all,
-sprite_mosaic, sprite_affine - sprite functions
+sprite_config, sprite_hide, sprite_hide_range, sprite_mosaic,
+sprite_affine - sprite functions
 
 == SYNOPSIS
 [verse]
@@ -18,9 +18,8 @@ ____
 
 **void sprite_config(u32 **__id__**, const struct Sprite +++*+++**__sprite__**);**
 
-**void sprite_hide(u32 **__id__**);**
-**void sprite_hide_range(u32 **__start__**, u32 **__stop__**);**
-**void sprite_hide_all(void);**
+**void sprite_hide(i32 **__id__**);**
+**void sprite_hide_range(i32 **__start__**, i32 **__stop__**);**
 
 **void sprite_mosaic(u32 **__x__**, u32 **__y__**);**
 **void sprite_affine(u32 **__parameter__**, i16 **__matrix__**[4]);**
@@ -139,12 +138,11 @@ while applying an affine transformation (one) or not (zero). Ignored if
 _affine_ is zero.
 
 === Hiding sprites
-The *sprite_hide*() function hides the sprite identified by _id_.
+The *sprite_hide*() function hides the sprite identified by _id_, or all
+sprites if a negative value is passed.
 
 The *sprite_hide_range*() function hides all sprites whose ID is between
 _start_ (inclusive) and _stop_ (exclusive).
-
-The *sprite_hide_all*() function hides all sprites.
 
 === Mosaic and Affine
 The *sprite_mosaic*() function sets the parameters of the mosaic graphic
