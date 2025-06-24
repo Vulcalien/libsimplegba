@@ -38,8 +38,8 @@ struct Background {
     u16 size     : 2; // 0-3
 };
 
-INLINE void background_config(u32 id, const struct Background *config) {
-    if(id >= BACKGROUND_COUNT)
+INLINE void background_config(i32 id, const struct Background *config) {
+    if(id < 0 || id >= BACKGROUND_COUNT)
         return;
 
     vu16 *control = (vu16 *) (0x04000008 + id * 2);
@@ -52,16 +52,16 @@ INLINE void background_config(u32 id, const struct Background *config) {
                config->size     << 14;
 }
 
-INLINE void background_offset(u32 id, u16 x, u16 y) {
-    if(id >= BACKGROUND_COUNT)
+INLINE void background_offset(i32 id, u16 x, u16 y) {
+    if(id < 0 || id >= BACKGROUND_COUNT)
         return;
 
     vu32 *offset = (vu32 *) (0x04000010 + id * 4);
     *offset = (x | y << 16);
 }
 
-INLINE void background_toggle(u32 id, bool enable) {
-    if(id >= BACKGROUND_COUNT)
+INLINE void background_toggle(i32 id, bool enable) {
+    if(id < 0 || id >= BACKGROUND_COUNT)
         return;
 
     const u16 bit = BIT(8 + id);
