@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-18
+:revdate: 2025-06-24
 :docdate: {revdate}
 
 == NAME
@@ -21,13 +21,13 @@ ____
 
 *#define TIMER_COUNTER_MAX 65536*
 
-**void timer_config(u32 **__id__**, u16 **__config__**);**
+**void timer_config(i32 **__id__**, u16 **__config__**);**
 
-**void timer_start(u32 **__id__**, u32 **__ticks__**);**
-**void timer_stop(u32 **__id__**);**
-**void timer_restart(u32 **__id__**, u32 **__ticks__**);**
+**void timer_start(i32 **__id__**, u32 **__ticks__**);**
+**void timer_stop(i32 **__id__**);**
+**void timer_restart(i32 **__id__**, u32 **__ticks__**);**
 
-**i32 timer_get_counter(u32 **__id__**);**
+**i32 timer_get_counter(i32 **__id__**);**
 ____
 
 == DESCRIPTION
