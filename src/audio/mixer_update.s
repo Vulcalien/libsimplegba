@@ -46,7 +46,7 @@ temp_buffers:
 @   r8  = volume
 @   r9  = temp_buffers
 @   r10 = remaining
-@   r11 = data_plus_pos, left sample
+@   r11 = left sample
 @   r12 = sample, right sample
 @   r14 = tmp, loop_length
 
@@ -105,7 +105,6 @@ BEGIN_FUNC ARM _mixer_update
 
     ldr     r9, =temp_buffers           @ (r9) temp_buffers
     mov     r10, r2                     @ (r10) remaining = length
-    mov     r11, r4                     @ (r11) data_plus_pos = data
 
     @ call mix_channel pseudo-function
     @ TODO select the most efficient one
@@ -113,9 +112,7 @@ BEGIN_FUNC ARM _mixer_update
 .L_mix_channel_return:
 
     @ write data pointer and position
-    str     r11, [r0, #0]               @ channel->data = data_plus_pos
-    lsl     r6, #20
-    lsr     r6, #20                     @ position %= 0x1000
+    str     r4, [r0, #0]                @ channel->data = data
     strh    r6, [r0, #8]                @ channel->position = position
 
 .L_continue_channels_loop:
@@ -164,15 +161,13 @@ BEGIN_FUNC ARM _mixer_update
     @ retrieve sample and advance position
     .if \pitch == 1
         @ retrieve right sample
-        ldrsb   r12, [r11, #1]          @ (r12) right sample
-        lsl     r14, r6, #20
-        lsr     r14, #20                @ weight = position % 0x1000
-        mul     r12, r14                @ right *= weight
+        ldrsb   r12, [r4, #1]           @ (r12) right sample
+        mul     r12, r6                 @ right *= position
 
         @ retrieve left sample
-        ldrsb   r11, [r11]              @ (r11) left sample
-        rsb     r14, #0x1000            @ weight = 0x1000 - position % 0x1000
-        mul     r11, r14                @ left *= weight
+        ldrsb   r11, [r4]               @ (r11) left sample
+        rsb     r14, r6, #0x1000        @ tmp = (0x1000 - position)
+        mul     r11, r14                @ left *= (0x1000 - position)
 
         @ interpolate samples
         add     r12, r11                @ (r12) sample = right + left
@@ -180,9 +175,11 @@ BEGIN_FUNC ARM _mixer_update
 
         @ advance position
         add     r6, r7                  @ (r6) position += increment
-        add     r11, r4, r6, lsr #12    @ (r11) data_plus_pos = data + position / 0x1000
+        add     r4, r6, lsr #12         @ (r4) data += position / 0x1000
+        lsl     r6, #20
+        lsr     r6, #20                 @ (r6) position %= 0x1000
     .else
-        ldrsb   r12, [r11], #1          @ (r12) sample = *(data_plus_pos++)
+        ldrsb   r12, [r4], #1           @ (r12) sample = *(data++)
     .endif
 
     @ Add sample to temp_buffers: instead of working on two 16-bit
@@ -211,8 +208,8 @@ BEGIN_FUNC ARM _mixer_update
     str     r14, [r9], #4               @ *(temp_buffers++) = tmp
 
     .if \near_end == 1
-        @ if data_plus_pos >= end, loop or stop the channel
-        cmp     r11, r5
+        @ if data >= end, loop or stop the channel
+        cmp     r4, r5
         bge     3f @ loop or stop
     .endif
 
@@ -231,17 +228,12 @@ BEGIN_FUNC ARM _mixer_update
         cmp     r14, #0
 
         @ if loop_length != 0, loop channel and continue samples loop
-        subne   r11, r5, r14            @ (r11) data_plus_pos = end - loop_length
-        .if \pitch == 1
-            @ When pitch control is enabled, data is used as base to
-            @ calculate data_plus_pos, so it must also be reset.
-            movne   r4, r11             @ (r4) data = data_plus_pos
-        .endif
+        subne   r4, r5, r14             @ (r4) data = end - loop_length
         bne     2b @ continue samples loop
 
-        @ if loop_length == 0, stop channel and break samples loop
-        moveq   r11, #0                 @ (r11) data_plus_pos = NULL
-        beq     .L_mix_channel_return
+        @ otherwise, stop channel and break samples loop
+        mov     r4, #0                  @ (r4) data = NULL
+        b       .L_mix_channel_return
     .endif
 .endm
 
