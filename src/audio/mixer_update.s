@@ -46,8 +46,8 @@ temp_buffers:
 @   r8  = volume
 @   r9  = temp_buffers
 @   r10 = remaining
-@   r11 = data_plus_pos
-@   r12 = sample
+@   r11 = data_plus_pos, left sample
+@   r12 = sample, right sample
 @   r14 = tmp, loop_length
 
 @ input:
@@ -161,9 +161,24 @@ BEGIN_FUNC ARM _mixer_update
 
 .macro MIX_CHANNEL pitch:req near_end:req
 1: @ samples loop
-    @ retrieve sample and update position
+    @ retrieve sample and advance position
     .if \pitch == 1
-        ldrsb   r12, [r11]              @ (r12) sample = *data_plus_pos
+        @ retrieve right sample
+        ldrsb   r12, [r11, #1]          @ (r12) right sample
+        lsl     r14, r6, #20
+        lsr     r14, #20                @ weight = position % 0x1000
+        mul     r12, r14                @ right *= weight
+
+        @ retrieve left sample
+        ldrsb   r11, [r11]              @ (r11) left sample
+        rsb     r14, #0x1000            @ weight = 0x1000 - position % 0x1000
+        mul     r11, r14                @ left *= weight
+
+        @ interpolate samples
+        add     r12, r11                @ (r12) sample = right + left
+        asr     r12, #12                @ sample /= 0x1000
+
+        @ advance position
         add     r6, r7                  @ (r6) position += increment
         add     r11, r4, r6, lsr #12    @ (r11) data_plus_pos = data + position / 0x1000
     .else
