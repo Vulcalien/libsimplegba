@@ -47,15 +47,14 @@ temp_buffers:
 @   r9  = temp_buffers
 @   r10 = remaining
 @   r11 = sample
-@   r12 = sample TODO move to r11
-@   r14 = tmp, loop_length
+@   r12 = loop_length
 
 @ input:
 @   r0 = channels : struct Channel [CHANNEL_COUNT]
 @   r1 = buffers  : i8 [OUTPUT_COUNT][BUFFER_SIZE]
 @   r2 = length   : u32 in range [4, BUFFER_SIZE], multiple of 4
 BEGIN_FUNC ARM _mixer_update
-    push    {r4-r12, r14}
+    push    {r4-r12}
 
 @ ==================================================================== @
 @                          clear temp_buffers                          @
@@ -128,28 +127,28 @@ BEGIN_FUNC ARM _mixer_update
     ldr     r9, =temp_buffers           @ (r9) temp_buffers
 .L_clip_loop:
     @ clip sample 1
-    ldrsh   r12, [r9, #2]               @ (r12) sample
-    asr     r12, #5                     @ sample /= VOLUME_LEVELS
-    cmp     r12, #-128                  @ ========
-    movlt   r12, #-128                  @   clip
-    cmp     r12, #127                   @  sample
-    movgt   r12, #127                   @ ========
-    strb    r12, [r1, #BUFFER_SIZE]     @ *buffers[1] = sample
+    ldrsh   r11, [r9, #2]               @ (r11) sample
+    asr     r11, #5                     @ sample /= VOLUME_LEVELS
+    cmp     r11, #-128                  @ ========
+    movlt   r11, #-128                  @   clip
+    cmp     r11, #127                   @  sample
+    movgt   r11, #127                   @ ========
+    strb    r11, [r1, #BUFFER_SIZE]     @ *buffers[1] = sample
 
     @ clip sample 0
-    ldrsh   r12, [r9], #4               @ (r12) sample
-    asr     r12, #5                     @ sample /= VOLUME_LEVELS
-    cmp     r12, #-128                  @ ========
-    movlt   r12, #-128                  @   clip
-    cmp     r12, #127                   @  sample
-    movgt   r12, #127                   @ ========
-    strb    r12, [r1], #1               @ *(buffers[0]++) = sample
+    ldrsh   r11, [r9], #4               @ (r11) sample
+    asr     r11, #5                     @ sample /= VOLUME_LEVELS
+    cmp     r11, #-128                  @ ========
+    movlt   r11, #-128                  @   clip
+    cmp     r11, #127                   @  sample
+    movgt   r11, #127                   @ ========
+    strb    r11, [r1], #1               @ *(buffers[0]++) = sample
 
     subs    r2, #1                      @ (r2) length--
     bgt     .L_clip_loop                @ if length > 0, repeat loop
 .L_exit_clip_loop:
 
-    pop     {r4-r12, r14}
+    pop     {r4-r12}
     bx      lr
 
 @ ==================================================================== @
@@ -197,11 +196,11 @@ BEGIN_FUNC ARM _mixer_update
     @ the resulting low 16-bit value overflows, the high 16-bit value
     @ will be off by one. This noise should be hardly noticeable, so no
     @ attempt is made to compensate for it.
-    ldr     r14, [r9]                   @ tmp = *temp_buffers
+    ldr     r12, [r9]                   @ tmp = *temp_buffers
     muls    r11, r8                     @ sample * volume
     addlt   r11, #0x00010000            @ if (sample * volume) < 0, fix top value
-    add     r14, r11                    @ tmp += sample * volume
-    str     r14, [r9], #4               @ *(temp_buffers++) = tmp
+    add     r12, r11                    @ tmp += sample * volume
+    str     r12, [r9], #4               @ *(temp_buffers++) = tmp
 
     .if \near_end == 1
         @ if data >= end, loop or stop the channel
@@ -220,11 +219,11 @@ BEGIN_FUNC ARM _mixer_update
         mov     r6, #0                  @ (r6) position = 0
 
         @ retrieve loop_length
-        ldr     r14, [r0, #12]          @ (r14) loop_length
-        cmp     r14, #0
+        ldr     r12, [r0, #12]          @ (r12) loop_length
+        cmp     r12, #0
 
         @ if loop_length != 0, loop channel and continue samples loop
-        subne   r4, r5, r14             @ (r4) data = end - loop_length
+        subne   r4, r5, r12             @ (r4) data = end - loop_length
         bne     2b @ continue samples loop
 
         @ otherwise, stop channel and break samples loop
