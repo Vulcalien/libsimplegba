@@ -123,10 +123,8 @@ INLINE void sprite_hide_range(i32 start, i32 stop) {
     if(stop > SPRITE_COUNT)
         stop = SPRITE_COUNT;
 
-    for(i32 i = start; i < stop; i++) {
-        vu16 *attribs = &_SPRITE_OAM[i * 4];
-        attribs[0] = BIT(9);
-    }
+    for(i32 i = start; i < stop; i++)
+        _SPRITE_OAM[i * 4] = BIT(9);
 }
 
 INLINE void sprite_hide(i32 id) {
