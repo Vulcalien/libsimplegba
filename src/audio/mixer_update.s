@@ -46,8 +46,8 @@ temp_buffers:
 @   r8  = volume
 @   r9  = temp_buffers
 @   r10 = remaining
-@   r11 = left sample
-@   r12 = sample, right sample
+@   r11 = sample
+@   r12 = sample TODO move to r11
 @   r14 = tmp, loop_length
 
 @ input:
@@ -158,20 +158,16 @@ BEGIN_FUNC ARM _mixer_update
 
 .macro MIX_CHANNEL pitch:req near_end:req
 1: @ samples loop
-    @ retrieve sample and advance position
+    @ get sample and advance position
     .if \pitch == 1
-        @ retrieve right sample
-        ldrsb   r12, [r4, #1]           @ (r12) right sample
-        mul     r12, r6                 @ right *= position
-
-        @ retrieve left sample
-        ldrsb   r11, [r4]               @ (r11) left sample
-        rsb     r14, r6, #0x1000        @ tmp = (0x1000 - position)
-        mul     r11, r14                @ left *= (0x1000 - position)
+        @ retrieve samples
+        ldrsb   r11, [r4]               @ left  = *(data)
+        ldrsb   r12, [r4, #1]           @ right = *(data + 1)
 
         @ interpolate samples
-        add     r12, r11                @ (r12) sample = right + left
-        asr     r12, #12                @ sample /= 0x1000
+        sub     r12, r11                @ delta = right - left
+        mul     r12, r6                 @ delta * position
+        add     r11, r12, asr #12       @ (r11) sample = left + delta * position / 0x1000
 
         @ advance position
         add     r6, r7                  @ (r6) position += increment
@@ -179,7 +175,7 @@ BEGIN_FUNC ARM _mixer_update
         lsl     r6, #20
         lsr     r6, #20                 @ (r6) position %= 0x1000
     .else
-        ldrsb   r12, [r4], #1           @ (r12) sample = *(data++)
+        ldrsb   r11, [r4], #1           @ (r11) sample = *(data++)
     .endif
 
     @ Add sample to temp_buffers: instead of working on two 16-bit
@@ -202,9 +198,9 @@ BEGIN_FUNC ARM _mixer_update
     @ will be off by one. This noise should be hardly noticeable, so no
     @ attempt is made to compensate for it.
     ldr     r14, [r9]                   @ tmp = *temp_buffers
-    muls    r12, r8                     @ sample * volume
-    addlt   r12, #0x00010000            @ if (sample * volume) < 0, fix top value
-    add     r14, r12                    @ tmp += sample * volume
+    muls    r11, r8                     @ sample * volume
+    addlt   r11, #0x00010000            @ if (sample * volume) < 0, fix top value
+    add     r14, r11                    @ tmp += sample * volume
     str     r14, [r9], #4               @ *(temp_buffers++) = tmp
 
     .if \near_end == 1
