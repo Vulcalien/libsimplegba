@@ -102,12 +102,24 @@ BEGIN_FUNC ARM _mixer_update
     orr     r8, r8, lsl #8              @ 00 LL xx RR
     bic     r8, #0x0000ff00             @ (r8) volume (00 LL 00 RR)
 
+    @ reset temp_buffers and remaining
     ldr     r9, =temp_buffers           @ (r9) temp_buffers
     mov     r10, r2                     @ (r10) remaining = length
 
-    @ call mix_channel pseudo-function
-    @ TODO select the most efficient one
-    b       mix_channel_pitch_near_end
+    @ calculate data pointer after processing
+    mla     r11, r7, r2, r6             @ tmp = pos + inc * len
+    add     r11, r4, r11, lsr #12       @ tmp = data + tmp / 0x1000
+
+    @ call most efficient mix_channel pseudo-function given conditions
+    cmp     r11, r5                     @ check if tmp < end
+    blo     1f                          @ if tmp < end, not near end
+    cmp     r7, #0x1000                 @ check if increment == 0x1000
+    beq     mix_channel_near_end        @ no pitch + near end
+    b       mix_channel_pitch_near_end  @ pitch + near end
+1: @ not near end
+    cmp     r7, #0x1000                 @ check if increment == 0x1000
+    beq     mix_channel                 @ no pitch + not near end
+    b       mix_channel_pitch           @ pitch + not near end
 .L_mix_channel_return:
 
     @ write data pointer and position
