@@ -47,40 +47,40 @@ isr_table:
 @ function again.
 
 BEGIN_FUNC ARM interrupt_handler
+    mov     r0, #0x04000000             @ (r0) address = register base
+
     @ load (IE & IF)
-    ldr     r0, =0x04000200             @ r0 = pointer to IE_IF
-    ldr     r1, [r0]                    @ r1 = IE_IF
-    and     r1, r1, lsr #16             @ r1 = IE & IF
+    ldr     r1, [r0, #0x200]!           @ *IE_IF, address = IE_IF
+    and     r1, r1, lsr #16             @ (r1) IE & IF
 
     @ find the IRQ bit in (IE & IF)
-    mov     r2, #0                      @ r2 = IRQ id  (0)
-    mov     r3, #1                      @ r3 = IRQ bit (1)
+    mov     r2, #0                      @ (r2) irq_id  = 0
+    mov     r3, #1                      @ (r3) irq_bit = 1
 1: @ loop
-    @ if IRQ id >= INTERRUPT_COUNT, return
+    @ if irq_id >= INTERRUPT_COUNT, return
     cmp     r2, #INTERRUPT_COUNT
     bxge    lr
 
     @ check if the IRQ bit in (IE & IF) is set
-    tst     r1, r3                      @ test (IE & IF) & (IRQ bit)
+    tst     r1, r3                      @ test (IE & IF) & irq_bit
 
     @ if the bit is clear, continue
-    addeq   r2, #1                      @ IRQ id += 1
-    lsleq   r3, #1                      @ IRQ bit <<= 1
+    addeq   r2, #1                      @ (r2) irq_id  +=  1
+    lsleq   r3, #1                      @ (r3) irq_bit <<= 1
     beq     1b @ loop
 
     @ --- the IRQ bit was found --- @
 
     @ acknowledge the IRQ
-    strh    r3, [r0, #0x2]              @ IF = IRQ bit
-
-    ldr     r0, =0x03007ff8             @ r0 = pointer to IF_BIOS
-    ldrh    r1, [r0]                    @ r1 = IF_BIOS
-    orr     r1, r3                      @ r1 = IF_BIOS | IRQ bit
-    strh    r1, [r0]                    @ IF_BIOS = (IF_BIOS | IRQ bit)
+    strh    r3, [r0, #2]                @ *IF = irq_bit
+    sub     r0, #0x200                  @ address = register base
+    ldrh    r1, [r0, #-8]               @ =====================
+    orr     r1, r3                      @  *IF_BIOS |= irq_bit
+    strh    r1, [r0, #-8]               @ =====================
 
     @ get the ISR
-    ldr     r0, =isr_table              @ r0 = pointer to isr_table
-    ldr     r0, [r0, r2, lsl #2]        @ r0 = isr_table[IRQ id]
+    ldr     r0, =isr_table              @ isr_table
+    ldr     r0, [r0, r2, lsl #2]        @ (r0) isr = isr_table[irq_id]
 
     @ if the ISR is NULL, return
     cmp     r0, #0
