@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-24
+:revdate: 2025-06-26
 :docdate: {revdate}
 
 == NAME
@@ -58,9 +58,9 @@ struct Sprite {
 };
 ----
 
-The _x_ and _y_ fields specify the location of the sprite's top-left
-corner, relative to the display's top-left corner. These values are
-treated as signed integers.
+The _x_ and _y_ fields specify the position of the sprite's top-left
+corner relative to the display. These values are treated as signed
+integers.
 
 The _disable_ field specifies whether a sprite is hidden (one) or not
 (zero). If set to one, this has the same effect as calling
