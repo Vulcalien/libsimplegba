@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-24
+:revdate: 2025-07-03
 :docdate: {revdate}
 
 == NAME
@@ -31,10 +31,11 @@ covers areas where sprites in window mode have a non-transparent pixel.
 *WINDOW_OUT* covers all pixels outside other windows.
 
 The *window_config*() function configures the window with the settings
-in the _config_ structure. Each flag in _config_ specifies whether a
-graphical element should be shown (1) or hidden (0) within the window.
-Passing NULL as _config_ is equivalent to passing the structure with all
-graphical elements enabled. The structure is defined as follows:
+specified in the _config_ structure. Each flag in _config_ specifies
+whether a graphical element should be shown (1) or hidden (0) within the
+window. Passing NULL as _config_ is equivalent to passing the structure
+with all graphical elements enabled. The structure is defined as
+follows:
 
 [source,c]
 ----
