@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-26
+:revdate: 2025-07-03
 :docdate: {revdate}
 
 == NAME
@@ -29,9 +29,9 @@ anywhere on the display, without being restricted to a grid like
 background tiles are. There are *SPRITE_COUNT* (128) sprites.
 
 === Sprite configuration
-The *sprite_config*() function configures the sprite identified by _id_
-with the settings specified in the _config_ structure. The structure is
-defined as follows:
+The *sprite_config*() function configures the sprite with the settings
+specified in the _config_ structure. The structure is defined as
+follows:
 
 [source,c]
 ----
@@ -62,9 +62,9 @@ The _x_ and _y_ fields specify the position of the sprite's top-left
 corner relative to the display. These values are treated as signed
 integers.
 
-The _disable_ field specifies whether a sprite is hidden (one) or not
-(zero). If set to one, this has the same effect as calling
-*sprite_hide*() on the same sprite ID. Ignored if _affine_ is one.
+The _disable_ field specifies whether a sprite is hidden or not. If set
+to one, this has the same effect as calling *sprite_hide*() on the same
+sprite ID. Ignored if _affine_ is one.
 
 The _mode_ field specifies the sprite's mode. Possible values are:
 *SPRITE_MODE_NORMAL*, *SPRITE_MODE_SEMI_TRANSPARENT*,
@@ -120,7 +120,7 @@ mode pixels are mapped to the entire sprite palette. Possible values
 are: *SPRITE_COLORS_16*, *SPRITE_COLORS_256*.
 
 The _affine_ field specifies whether an affine transformation is applied
-to the sprite (one) or not (zero).
+to the sprite or not.
 
 The __affine_parameter__ field specifies which of the 32 affine
 transformation matrices is used to transform the sprite. Use
@@ -128,8 +128,8 @@ transformation matrices is used to transform the sprite. Use
 _affine_ is zero.
 
 The __double_size__ field specifies whether the sprite size is doubled
-while applying an affine transformation (one) or not (zero). Ignored if
-_affine_ is zero.
+while applying an affine transformation or not. Ignored if _affine_ is
+zero.
 
 === Hiding sprites
 The *sprite_hide*() function hides the sprite identified by _id_, or all
