@@ -18,18 +18,20 @@
 #include <base.h>
 
 extern void *memset(volatile void *dest, i32 byte, u32 n);
+extern void *memcpy(volatile void *dest, volatile const void *src, u32 n);
+extern i32 memcmp(volatile const void *a, volatile const void *b, u32 n);
 
 #define memory_set memset
 extern void *memory_set_8 (volatile void *dest, i32 byte, u32 n);
 extern void *memory_set_16(volatile void *dest, i32 byte, u32 n);
 extern void *memory_set_32(volatile void *dest, i32 byte, u32 n);
 
-// TODO #define memory_copy memcpy
+#define memory_copy memcpy
 extern void *memory_copy_8 (volatile void *dest, volatile const void *src, u32 n);
 extern void *memory_copy_16(volatile void *dest, volatile const void *src, u32 n);
 extern void *memory_copy_32(volatile void *dest, volatile const void *src, u32 n);
 
-// TODO #define memory_compare memcmp
+#define memory_compare memcmp
 extern i32 memory_compare_8 (volatile const void *a, volatile const void *b, u32 n);
 extern i32 memory_compare_16(volatile const void *a, volatile const void *b, u32 n);
 extern i32 memory_compare_32(volatile const void *a, volatile const void *b, u32 n);
