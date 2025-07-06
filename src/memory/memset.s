@@ -39,57 +39,59 @@
 @ output:
 @   r0 = dest : void *
 BEGIN_FUNC THUMB memset
-    mov     r3, lr                      @ r3 = lr
+    mov     r3, lr
     push    {r0, r3}
 
     @ make sure 'byte' is actually 8-bit
     lsl     r1, #24                     @ xx 00 00 00
     lsr     r1, #24                     @ 00 00 00 xx
 
-    @ if dest is unaligned, handle that case
-    mov     r3, #3                      @ (r3) mask = 3
+    @ if (dest & 3) != 0, handle unaligned start
+    mov     r3, #3
     tst     r0, r3
-    bne     16f @ unaligned start
-1: @ unaligned start return
+    bne     .L_unaligned_start
+.L_unaligned_start_return:
 
-    @ if n % 4 != 0, handle that case
+    @ if (n & 3) != 0, handle unaligned end
     mov     r3, #3
     tst     r2, r3
-    bne     32f @ unaligned end
-2: @ unaligned end return
+    bne     .L_unaligned_end
+.L_unaligned_end_return:
 
     bl      memory_set_32
 
     @ return original value of dest
     pop     {r0, r3}
-    bx      r3                          @ r3 = original value of lr
+    bx      r3                          @ jump to original value of lr
 
-@ - unaligned start - @
-@ handle cases where the first bytes are unaligned
-16: @ unaligned start
+@ ==================================================================== @
+@                           unaligned start                            @
+@ ==================================================================== @
+
+.L_unaligned_start:
     @ if n < 1, return
     cmp     r2, #1
-    blo     1b @ unaligned start return
+    blo     .L_unaligned_start_return
 
     @ check if (dest & 1) != 0
-    mov     r3, #1                      @ (r3) mask = 1
+    mov     r3, #1
     tst     r0, r3
-    beq     17f @ after byte-store
+    beq     1f @ after byte-store
 
     @ store a byte
     strb    r1, [r0]                    @ *dest = 8-bit content
     add     r0, #1                      @ (r0) dest += 1
     sub     r2, #1                      @ (r2) n -= 1
-17: @ after byte-store
+1: @ after byte-store
 
     @ if n < 2, return
     cmp     r2, #2
-    blo     1b @ unaligned start return
+    blo     .L_unaligned_start_return
 
     @ check if (dest & 2) != 0
-    mov     r3, #2                      @ (r3) mask = 2
+    mov     r3, #2
     tst     r0, r3
-    beq     1b @ unaligned start return
+    beq     .L_unaligned_start_return
 
     @ duplicate 'byte' to fill 16 bits
     lsl     r3, r1, #8                  @ r3 = xx 00
@@ -100,26 +102,27 @@ BEGIN_FUNC THUMB memset
     add     r0, #2                      @ (r0) dest += 2
     sub     r2, #2                      @ (r2) n -= 2
 
-    @ return
-    b       1b @ unaligned start return
+    b       .L_unaligned_start_return
 
-@ - unaligned end - @
-@ handle cases where the last bytes are unaligned
-32: @ unaligned end
+@ ==================================================================== @
+@                            unaligned end                             @
+@ ==================================================================== @
+
+.L_unaligned_end:
     @ check if (n & 1) != 0
     mov     r3, #1
     tst     r2, r3
-    beq     33f @ after byte-store
+    beq     1f @ after byte-store
 
     @ store a byte
     sub     r2, #1                      @ (r2) n -= 1
     strb    r1, [r0, r2]                @ dest[n] = 8-bit content
-33: @ after byte-store
+1: @ after byte-store
 
     @ check if (n & 2) != 0
     mov     r3, #2
     tst     r2, r3
-    beq     2b @ unaligned end return
+    beq     .L_unaligned_end_return
 
     @ duplicate 'byte' to fill 16 bits
     lsl     r3, r1, #8                  @ r3 = xx 00
@@ -129,8 +132,7 @@ BEGIN_FUNC THUMB memset
     sub     r2, #2                      @ (r2) n -= 2
     strh    r1, [r0, r2]                @ dest[n] = 16-bit content
 
-    @ return
-    b       2b @ unaligned end return
+    b       .L_unaligned_end_return
 END_FUNC memset
 
 .end
