@@ -38,8 +38,8 @@
 #define IRQ_KEYPAD  12
 #define IRQ_GAMEPAK 13
 
-INLINE void interrupt_toggle(u32 irq, bool enable) {
-    if(irq >= INTERRUPT_COUNT)
+INLINE void interrupt_toggle(i32 id, bool enable) {
+    if(id < 0 || id >= INTERRUPT_COUNT)
         return;
 
     const struct {
@@ -62,17 +62,17 @@ INLINE void interrupt_toggle(u32 irq, bool enable) {
         [IRQ_GAMEPAK] = { 0,      0       }, // no register
     };
 
-    vu16 *sender = (vu16 *) (0x04000000 + senders[irq].offset);
+    vu16 *sender = (vu16 *) (0x04000000 + senders[id].offset);
     vu16 *ie = (vu16 *) 0x04000200;
 
     // toggle IRQ bits in both sender register and IE
     if(enable) {
-        *sender |= senders[irq].bit;
-        *ie     |= BIT(irq);
+        *sender |= senders[id].bit;
+        *ie     |= BIT(id);
     } else {
-        *sender &= ~senders[irq].bit;
-        *ie     &= ~BIT(irq);
+        *sender &= ~senders[id].bit;
+        *ie     &= ~BIT(id);
     }
 }
 
-extern void interrupt_set_isr(u32 irq, void (*isr)(void));
+extern void interrupt_set_isr(i32 id, void (*isr)(void));

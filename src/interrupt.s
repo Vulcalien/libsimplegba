@@ -127,13 +127,13 @@ END_FUNC _interrupt_init
 .text
 
 @ input:
-@   r0 = irq : u32
+@   r0 = id  : i32
 @   r1 = isr : function pointer
 BEGIN_FUNC ARM interrupt_set_isr
-    @ check if the given IRQ is valid
+    @ check if the interrupt ID is valid
     cmp     r0, #INTERRUPT_COUNT
 
-    @ isr_table[irq] = irq
+    @ isr_table[id] = id
     ldrlo   r2, =isr_table
     strlo   r1, [r2, r0, lsl #2]
 

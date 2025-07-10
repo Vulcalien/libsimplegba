@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-01-10
+:revdate: 2025-07-10
 :docdate: {revdate}
 
 == NAME
@@ -13,16 +13,16 @@ interrupt_toggle, interrupt_set_isr - interrupt handling
 ____
 *#include <gba/interrupt.h>*
 
-**void interrupt_toggle(u32 **__irq__**, bool **__enable__**);**
-**void interrupt_set_isr(u32 **__irq__**, void (+++*+++**__isr__**)(void));**
+**void interrupt_toggle(u32 **__id__**, bool **__enable__**);**
+**void interrupt_set_isr(u32 **__id__**, void (+++*+++**__isr__**)(void));**
 ____
 
 == DESCRIPTION
-The *interrupt_toggle*() function enables or disables (depending on the
-value of _enable_) the specified _irq_, identified by one of the
+The *interrupt_toggle*() function enables or disables the interrupt,
+based on the value of _enable_. Interrupts are identified by the
 constants listed below.
 
-.IRQ identifiers
+.Interrupt identifiers
 [cols="1,1,1,1"]
 |===
 
@@ -32,15 +32,15 @@ constants listed below.
 |IRQ_KEYPAD |IRQ_GAMEPAK |IRQ_SERIAL |
 |===
 
-The *interrupt_set_isr*() function maps the specified _irq_ to its _isr_
+The *interrupt_set_isr*() function maps the interrupt to its _isr_
 (Interrupt Service Routine). If _isr_ is set to NULL, no action will be
 performed when that interrupt is raised.
 
 == NOTES
-Each IRQ can only be mapped to one ISR at a time, so that calling
-*interrupt_set_isr*() overwrites the previous association. If an IRQ
-needs multiple ISRs, the recommended approach is to write a wrapper
-function:
+Each interrupt can only be mapped to one ISR at a time, meaning that
+calling *interrupt_set_isr*() overwrites the previous association. If an
+interrupt needs multiple ISRs, the recommended approach is to write a
+wrapper function:
 
 [source,c]
 ----
