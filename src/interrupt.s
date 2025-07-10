@@ -140,4 +140,21 @@ BEGIN_FUNC ARM interrupt_set_isr
     bx      lr
 END_FUNC interrupt_set_isr
 
+@ --- interrupt_wait --- @
+.global interrupt_wait
+.text
+
+@ input:
+@   r0 = id : i32
+BEGIN_FUNC THUMB interrupt_wait
+    @ set arguments of IntrWait
+    mov     r1, #1
+    lsl     r1, r0                      @ (r1) flags = BIT(id)
+    mov     r0, #1                      @ (r0) discard = 1
+
+    @ call IntrWait
+    swi     0x04
+    bx      lr
+END_FUNC interrupt_wait
+
 .end

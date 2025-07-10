@@ -6,7 +6,7 @@
 :docdate: {revdate}
 
 == NAME
-interrupt_toggle, interrupt_set_isr - interrupt handling
+interrupt_toggle, interrupt_set_isr, interrupt_wait - interrupt handling
 
 == SYNOPSIS
 [verse]
@@ -15,6 +15,7 @@ ____
 
 **void interrupt_toggle(u32 **__id__**, bool **__enable__**);**
 **void interrupt_set_isr(u32 **__id__**, void (+++*+++**__isr__**)(void));**
+**void interrupt_wait(i32 **__id__**);**
 ____
 
 == DESCRIPTION
@@ -35,6 +36,9 @@ constants listed below.
 The *interrupt_set_isr*() function maps the interrupt to its _isr_
 (Interrupt Service Routine). If _isr_ is set to NULL, no action will be
 performed when that interrupt is raised.
+
+The *interrupt_wait*() function waits for the interrupt to be raised,
+then returns.
 
 == NOTES
 Each interrupt can only be mapped to one ISR at a time, meaning that
