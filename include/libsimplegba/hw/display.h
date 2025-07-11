@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include <base.h>
+#include "libsimplegba/base.h"
 
 #define DISPLAY_W 240
 #define DISPLAY_H 160

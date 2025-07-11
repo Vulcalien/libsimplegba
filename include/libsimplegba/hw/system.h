@@ -15,6 +15,6 @@
  */
 #pragma once
 
-#include <base.h>
+#include "libsimplegba/base.h"
 
 #define SYSTEM_FREQUENCY (16 * 1024 * 1024) // about 16.78 MHz

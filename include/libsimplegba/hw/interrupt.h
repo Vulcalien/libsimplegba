@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include <base.h>
+#include "libsimplegba/base.h"
 
 #define INTERRUPT_COUNT 14
 

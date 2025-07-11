@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include <base.h>
+#include "libsimplegba/base.h"
 
 extern const struct _BackupDriver {
     void (*read) (u16 offset, void *buffer, u32 n);

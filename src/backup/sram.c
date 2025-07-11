@@ -13,9 +13,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include <gba/backup.h>
+#include "libsimplegba/hw/backup.h"
 
-#include <memory.h>
+#include "libsimplegba/memory.h"
 
 #define SRAM ((vu8 *) 0x0e000000)
 

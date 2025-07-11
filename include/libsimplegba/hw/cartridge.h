@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include <base.h>
+#include "libsimplegba/base.h"
 
 struct CartridgeHeader {
     u32 entry_point;

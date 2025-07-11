@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include <base.h>
+#include "libsimplegba/base.h"
 
 #define RANDOM_MAX 65535
 

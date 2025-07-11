@@ -15,10 +15,10 @@
  */
 #pragma once
 
-#include <base.h>
+#include "libsimplegba/base.h"
 
-#include <gba/system.h>
-#include <gba/timer.h>
+#include "libsimplegba/hw/system.h"
+#include "libsimplegba/hw/timer.h"
 
 #define AUDIO_PITCH_NORMAL  0x1000
 #define AUDIO_PITCH_MAX     0xffff

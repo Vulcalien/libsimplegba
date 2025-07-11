@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include <base.h>
+#include "libsimplegba/base.h"
 
 extern void *memset(volatile void *dest, i32 byte, u32 n);
 extern void *memcpy(volatile void *dest, volatile const void *src, u32 n);

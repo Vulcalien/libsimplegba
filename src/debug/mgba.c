@@ -13,11 +13,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include <debug/mgba.h>
+#include "libsimplegba/debug/mgba.h"
 
 #include <stdarg.h>
 
-#include <math.h>
+#include "libsimplegba/math.h"
 
 #define MGBA_DEBUG_ENABLE *((vu16 *) 0x04fff780)
 #define MGBA_DEBUG_FLAGS  *((vu16 *) 0x04fff700)

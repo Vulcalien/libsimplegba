@@ -15,6 +15,8 @@
  */
 #pragma once
 
+#include "libsimplegba/base.h"
+
 #define WINDOW_COUNT 4
 
 #define WINDOW_0   0

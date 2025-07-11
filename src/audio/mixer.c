@@ -13,13 +13,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include <gba/audio.h>
+#include "libsimplegba/hw/audio.h"
 
-#include <gba/interrupt.h>
-#include <gba/timer.h>
-#include <gba/dma.h>
-#include <memory.h>
-#include <math.h>
+#include "libsimplegba/hw/interrupt.h"
+#include "libsimplegba/hw/timer.h"
+#include "libsimplegba/hw/dma.h"
+#include "libsimplegba/memory.h"
+#include "libsimplegba/math.h"
 
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)

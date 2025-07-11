@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include <gba/input.h>
+#include "libsimplegba/hw/input.h"
 
 #define KEY_INPUT   *((vu16 *) 0x04000130)
 #define KEY_CONTROL *((vu16 *) 0x04000132)

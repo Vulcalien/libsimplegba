@@ -13,11 +13,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include <gba/audio.h>
+#include "libsimplegba/hw/audio.h"
 
-#include <gba/interrupt.h>
-#include <gba/timer.h>
-#include <gba/dma.h>
+#include "libsimplegba/hw/interrupt.h"
+#include "libsimplegba/hw/timer.h"
+#include "libsimplegba/hw/dma.h"
 
 // Basic audio driver offering 2 independent channels, each with:
 // - looping support

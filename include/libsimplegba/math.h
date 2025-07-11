@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include <base.h>
+#include "libsimplegba/base.h"
 
 INLINE i32 math_min(i32 a, i32 b) {
     return (a < b ? a : b);
