@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-02-18
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -33,10 +33,6 @@ distributed between 0 and _bound_ (exclusive).
 
 The *random_seed*() function returns the previously stored seed value as
 a _u32_ (unsigned 32-bit integer).
-
-== NOTES
-If *random*() is called with a _bound_ of 1, the function always returns
-0.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
