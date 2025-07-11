@@ -17,8 +17,8 @@
 
 #include "libsimplegba/base.h"
 
-#define DISPLAY_W 240
-#define DISPLAY_H 160
+#define DISPLAY_WIDTH  240
+#define DISPLAY_HEIGHT 160
 
 #define DISPLAY_BG_PALETTE  ((vu16 *) 0x05000000)
 #define DISPLAY_OBJ_PALETTE ((vu16 *) 0x05000200)

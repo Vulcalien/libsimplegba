@@ -15,6 +15,9 @@ display_get_raster - display functions
 ____
 *#include <libsimplegba.h>*
 
+*#define DISPLAY_WIDTH  240*
+*#define DISPLAY_HEIGHT 160*
+
 **void display_config(u32 **__video_mode__**);**
 **void display_force_blank(bool **__flag__**);**
 
