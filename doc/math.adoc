@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-03-17
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -13,7 +13,7 @@ math_acos - various mathematical functions
 == SYNOPSIS
 [verse]
 ____
-*#include <math.h>*
+*#include <libsimplegba.h>*
 
 **i32 math_min(i32 **__a__**, i32 **__b__**);**
 **i32 math_max(i32 **__a__**, i32 **__b__**);**

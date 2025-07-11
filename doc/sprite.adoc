@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-03
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -12,7 +12,7 @@ sprite_affine - sprite functions
 == SYNOPSIS
 [verse]
 ____
-*#include <gba/sprite.h>*
+*#include <libsimplegba.h>*
 
 **void sprite_config(i32 **__id__**, const struct Sprite +++*+++**__sprite__**);**
 

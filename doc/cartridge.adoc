@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-03-25
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -12,7 +12,7 @@ cartridge_gpio_read, cartridge_gpio_write - game cartridge
 == SYNOPSIS
 [verse]
 ____
-*#include <gba/cartridge.h>*
+*#include <libsimplegba.h>*
 
 *bool cartridge_missing(void);*
 

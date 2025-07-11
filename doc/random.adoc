@@ -11,7 +11,7 @@ random, random_seed - pseudo-random number generator
 == SYNOPSIS
 [verse]
 ____
-*#include <random.h>*
+*#include <libsimplegba.h>*
 
 *#define RANDOM_MAX 65535*
 

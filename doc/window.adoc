@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-03
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -11,7 +11,7 @@ window_config, window_viewport, window_toggle - display windows
 == SYNOPSIS
 [verse]
 ____
-*#include <gba/window.h>*
+*#include <libsimplegba.h>*
 
 *#define WINDOW_0*
 *#define WINDOW_1*

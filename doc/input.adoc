@@ -12,7 +12,7 @@ input_repeat, input_irq_config - input detection
 == SYNOPSIS
 [verse]
 ____
-*#include <gba/input.h>*
+*#include <libsimplegba.h>*
 
 **void input_init(i32 **__repeat_delay__**, i32 **__repeat_interval__**);**
 **void input_update(void);**

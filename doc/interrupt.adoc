@@ -11,7 +11,7 @@ interrupt_toggle, interrupt_set_isr, interrupt_wait - interrupt handling
 == SYNOPSIS
 [verse]
 ____
-*#include <gba/interrupt.h>*
+*#include <libsimplegba.h>*
 
 **void interrupt_toggle(i32 **__id__**, bool **__enable__**);**
 **void interrupt_set_isr(i32 **__id__**, void (+++*+++**__isr__**)(void));**

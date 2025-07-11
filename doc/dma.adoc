@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-24
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -11,7 +11,7 @@ dma_config, dma_transfer, dma_stop - direct memory access
 == SYNOPSIS
 [verse]
 ____
-*#include <gba/dma.h>*
+*#include <libsimplegba.h>*
 
 *#define DMA0*
 *#define DMA1*

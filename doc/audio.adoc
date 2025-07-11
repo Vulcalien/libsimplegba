@@ -13,7 +13,7 @@ audio_sample_rate - audio driver
 == SYNOPSIS
 [verse]
 ____
-*#include <gba/audio.h>*
+*#include <libsimplegba.h>*
 
 **void audio_init(const void +++*+++**__driver__**);**
 **void audio_update(void);**

@@ -12,7 +12,7 @@ timer_config, timer_start, timer_stop, timer_restart, timer_get_counter
 == SYNOPSIS
 [verse]
 ____
-*#include <gba/timer.h>*
+*#include <libsimplegba.h>*
 
 *#define TIMER0*
 *#define TIMER1*

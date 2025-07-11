@@ -11,7 +11,7 @@ memory_set, memory_copy, memory_clear - memory functions
 == SYNOPSIS
 [verse]
 ____
-*#include <memory.h>*
+*#include <libsimplegba.h>*
 
 **void +++*+++memory_set(void +++*+++**__dest__**, i32 **__byte__**, u32 **__n__**);**
 **void +++*+++memory_copy(void +++*+++**__dest__**, const void +++*+++**__src__**, u32 **__n__**);**

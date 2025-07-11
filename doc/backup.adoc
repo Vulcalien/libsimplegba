@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-04-14
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -13,7 +13,7 @@ backup_erase_sector - backup memory
 == SYNOPSIS
 [verse]
 ____
-*#include <gba/backup.h>*
+*#include <libsimplegba.h>*
 
 **void backup_init(const void +++*+++**__driver__**);**
 
