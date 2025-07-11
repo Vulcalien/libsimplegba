@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-05-19
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -17,10 +17,10 @@ ____
 **void input_init(i32 **__repeat_delay__**, i32 **__repeat_interval__**);**
 **void input_update(void);**
 
-**bool input_down   (u32 **__key__**);**
-**bool input_press  (u32 **__key__**);**
+**bool input_down(u32 **__key__**);**
+**bool input_press(u32 **__key__**);**
 **bool input_release(u32 **__key__**);**
-**bool input_repeat (u32 **__key__**);**
+**bool input_repeat(u32 **__key__**);**
 
 **void input_irq_config(bool **__all_keys__**, u32 **__keys__**);**
 ____

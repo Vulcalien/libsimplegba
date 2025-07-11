@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-04-16
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -13,8 +13,8 @@ memory_set, memory_copy, memory_clear - memory functions
 ____
 *#include <memory.h>*
 
-**void +++*+++memory_set  (void +++*+++**__dest__**, i32 **__byte__**, u32 **__n__**);**
-**void +++*+++memory_copy (void +++*+++**__dest__**, const void +++*+++**__src__**, u32 **__n__**);**
+**void +++*+++memory_set(void +++*+++**__dest__**, i32 **__byte__**, u32 **__n__**);**
+**void +++*+++memory_copy(void +++*+++**__dest__**, const void +++*+++**__src__**, u32 **__n__**);**
 **void +++*+++memory_clear(void +++*+++**__dest__**, u32 **__n__**);**
 ____
 

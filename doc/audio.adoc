@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-04-04
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -24,9 +24,9 @@ ____
 **void audio_pause(i32 **__channel__**);**
 **void audio_resume(i32 **__channel__**);**
 
-**void audio_loop   (i32 **__channel__**, u32 **__loop_length__**);**
-**void audio_pitch  (i32 **__channel__**, u32 **__pitch__**);**
-**void audio_volume (i32 **__channel__**, u32 **__volume__**);**
+**void audio_loop(i32 **__channel__**, u32 **__loop_length__**);**
+**void audio_pitch(i32 **__channel__**, u32 **__pitch__**);**
+**void audio_volume(i32 **__channel__**, u32 **__volume__**);**
 **void audio_panning(i32 **__channel__**, i32 **__panning__**);**
 
 **void audio_sample_rate(u32 **__sample_rate__**);**
