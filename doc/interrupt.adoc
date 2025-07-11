@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-10
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -13,8 +13,8 @@ interrupt_toggle, interrupt_set_isr, interrupt_wait - interrupt handling
 ____
 *#include <gba/interrupt.h>*
 
-**void interrupt_toggle(u32 **__id__**, bool **__enable__**);**
-**void interrupt_set_isr(u32 **__id__**, void (+++*+++**__isr__**)(void));**
+**void interrupt_toggle(i32 **__id__**, bool **__enable__**);**
+**void interrupt_set_isr(i32 **__id__**, void (+++*+++**__isr__**)(void));**
 **void interrupt_wait(i32 **__id__**);**
 ____
 
