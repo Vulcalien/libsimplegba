@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-06-24
+:revdate: 2025-07-11
 :docdate: {revdate}
 
 == NAME
@@ -18,8 +18,6 @@ ____
 *#define TIMER1*
 *#define TIMER2*
 *#define TIMER3*
-
-*#define TIMER_COUNTER_MAX 65536*
 
 **void timer_config(i32 **__id__**, u16 **__config__**);**
 
