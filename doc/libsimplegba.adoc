@@ -47,17 +47,18 @@ details about the functionalities offered by each module.
 
 === Usage
 Add the 'include' directory to the include path and the 'bin' directory
-to the library search path, then link against 'libsimplegba'. Also set
-'lnkscript' as the linker script. The following should work on Makefile:
+to the library search path, then link against 'libsimplegba' and set
+'lnkscript' as the linker script. If using a Makefile, add the following
+lines (replacing <path> with the path to the library):
 
 [source,make]
 ----
 # linker script
-LDFLAGS += -nostartfiles -Tlib/libsimplegba/lnkscript
+LDFLAGS += -nostartfiles -T<path>/lnkscript
 
 # libsimplegba
-CPPFLAGS += -Ilib/libsimplegba/include
-LDFLAGS  += -Llib/libsimplegba/bin
+CPPFLAGS += -I<path>/include
+LDFLAGS  += -L<path>/bin
 LDLIBS   += -lsimplegba
 ----
 
