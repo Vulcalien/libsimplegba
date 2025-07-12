@@ -2,11 +2,11 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-11
+:revdate: 2025-07-12
 :docdate: {revdate}
 
 == NAME
-memory_set, memory_copy, memory_clear - memory functions
+memory_set, memory_copy, memory_clear - memory manipulation
 
 == SYNOPSIS
 [verse]
