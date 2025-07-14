@@ -13,31 +13,28 @@ hardware registers directly.
 
 ## Modules
 The following modules are available:
-```
-Misc
-    Base                basic definitions (types, macros...)
-    Math                various mathematical functions
-    Random              pseudo-random number generator
-    Memory              memory manipulation
-
-GBA Hardware
-    Display             display interface
-    Background          tiled backgrounds
-    Sprite              sprites
-    Window              display windows (e.g. viewports)
-    Audio               digital audio driver
-    Timer               hardware timers
-    DMA                 direct memory access
-    Input               input detection
-    Interrupt           interrupt handling
-    System              system control
-    Cartridge           game cartridge
-    Backup              backup memory
-
-Debug
-    Profiler            code profiler
-    mGBA                printing to mGBA output (e.g. mgba_printf)
-```
+| Category | Module     | Description                                  |
+| :------: | ---------- | -------------------------------------------- |
+| Misc     | Base       | basic definitions (types, macros...)         |
+| -        | Math       | various mathematical functions               |
+| -        | Random     | pseudo-random number generator               |
+| -        | Memory     | memory manipulation                          |
+|          |            |                                              |
+| Hardware | Display    | display interface                            |
+| -        | Background | tiled backgrounds                            |
+| -        | Sprite     | sprites                                      |
+| -        | Window     | display windows (e.g. viewports)             |
+| -        | Audio      | digital audio driver                         |
+| -        | Timer      | hardware timers                              |
+| -        | DMA        | direct memory access                         |
+| -        | Input      | input detection                              |
+| -        | Interrupt  | interrupt handling                           |
+| -        | System     | system control                               |
+| -        | Cartridge  | game cartridge                               |
+| -        | Backup     | backup memory                                |
+|          |            |                                              |
+| Debug    | Profiler   | code profiler                                |
+| -        | mGBA       | printing to mGBA output (e.g. mgba_printf)   |
 
 Most modules are accompanied by a manual: see the [doc](doc) directory.
 An overview of the library and a brief description of each module can be
