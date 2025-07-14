@@ -55,7 +55,7 @@ To let the build tool know where to find library files:
 - Add `libsimplegba` to the list of libraries to link against
 - Set `lnkscript` as the linker script
 
-If using a `Makefile` to build the program, and assuming the library is
+If using a `Makefile` to build the program and assuming the library is
 located at `lib/libsimplegba`, add these lines:
 
 ```Makefile
