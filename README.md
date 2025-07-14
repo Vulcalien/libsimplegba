@@ -46,16 +46,17 @@ installed. Then, run `make` to generate the static library file
 `bin/libsimplegba.a`.
 
 ## Usage
-Follow these steps to use the library:
-- Obtain *libsimplegba* (for example, by adding it as a git submodule).
-- Add the `include` directory to the include path.
-- Add the `bin` directory to the library search path.
-- Add `libsimplegba` to the list of libraries to link against.
-- Add the `-nostartfiles` and `-T<lib-path>/lnkscript` linker flags.
+Follow these instructions to use *libsimplegba* in a project.
 
-### Makefile example
-Assuming the library is located at `lib/libsimplegba`, add these lines
-to `Makefile`:
+### Adding the library
+To let the build tool know where to find library files:
+- Add the `include` directory to the include path
+- Add the `bin` directory to the library search path
+- Add `libsimplegba` to the list of libraries to link against
+- Set `lnkscript` as the linker script
+
+If using a `Makefile` to build the program, and assuming the library is
+located at `lib/libsimplegba`, add these lines:
 
 ```Makefile
 # linker script
@@ -65,6 +66,35 @@ LDFLAGS += -nostartfiles -Tlib/libsimplegba/lnkscript
 CPPFLAGS += -Ilib/libsimplegba/include
 LDFLAGS  += -Llib/libsimplegba/bin
 LDLIBS   += -lsimplegba
+```
+
+### Using the library
+Use `#include <libsimplegba.h>` to retrieve the library's single header.
+All library functions, types, constants... will be available.
+
+The library expects the `void AgbMain(void)` function to be defined,
+which will be used as the entry point of the program. This function
+should first perform initialization, then enter an infinite loop. For
+example:
+
+```c
+void AgbMain(void) {
+    interrupt_toggle(IRQ_VBLANK, true);
+
+    input_init(30, 2);
+    audio_init(AUDIO_MIXER);
+    backup_init(BACKUP_SRAM);
+
+    // init...
+    while(true) {
+        audio_update();
+        input_update();
+
+        // tick...
+        interrupt_wait(IRQ_VBLANK);
+        // draw...
+    }
+}
 ```
 
 ## License
