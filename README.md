@@ -37,8 +37,6 @@ The following modules are available:
 | -        | mGBA       | printing to mGBA output (e.g. mgba_printf)   |
 
 Most modules are accompanied by a manual: see the [doc](doc) directory.
-An overview of the library and a brief description of each module can be
-found in the [libsimplegba](doc/libsimplegba.adoc) manual.
 
 ## Building
 First, make sure the *arm-none-eabi-gcc* compiler and *make* tool are
