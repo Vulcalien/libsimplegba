@@ -20,8 +20,8 @@
 #include "libsimplegba/hw/system.h"
 #include "libsimplegba/hw/timer.h"
 
-#define AUDIO_PITCH_NORMAL  0x1000
-#define AUDIO_PITCH_MAX     0xffff
+#define AUDIO_PITCH_NORMAL 0x1000
+#define AUDIO_PITCH_MAX    0xffff
 
 #define AUDIO_VOLUME_MAX 64
 
@@ -38,9 +38,9 @@ extern const struct _AudioDriver {
     void (*pause)(i32 channel);
     void (*resume)(i32 channel);
 
-    void (*loop)   (i32 channel, u32 loop_length);
-    void (*pitch)  (i32 channel, u32 pitch);
-    void (*volume) (i32 channel, u32 volume);
+    void (*loop)(i32 channel, u32 loop_length);
+    void (*pitch)(i32 channel, u32 pitch);
+    void (*volume)(i32 channel, u32 volume);
     void (*panning)(i32 channel, i32 panning);
 
     // internal use

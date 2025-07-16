@@ -18,16 +18,16 @@
 #include "libsimplegba/base.h"
 
 extern const struct _BackupDriver {
-    void (*read) (u16 offset, void *buffer, u32 n);
+    void (*read)(u16 offset, void *buffer, u32 n);
     void (*write)(u16 offset, const void *buffer, u32 n);
 
-    i32  (*read_byte) (u16 offset);
+    i32  (*read_byte)(u16 offset);
     void (*write_byte)(u16 offset, i32 byte);
 
     u16  (*identify)(void);
     void (*set_bank)(u32 bank);
 
-    void (*erase_chip)  (void);
+    void (*erase_chip)(void);
     void (*erase_sector)(u32 n);
 } *_backup_driver;
 
