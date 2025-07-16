@@ -44,7 +44,7 @@ extern const struct _AudioDriver {
     void (*panning)(i32 channel, i32 panning);
 
     // internal use
-    u32 channel_count;
+    u16 channel_count;
     i32 (*available_channel)(void); // returns -1 if none available
 } *_audio_driver;
 
