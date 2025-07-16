@@ -225,8 +225,8 @@ BEGIN_FUNC ARM _mixer_update
     bgt     1b @ samples loop           @ if remaining > 0, repeat loop
     b       .L_mix_channel_return       @ otherwise, return
 
-    .if \near_end == 1
 3: @ loop or stop
+    .if \near_end == 1
         @ reset position
         mov     r6, #0                  @ (r6) position = 0
 
