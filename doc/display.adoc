@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-11
+:revdate: 2025-07-16
 :docdate: {revdate}
 
 == NAME
@@ -24,7 +24,7 @@ ____
 **vu16 +++*+++display_charblock(i32 **__block__**);**
 **vu16 +++*+++display_screenblock(i32 **__block__**);**
 
-**i32 display_get_page(void);**
+**i32  display_get_page(void);**
 **void display_set_page(i32 **__page__**);**
 **vu16 +++*+++display_get_raster(i32 **__page__**);**
 ____
