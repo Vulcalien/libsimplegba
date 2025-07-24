@@ -18,13 +18,14 @@
 @ LUT-based implementation of sine. Since sin(180 + x) = -sin(x), the
 @ table only contains entries for angles in [0, 180].
 @
-@ SCALE = 32
-@
 @ --- Table Generation ---
 @ for i = 0 to 0x8000 / SCALE:
 @     x = i * SCALE * M_PI / 0x8000
 @     y = sin(x) * 0x4000
 @     LUT[i] = floor(y)
+
+@ SCALE = (1 << SCALE_SHIFT)
+.equ SCALE_SHIFT, 5
 
 @ --- sin_lut --- @
 .section .rodata
@@ -185,21 +186,21 @@ BEGIN_FUNC THUMB math_sin
     @ retrieve LUT entries
     ldr     r0, =sin_lut
     lsl     r2, r1, #17
-    lsr     r2, #(17 + 5)               @ index = (angle % 180 deg) / SCALE
+    lsr     r2, #(17 + SCALE_SHIFT)     @ index = (angle % 180 deg) / SCALE
     lsl     r2, #1                      @ index * 2
     add     r2, r0                      @ &sin_lut[index]
     ldrh    r0, [r2]                    @ (r0) left  = sin_lut[index]
     ldrh    r2, [r2, #2]                @ (r2) right = sin_lut[index + 1]
 
     @ interpolate entries: (left * weight_l + right * weight_r) / SCALE
-    mov     r3, #(32 - 1)
-    and     r3, r1                      @ (r3) weight_r = angle % SCALE
+    lsl     r3, r1, #(32 - SCALE_SHIFT)
+    lsr     r3, #(32 - SCALE_SHIFT)     @ (r3) weight_r = angle % SCALE
     mul     r2, r3                      @ (r2) right *= weight_r
     neg     r3, r3
-    add     r3, #32                     @ (r3) weight_l = SCALE - weight_r
+    add     r3, #(1 << SCALE_SHIFT)     @ (r3) weight_l = SCALE - weight_r
     mul     r0, r3                      @ (r0) left *= weight_l
     add     r0, r2
-    lsr     r0, #5                      @ (r0) result = (left + right) / SCALE
+    lsr     r0, #SCALE_SHIFT            @ (r0) result = (left + right) / SCALE
 
     @ If angle > 180 deg, adjust sign of result.
     @ Since angle is in range [0, 360) deg, i.e. [0, 0xffff],
