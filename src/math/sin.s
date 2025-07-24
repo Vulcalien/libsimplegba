@@ -207,9 +207,9 @@ BEGIN_FUNC THUMB math_sin
     @ Since angle is in range [0, 360) deg, i.e. [0, 0xffff],
     @ if bit 15 is set, then angle >= 180 deg.
     lsr     r1, #15                     @ check bit 15 of angle
-    beq     1f @ do not adjust          @ if bit 15 clear, do not adjust
+    beq     .L_do_not_adjust            @ if bit 15 clear, do not adjust
     neg     r0, r0                      @ (r0) result = -result
-1: @ do not adjust
+.L_do_not_adjust:
 
     bx      lr
 END_FUNC math_sin
