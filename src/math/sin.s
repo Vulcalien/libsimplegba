@@ -18,11 +18,12 @@
 @ LUT-based implementation of sine. Since sin(180 + x) = -sin(x), the
 @ table only contains entries for angles in [0, 180].
 @
-@ --- Table Generation ---
+@ ------------------------- Table Generation ------------------------- @
 @ for i = 0 to 0x8000 / SCALE:
 @     x = i * SCALE * M_PI / 0x8000
 @     y = sin(x) * 0x4000
 @     LUT[i] = floor(y)
+@ -------------------------------------------------------------------- @
 
 @ SCALE = (1 << SCALE_SHIFT)
 .equ SCALE_SHIFT, 5
