@@ -1,7 +1,4 @@
 # libsimplegba
-A library containing utilities for the Game Boy Advance.
-
-## Purpose
 *libsimplegba* is a collection of functions and constants that can be
 used to interface with the GBA hardware hiding some of the complexity
 and low-level details.
