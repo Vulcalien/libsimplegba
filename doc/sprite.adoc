@@ -81,9 +81,7 @@ of the *SPRITE_SIZE_x* constants, with *x* replaced by one of the
 following sizes:
 
 .Sprite sizes
-[cols="1,1,1,1,1"]
 |===
-
 |*Square*     |8x8  |16x16 |32x32 |64x64
 |*Horizontal* |16x8 |32x8  |32x16 |64x32
 |*Vertical*   |8x16 |8x32  |16x32 |32x64
@@ -99,9 +97,7 @@ the display's video mode (see *display_config*(3)) and by the sprite's
 color mode (determined by the _colors_ field). See NOTES below.
 
 .Tile value ranges
-[cols="1,1,1"]
 |===
-
 |                |*16-color mode* |*256-color mode*
 |*Tilemap modes* |0-1023 (1024)   |0-511 (512)
 |*Bitmap modes*  |512-1023 (512)  |256-511 (256)

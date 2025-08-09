@@ -24,9 +24,7 @@ based on the value of _enable_. Interrupts are identified by the
 constants listed below.
 
 .Interrupt identifiers
-[cols="1,1,1,1"]
 |===
-
 |IRQ_VBLANK |IRQ_HBLANK  |IRQ_VCOUNT |
 |IRQ_TIMER0 |IRQ_TIMER1  |IRQ_TIMER2 |IRQ_TIMER3
 |IRQ_DMA0   |IRQ_DMA1    |IRQ_DMA2   |IRQ_DMA3

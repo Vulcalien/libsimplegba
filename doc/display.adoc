@@ -42,10 +42,9 @@ video mode selected. Charblocks are allocated as follows: 0-3 background
 tilesets, 4-5 sprite tileset.
 
 .Tilemap video modes
-[cols="1,1,1,1,1"]
 |===
-
 |*Mode* |*BG0* |*BG1* |*BG2* |*BG3*
+
 |0      |reg   |reg   |reg   |reg
 |1      |reg   |reg   |aff   |
 |2      |      |      |aff   |aff
@@ -56,10 +55,9 @@ of pages depend on the video mode selected. Charblocks are allocated as
 follows: 0-4 raster, 5 sprite tileset.
 
 .Bitmap video modes
-[cols="1,1,1,1"]
 |===
-
 |*Mode* |*Size*  |*BPP* |*Pages*
+
 |3      |240x160 |16    |1
 |4      |240x160 |8     |2
 |5      |160x128 |16    |2

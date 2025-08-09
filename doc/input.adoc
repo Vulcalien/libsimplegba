@@ -39,9 +39,7 @@ before any input processing is done.
 These functions take the _key_ argument, used to identify GBA buttons.
 This can be any of the following constants:
 
-[cols="1,1,1,1"]
 |===
-
 |KEY_A     |KEY_B    |KEY_SELECT |KEY_START
 |KEY_RIGHT |KEY_LEFT |KEY_UP     |KEY_DOWN
 |KEY_R     |KEY_L    |           |
