@@ -183,8 +183,7 @@ BEGIN_FUNC ARM _mixer_update
         @ advance position
         add     r6, r7                  @ (r6) position += increment
         add     r4, r6, lsr #12         @ (r4) data += position / 0x1000
-        lsl     r6, #20
-        lsr     r6, #20                 @ (r6) position %= 0x1000
+        bic     r6, #0x000ff000         @ (r6) position %= 0x1000
     .else
         ldrsb   r11, [r4], #1           @ (r11) sample = *(data++)
     .endif
