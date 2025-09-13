@@ -16,8 +16,6 @@
 .include "macros.inc"
 
 @ --- memory_set_8 --- @
-.global memory_set_8
-.text
 
 @ Fill a memory area with a given byte, using only 8-bit writes.
 @
@@ -30,7 +28,7 @@
 @   r2 = n    : u32
 @ output:
 @   r0 = dest : void *
-BEGIN_FUNC THUMB memory_set_8
+BEGIN_GLOBAL_FUNC TEXT THUMB memory_set_8
     push    {r0}
 
     @ calculate number of blocks

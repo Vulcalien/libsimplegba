@@ -31,8 +31,6 @@ temp_buffers:
 .size temp_buffers, .-temp_buffers
 
 @ --- _mixer_update --- @
-.global _mixer_update
-.section .iwram, "ax", %progbits
 
 @ register allocation:
 @   r0  = channels, channel (struct pointer)
@@ -53,7 +51,7 @@ temp_buffers:
 @   r0 = channels : struct Channel [CHANNEL_COUNT]
 @   r1 = buffers  : i8 [OUTPUT_COUNT][BUFFER_SIZE]
 @   r2 = length   : u32 in range [4, BUFFER_SIZE], multiple of 4
-BEGIN_FUNC ARM _mixer_update
+BEGIN_GLOBAL_FUNC IWRAM ARM _mixer_update
     push    {r4-r12}
 
 @ ==================================================================== @

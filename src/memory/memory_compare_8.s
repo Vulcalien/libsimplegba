@@ -16,8 +16,6 @@
 .include "macros.inc"
 
 @ --- memory_compare_8 --- @
-.global memory_compare_8
-.text
 
 @ Compare memory areas, using only 8-bit reads.
 @
@@ -32,7 +30,7 @@
 @   r2 = n : u32
 @ output:
 @   r0 = diff : i32
-BEGIN_FUNC THUMB memory_compare_8
+BEGIN_GLOBAL_FUNC TEXT THUMB memory_compare_8
     @ if n == 0, return 0
     cmp     r2, #0
     beq     .L_return_zero

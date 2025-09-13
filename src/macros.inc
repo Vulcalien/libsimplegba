@@ -13,7 +13,17 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.macro BEGIN_FUNC isa:req name:req
+.macro BEGIN_FUNC section:req isa:req name:req
+    .if \section == TEXT
+        .text
+    .elseif \section == IWRAM
+        .section .iwram, "ax", %progbits
+    .elseif \section == EWRAM
+        .section .ewram, "ax", %progbits
+    .else
+        .err "section must be TEXT, IWRAM or EWRAM"
+    .endif
+
     .if \isa == ARM
         .arm
         .align 2
@@ -29,6 +39,11 @@
     .type \name, %function
 
     \name\():
+.endm
+
+.macro BEGIN_GLOBAL_FUNC section:req isa:req name:req
+    .global \name
+    BEGIN_FUNC \section \isa \name
 .endm
 
 .macro END_FUNC name:req

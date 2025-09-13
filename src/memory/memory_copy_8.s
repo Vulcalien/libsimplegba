@@ -16,8 +16,6 @@
 .include "macros.inc"
 
 @ --- memory_copy_8 --- @
-.global memory_copy_8
-.text
 
 @ Copy data from one memory area to another, using only 8-bit reads and
 @ writes.
@@ -31,7 +29,7 @@
 @   r2 = n    : u32
 @ output:
 @   r0 = dest : void *
-BEGIN_FUNC THUMB memory_copy_8
+BEGIN_GLOBAL_FUNC TEXT THUMB memory_copy_8
     push    {r0, r4}
 
     @ calculate number of blocks

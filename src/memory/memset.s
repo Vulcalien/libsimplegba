@@ -16,8 +16,6 @@
 .include "macros.inc"
 
 @ --- memset --- @
-.global memset
-.text
 
 @ Fill a memory area with a given byte value. This is an implementation
 @ of the C standard function 'memset'.
@@ -38,7 +36,7 @@
 @   r2 = n    : u32
 @ output:
 @   r0 = dest : void *
-BEGIN_FUNC THUMB memset
+BEGIN_GLOBAL_FUNC TEXT THUMB memset
     mov     r3, lr
     push    {r0, r3}
 

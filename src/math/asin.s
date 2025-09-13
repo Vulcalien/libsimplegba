@@ -102,8 +102,6 @@ asin_lut:
 .size asin_lut, .-asin_lut
 
 @ --- math_asin --- @
-.global math_asin
-.text
 
 @ register allocation:
 @   r0 = x
@@ -115,7 +113,7 @@ asin_lut:
 @   r0 = x : i32
 @ output:
 @   r0 = result : i32
-BEGIN_FUNC THUMB math_asin
+BEGIN_GLOBAL_FUNC TEXT THUMB math_asin
     @ calculate abs(x)
     asr     r2, r0, #31                 @ x < 0 ? -1 : 0
     add     r1, r0, r2                  @ x < 0 ? x - 1 : x

@@ -16,8 +16,6 @@
 .include "macros.inc"
 
 @ --- memory_set_32 --- @
-.global memory_set_32
-.text
 
 @ Fill a memory area with a given byte, using only 32-bit writes.
 @
@@ -34,7 +32,7 @@
 @   r2 = n    : u32
 @ output:
 @   r0 = dest : void *
-BEGIN_FUNC THUMB memory_set_32
+BEGIN_GLOBAL_FUNC TEXT THUMB memory_set_32
     push    {r0, r4-r6}
 
     @ make sure 'byte' is actually 8-bit

@@ -16,8 +16,6 @@
 .include "macros.inc"
 
 @ --- memory_copy_16 --- @
-.global memory_copy_16
-.text
 
 @ Copy data from one memory area to another, using only 16-bit reads and
 @ writes.
@@ -35,7 +33,7 @@
 @   r2 = n    : u32
 @ output:
 @   r0 = dest : void *
-BEGIN_FUNC THUMB memory_copy_16
+BEGIN_GLOBAL_FUNC TEXT THUMB memory_copy_16
     push    {r0, r4}
 
     @ calculate number of units and blocks

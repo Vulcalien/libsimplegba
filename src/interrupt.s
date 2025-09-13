@@ -28,7 +28,6 @@ isr_table:
 .size isr_table, .-isr_table
 
 @ --- interrupt_handler --- @
-.section .iwram, "ax", %progbits
 
 @ Handle IRQs by calling the matching ISR.
 @ Tasks of this function:
@@ -46,7 +45,7 @@ isr_table:
 @ that other bits were to be set, the BIOS would simply call this
 @ function again.
 
-BEGIN_FUNC ARM interrupt_handler
+BEGIN_FUNC IWRAM ARM interrupt_handler
     mov     r0, #0x04000000             @ (r0) address = register base
 
     @ load (IE & IF)
@@ -105,10 +104,8 @@ BEGIN_FUNC ARM interrupt_handler
 END_FUNC interrupt_handler
 
 @ --- _interrupt_init --- @
-.global _interrupt_init
-.text
 
-BEGIN_FUNC THUMB _interrupt_init
+BEGIN_GLOBAL_FUNC TEXT THUMB _interrupt_init
     @ set interrupt vector
     ldr     r0, =0x03007ffc             @ r0 = pointer to master ISR
     ldr     r1, =interrupt_handler
@@ -123,13 +120,11 @@ BEGIN_FUNC THUMB _interrupt_init
 END_FUNC _interrupt_init
 
 @ --- interrupt_set_isr --- @
-.global interrupt_set_isr
-.text
 
 @ input:
 @   r0 = id  : i32
 @   r1 = isr : function pointer
-BEGIN_FUNC ARM interrupt_set_isr
+BEGIN_GLOBAL_FUNC TEXT ARM interrupt_set_isr
     @ check if the interrupt ID is valid
     cmp     r0, #INTERRUPT_COUNT
 
@@ -141,12 +136,10 @@ BEGIN_FUNC ARM interrupt_set_isr
 END_FUNC interrupt_set_isr
 
 @ --- interrupt_wait --- @
-.global interrupt_wait
-.text
 
 @ input:
 @   r0 = id : i32
-BEGIN_FUNC THUMB interrupt_wait
+BEGIN_GLOBAL_FUNC TEXT THUMB interrupt_wait
     @ set arguments of IntrWait
     mov     r1, #1
     lsl     r1, r0                      @ (r1) flags = BIT(id)

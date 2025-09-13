@@ -166,8 +166,6 @@ sin_lut:
 .size sin_lut, .-sin_lut
 
 @ --- math_sin --- @
-.global math_sin
-.text
 
 @ register allocation:
 @   r0 = left, result
@@ -179,7 +177,7 @@ sin_lut:
 @   r0 = angle : i32
 @ output:
 @   r0 = result : i32
-BEGIN_FUNC THUMB math_sin
+BEGIN_GLOBAL_FUNC TEXT THUMB math_sin
     @ normalize angle in range [0, 360) degrees
     lsl     r1, r0, #16
     lsr     r1, #16                     @ (r1) angle &= 0xffff
