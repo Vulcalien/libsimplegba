@@ -33,6 +33,10 @@
 @ output:
 @   r0 = diff : i32
 BEGIN_FUNC THUMB memory_compare_8
+    @ if n == 0, return 0
+    cmp     r2, #0
+    beq     .L_return_zero
+
     push    {r4-r5}
 
     @ move 'a' and 'b' pointers to r4 and r5
@@ -91,6 +95,10 @@ BEGIN_FUNC THUMB memory_compare_8
 
 .L_return:
     pop     {r4-r5}
+    bx      lr
+
+.L_return_zero:
+    mov     r0, #0
     bx      lr
 END_FUNC memory_compare_8
 
