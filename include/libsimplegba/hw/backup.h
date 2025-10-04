@@ -52,24 +52,19 @@ INLINE void backup_write_byte(u16 offset, i32 byte) {
 }
 
 INLINE u16 backup_identify(void) {
-    if(_backup_driver->identify)
-        return _backup_driver->identify();
-    return 0;
+    return _backup_driver->identify();
 }
 
 INLINE void backup_set_bank(u32 bank) {
-    if(_backup_driver->set_bank)
-        _backup_driver->set_bank(bank);
+    _backup_driver->set_bank(bank);
 }
 
 INLINE void backup_erase_chip(void) {
-    if(_backup_driver->erase_chip)
-        _backup_driver->erase_chip();
+    _backup_driver->erase_chip();
 }
 
 INLINE void backup_erase_sector(u32 n) {
-    if(_backup_driver->erase_sector)
-        _backup_driver->erase_sector(n);
+    _backup_driver->erase_sector(n);
 }
 
 extern const struct _BackupDriver
