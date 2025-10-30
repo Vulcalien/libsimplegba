@@ -36,7 +36,7 @@
 @   r2 = n    : u32
 @ output:
 @   r0 = dest : void *
-BEGIN_GLOBAL_FUNC TEXT THUMB memset
+BEGIN_GLOBAL_FUNC .text THUMB memset
     mov     r3, lr
     push    {r0, r3}
 

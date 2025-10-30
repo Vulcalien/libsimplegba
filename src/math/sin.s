@@ -177,7 +177,7 @@ sin_lut:
 @   r0 = angle : i32
 @ output:
 @   r0 = result : i32
-BEGIN_GLOBAL_FUNC TEXT THUMB math_sin
+BEGIN_GLOBAL_FUNC .text THUMB math_sin
     @ normalize angle in range [0, 360) degrees
     lsls    r1, r0, #16
     lsrs    r1, #16                     @ (r1) angle &= 0xffff

@@ -16,15 +16,7 @@
 .syntax unified
 
 .macro BEGIN_FUNC section:req isa:req name:req
-    .if \section == TEXT
-        .text
-    .elseif \section == IWRAM
-        .section .iwram, "ax", %progbits
-    .elseif \section == EWRAM
-        .section .ewram, "ax", %progbits
-    .else
-        .err "section must be TEXT, IWRAM or EWRAM"
-    .endif
+    .section \section, "ax", %progbits
 
     .if \isa == ARM
         .arm

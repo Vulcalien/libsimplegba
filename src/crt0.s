@@ -17,11 +17,7 @@
 
 .include "assembly.inc"
 
-.section .crt0, "ax"
-
-.global start_vector
-.arm
-start_vector:
+BEGIN_GLOBAL_FUNC .crt0 ARM start_vector
     @ switch to IRQ mode and set SP_irq
     mov     r0, #0x12
     msr     cpsr, r0
@@ -79,7 +75,6 @@ start_vector:
 
     ldr     r0, =AgbMain
     bx      r0
-
-.size start_vector, .-start_vector
+END_FUNC start_vector
 
 .end

@@ -51,7 +51,7 @@ temp_buffers:
 @   r0 = channels : struct Channel [CHANNEL_COUNT]
 @   r1 = buffers  : i8 [OUTPUT_COUNT][BUFFER_SIZE]
 @   r2 = length   : u32 in range [4, BUFFER_SIZE], multiple of 4
-BEGIN_GLOBAL_FUNC IWRAM ARM _mixer_update
+BEGIN_GLOBAL_FUNC .iwram ARM _mixer_update
     push    {r4-r12}
 
 @ ==================================================================== @

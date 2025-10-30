@@ -33,7 +33,7 @@
 @   r2 = n    : u32
 @ output:
 @   r0 = dest : void *
-BEGIN_GLOBAL_FUNC TEXT THUMB memory_copy_16
+BEGIN_GLOBAL_FUNC .text THUMB memory_copy_16
     push    {r0, r4}
 
     @ calculate number of units and blocks

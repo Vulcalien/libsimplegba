@@ -113,7 +113,7 @@ asin_lut:
 @   r0 = x : i32
 @ output:
 @   r0 = result : i32
-BEGIN_GLOBAL_FUNC TEXT THUMB math_asin
+BEGIN_GLOBAL_FUNC .text THUMB math_asin
     @ calculate abs(x)
     asrs    r2, r0, #31                 @ x < 0 ? -1 : 0
     adds    r1, r0, r2                  @ x < 0 ? x - 1 : x
