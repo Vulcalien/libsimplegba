@@ -13,7 +13,7 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.include "macros.inc"
+.include "assembly.inc"
 
 @ LUT-based implementation of arcsine. Since asin(-x) = -asin(x), the
 @ table only contains entries for non-negative arguments.
@@ -115,45 +115,45 @@ asin_lut:
 @   r0 = result : i32
 BEGIN_GLOBAL_FUNC TEXT THUMB math_asin
     @ calculate abs(x)
-    asr     r2, r0, #31                 @ x < 0 ? -1 : 0
-    add     r1, r0, r2                  @ x < 0 ? x - 1 : x
-    eor     r1, r2                      @ (r1) abs(x) = x < 0 ? -x : x
+    asrs    r2, r0, #31                 @ x < 0 ? -1 : 0
+    adds    r1, r0, r2                  @ x < 0 ? x - 1 : x
+    eors    r1, r2                      @ (r1) abs(x) = x < 0 ? -x : x
 
     @ if argument is outside the domain, return 0
-    ldrh    r2, =0x4000
+    ldr     r2, =0x4000
     cmp     r1, r2
     bhi     .L_return_zero              @ if abs(x) > 0x4000, return 0
 
     @ retrieve LUT entries
     ldr     r2, =asin_lut
-    lsr     r3, r1, #SCALE_SHIFT        @ index = abs(x) / SCALE
-    lsl     r3, #1                      @ index * 2
-    add     r3, r2                      @ &asin_lut[index]
+    lsrs    r3, r1, #SCALE_SHIFT        @ index = abs(x) / SCALE
+    lsls    r3, #1                      @ index * 2
+    adds    r3, r2                      @ &asin_lut[index]
     ldrh    r2, [r3]                    @ (r2) left  = asin_lut[index]
     ldrh    r3, [r3, #2]                @ (r3) right = asin_lut[index + 1]
 
     @ interpolate entries: (left * weight_l + right * weight_r) / SCALE
-    lsl     r1, #(32 - SCALE_SHIFT)
-    lsr     r1, #(32 - SCALE_SHIFT)     @ (r1) weight_r = abs(x) % SCALE
-    mul     r3, r1                      @ (r3) right *= weight_r
-    neg     r1, r1
-    add     r1, #(1 << SCALE_SHIFT)     @ (r1) weight_l = SCALE - weight_r
-    mul     r2, r1                      @ (r2) left *= weight_l
-    add     r2, r3
-    lsr     r2, #SCALE_SHIFT            @ (r2) result = (left + right) / SCALE
+    lsls    r1, #(32 - SCALE_SHIFT)
+    lsrs    r1, #(32 - SCALE_SHIFT)     @ (r1) weight_r = abs(x) % SCALE
+    muls    r3, r1                      @ (r3) right *= weight_r
+    negs    r1, r1
+    adds    r1, #(1 << SCALE_SHIFT)     @ (r1) weight_l = SCALE - weight_r
+    muls    r2, r1                      @ (r2) left *= weight_l
+    adds    r2, r3
+    lsrs    r2, #SCALE_SHIFT            @ (r2) result = (left + right) / SCALE
 
     @ adjust sign of result
     cmp     r0, #0
     bgt     .L_do_not_adjust            @ if x > 0, do not adjust
-    neg     r2, r2                      @ (r2) result = -result
+    negs    r2, r2                      @ (r2) result = -result
 .L_do_not_adjust:
 
     @ move result to r0 and return
-    mov     r0, r2
+    movs    r0, r2
     bx      lr
 
 .L_return_zero:
-    mov     r0, #0
+    movs    r0, #0
     bx      lr
 END_FUNC math_asin
 

@@ -13,7 +13,7 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.include "macros.inc"
+.include "assembly.inc"
 
 @ --- memory_set_8 --- @
 
@@ -32,7 +32,7 @@ BEGIN_GLOBAL_FUNC TEXT THUMB memory_set_8
     push    {r0}
 
     @ calculate number of blocks
-    lsr     r3, r2, #2                  @ (r3) blocks = n / 4
+    lsrs    r3, r2, #2                  @ (r3) blocks = n / 4
     beq     .L_exit_block_loop          @ if blocks == 0, skip block loop
 
 .L_block_loop:
@@ -41,21 +41,21 @@ BEGIN_GLOBAL_FUNC TEXT THUMB memory_set_8
     strb    r1, [r0, #2]
     strb    r1, [r0, #3]
 
-    add     r0, #4                      @ (r0) dest += 4
-    sub     r3, #1                      @ (r3) blocks--
+    adds    r0, #4                      @ (r0) dest += 4
+    subs    r3, #1                      @ (r3) blocks--
     bne     .L_block_loop               @ if blocks != 0, repeat loop
 .L_exit_block_loop:
 
     @ calculate remaining units
-    lsl     r2, #30
-    lsr     r2, #30                     @ (r2) n %= 4
+    lsls    r2, #30
+    lsrs    r2, #30                     @ (r2) n %= 4
     beq     .L_exit_single_loop         @ if n == 0, skip single loop
 
 .L_single_loop:
     strb    r1, [r0]
 
-    add     r0, #1                      @ (r0) dest += 1
-    sub     r2, #1                      @ (r2) n--
+    adds    r0, #1                      @ (r0) dest += 1
+    subs    r2, #1                      @ (r2) n--
     bne     .L_single_loop              @ if n != 0, repeat loop
 .L_exit_single_loop:
 

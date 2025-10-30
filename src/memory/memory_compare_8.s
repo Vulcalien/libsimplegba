@@ -13,7 +13,7 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.include "macros.inc"
+.include "assembly.inc"
 
 @ --- memory_compare_8 --- @
 
@@ -38,56 +38,56 @@ BEGIN_GLOBAL_FUNC TEXT THUMB memory_compare_8
     push    {r4-r5}
 
     @ move 'a' and 'b' pointers to r4 and r5
-    mov     r4, r0                      @ (r4) a
-    mov     r5, r1                      @ (r5) b
+    movs    r4, r0                      @ (r4) a
+    movs    r5, r1                      @ (r5) b
 
     @ calculate number of blocks
-    lsr     r3, r2, #2                  @ (r3) blocks = n / 4
+    lsrs    r3, r2, #2                  @ (r3) blocks = n / 4
     beq     .L_exit_block_loop          @ if blocks == 0, skip block loop
 
 .L_block_loop:
     ldrb    r0, [r4, #0]
     ldrb    r1, [r5, #0]
-    sub     r0, r1
+    subs    r0, r1
     bne     .L_return
 
     ldrb    r0, [r4, #1]
     ldrb    r1, [r5, #1]
-    sub     r0, r1
+    subs    r0, r1
     bne     .L_return
 
     ldrb    r0, [r4, #2]
     ldrb    r1, [r5, #2]
-    sub     r0, r1
+    subs    r0, r1
     bne     .L_return
 
     ldrb    r0, [r4, #3]
     ldrb    r1, [r5, #3]
-    sub     r0, r1
+    subs    r0, r1
     bne     .L_return
 
-    add     r4, #4                      @ (r4) a += 4
-    add     r5, #4                      @ (r5) b += 4
+    adds    r4, #4                      @ (r4) a += 4
+    adds    r5, #4                      @ (r5) b += 4
 
-    sub     r3, #1                      @ (r3) blocks--
+    subs    r3, #1                      @ (r3) blocks--
     bne     .L_block_loop               @ if blocks != 0, repeat loop
 .L_exit_block_loop:
 
     @ calculate remaining units
-    lsl     r2, #30
-    lsr     r2, #30                     @ (r2) n %= 4
+    lsls    r2, #30
+    lsrs    r2, #30                     @ (r2) n %= 4
     beq     .L_exit_single_loop         @ if n == 0, skip single loop
 
 .L_single_loop:
     ldrb    r0, [r4]
     ldrb    r1, [r5]
-    sub     r0, r1
+    subs    r0, r1
     bne     .L_return
 
-    add     r4, #1                      @ (r4) a += 1
-    add     r5, #1                      @ (r5) b += 1
+    adds    r4, #1                      @ (r4) a += 1
+    adds    r5, #1                      @ (r5) b += 1
 
-    sub     r2, #1                      @ (r2) n--
+    subs    r2, #1                      @ (r2) n--
     bne     .L_single_loop              @ if n != 0, repeat loop
 .L_exit_single_loop:
 
@@ -96,7 +96,7 @@ BEGIN_GLOBAL_FUNC TEXT THUMB memory_compare_8
     bx      lr
 
 .L_return_zero:
-    mov     r0, #0
+    movs    r0, #0
     bx      lr
 END_FUNC memory_compare_8
 

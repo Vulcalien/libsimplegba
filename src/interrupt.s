@@ -13,7 +13,7 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.include "macros.inc"
+.include "assembly.inc"
 
 .equ INTERRUPT_COUNT, 14
 
@@ -50,7 +50,7 @@ BEGIN_FUNC IWRAM ARM interrupt_handler
 
     @ load (IE & IF)
     ldr     r1, [r0, #0x200]!           @ *IE_IF, address = IE_IF
-    and     r1, r1, lsr #16             @ (r1) IE & IF
+    and     r1, r1, r1, lsr #16         @ (r1) IE & IF
 
     @ find the IRQ bit in (IE & IF)
     mov     r2, #0                      @ (r2) irq_id  = 0
@@ -113,7 +113,7 @@ BEGIN_GLOBAL_FUNC TEXT THUMB _interrupt_init
 
     @ IME = 1
     ldr     r0, =0x04000208             @ r0 = pointer to IME
-    mov     r1, #1
+    movs    r1, #1
     str     r1, [r0]
 
     bx      lr
@@ -141,9 +141,9 @@ END_FUNC interrupt_set_isr
 @   r0 = id : i32
 BEGIN_GLOBAL_FUNC TEXT THUMB interrupt_wait
     @ set arguments of IntrWait
-    mov     r1, #1
-    lsl     r1, r0                      @ (r1) flags = BIT(id)
-    mov     r0, #1                      @ (r0) discard = 1
+    movs    r1, #1
+    lsls    r1, r0                      @ (r1) flags = BIT(id)
+    movs    r0, #1                      @ (r0) discard = 1
 
     @ call IntrWait
     swi     0x04

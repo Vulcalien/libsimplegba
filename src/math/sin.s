@@ -13,7 +13,7 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.include "macros.inc"
+.include "assembly.inc"
 
 @ LUT-based implementation of sine. Since sin(180 + x) = -sin(x), the
 @ table only contains entries for angles in [0, 180].
@@ -179,34 +179,34 @@ sin_lut:
 @   r0 = result : i32
 BEGIN_GLOBAL_FUNC TEXT THUMB math_sin
     @ normalize angle in range [0, 360) degrees
-    lsl     r1, r0, #16
-    lsr     r1, #16                     @ (r1) angle &= 0xffff
+    lsls    r1, r0, #16
+    lsrs    r1, #16                     @ (r1) angle &= 0xffff
 
     @ retrieve LUT entries
     ldr     r0, =sin_lut
-    lsl     r2, r1, #17
-    lsr     r2, #(17 + SCALE_SHIFT)     @ index = (angle % 180 deg) / SCALE
-    lsl     r2, #1                      @ index * 2
-    add     r2, r0                      @ &sin_lut[index]
+    lsls    r2, r1, #17
+    lsrs    r2, #(17 + SCALE_SHIFT)     @ index = (angle % 180 deg) / SCALE
+    lsls    r2, #1                      @ index * 2
+    adds    r2, r0                      @ &sin_lut[index]
     ldrh    r0, [r2]                    @ (r0) left  = sin_lut[index]
     ldrh    r2, [r2, #2]                @ (r2) right = sin_lut[index + 1]
 
     @ interpolate entries: (left * weight_l + right * weight_r) / SCALE
-    lsl     r3, r1, #(32 - SCALE_SHIFT)
-    lsr     r3, #(32 - SCALE_SHIFT)     @ (r3) weight_r = angle % SCALE
-    mul     r2, r3                      @ (r2) right *= weight_r
-    neg     r3, r3
-    add     r3, #(1 << SCALE_SHIFT)     @ (r3) weight_l = SCALE - weight_r
-    mul     r0, r3                      @ (r0) left *= weight_l
-    add     r0, r2
-    lsr     r0, #SCALE_SHIFT            @ (r0) result = (left + right) / SCALE
+    lsls    r3, r1, #(32 - SCALE_SHIFT)
+    lsrs    r3, #(32 - SCALE_SHIFT)     @ (r3) weight_r = angle % SCALE
+    muls    r2, r3                      @ (r2) right *= weight_r
+    negs    r3, r3
+    adds    r3, #(1 << SCALE_SHIFT)     @ (r3) weight_l = SCALE - weight_r
+    muls    r0, r3                      @ (r0) left *= weight_l
+    adds    r0, r2
+    lsrs    r0, #SCALE_SHIFT            @ (r0) result = (left + right) / SCALE
 
     @ If angle > 180 deg, adjust sign of result.
     @ Since angle is in range [0, 360) deg, i.e. [0, 0xffff],
     @ if bit 15 is set, then angle >= 180 deg.
-    lsr     r1, #15                     @ check bit 15 of angle
+    lsrs    r1, #15                     @ check bit 15 of angle
     beq     .L_do_not_adjust            @ if bit 15 clear, do not adjust
-    neg     r0, r0                      @ (r0) result = -result
+    negs    r0, r0                      @ (r0) result = -result
 .L_do_not_adjust:
 
     bx      lr

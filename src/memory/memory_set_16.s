@@ -13,7 +13,7 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.include "macros.inc"
+.include "assembly.inc"
 
 @ --- memory_set_16 --- @
 
@@ -36,16 +36,16 @@ BEGIN_GLOBAL_FUNC TEXT THUMB memory_set_16
     push    {r0}
 
     @ make sure 'byte' is actually 8-bit
-    lsl     r1, #24                     @ xx 00 00 00
-    lsr     r1, #24                     @ 00 00 00 xx
+    lsls    r1, #24                     @ xx 00 00 00
+    lsrs    r1, #24                     @ 00 00 00 xx
 
     @ duplicate 'byte' to fill 16 bits
-    lsl     r3, r1, #8                  @ r3 = xx 00
-    orr     r1, r3                      @ r1 = xx xx
+    lsls    r3, r1, #8                  @ r3 = xx 00
+    orrs    r1, r3                      @ r1 = xx xx
 
     @ calculate number of units and blocks
-    lsr     r2, #1                      @ (r2) n /= 2
-    lsr     r3, r2, #2                  @ (r3) blocks = n / 4
+    lsrs    r2, #1                      @ (r2) n /= 2
+    lsrs    r3, r2, #2                  @ (r3) blocks = n / 4
     beq     .L_exit_block_loop          @ if blocks == 0, skip block loop
 
 .L_block_loop:
@@ -54,21 +54,21 @@ BEGIN_GLOBAL_FUNC TEXT THUMB memory_set_16
     strh    r1, [r0, #4]
     strh    r1, [r0, #6]
 
-    add     r0, #8                      @ (r0) dest += 8
-    sub     r3, #1                      @ (r3) blocks--
+    adds    r0, #8                      @ (r0) dest += 8
+    subs    r3, #1                      @ (r3) blocks--
     bne     .L_block_loop               @ if blocks != 0, repeat loop
 .L_exit_block_loop:
 
     @ calculate remaining units
-    lsl     r2, #30
-    lsr     r2, #30                     @ (r2) n %= 4
+    lsls    r2, #30
+    lsrs    r2, #30                     @ (r2) n %= 4
     beq     .L_exit_single_loop         @ if n == 0, skip single loop
 
 .L_single_loop:
     strh    r1, [r0]
 
-    add     r0, #2                      @ (r0) dest += 2
-    sub     r2, #1                      @ (r2) n--
+    adds    r0, #2                      @ (r0) dest += 2
+    subs    r2, #1                      @ (r2) n--
     bne     .L_single_loop              @ if n != 0, repeat loop
 .L_exit_single_loop:
 

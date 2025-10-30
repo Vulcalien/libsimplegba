@@ -13,7 +13,7 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.include "macros.inc"
+.include "assembly.inc"
 
 .equ CHANNEL_COUNT, 8
 .equ OUTPUT_COUNT,  2
@@ -97,7 +97,7 @@ BEGIN_GLOBAL_FUNC IWRAM ARM _mixer_update
 
     @ retrieve volume vector
     ldrh    r8, [r0, #20]               @ 00 00 LL RR
-    orr     r8, r8, lsl #8              @ 00 LL xx RR
+    orr     r8, r8, r8, lsl #8          @ 00 LL xx RR
     bic     r8, #0x0000ff00             @ (r8) volume (00 LL 00 RR)
 
     @ reset temp_buffers and remaining
@@ -176,11 +176,11 @@ BEGIN_GLOBAL_FUNC IWRAM ARM _mixer_update
         @ interpolate samples
         sub     r12, r11                @ delta = right - left
         mul     r12, r6                 @ delta * position
-        add     r11, r12, asr #12       @ (r11) sample = left + delta * position / 0x1000
+        add     r11, r11, r12, asr #12  @ (r11) sample = left + delta * position / 0x1000
 
         @ advance position
         add     r6, r7                  @ (r6) position += increment
-        add     r4, r6, lsr #12         @ (r4) data += position / 0x1000
+        add     r4, r4, r6, lsr #12     @ (r4) data += position / 0x1000
         bic     r6, #0x000ff000         @ (r6) position %= 0x1000
     .else
         ldrsb   r11, [r4], #1           @ (r11) sample = *(data++)

@@ -15,6 +15,8 @@
 
 @ Based on crt0.S v1.28 by Jeff Frohwein
 
+.include "assembly.inc"
+
 .section .crt0, "ax"
 
 .global start_vector
@@ -38,13 +40,13 @@ start_vector:
 
     @ clear .bss section
     ldr     r0, =__bss_start            @ r0 = dest
-    mov     r1, #0                      @ r1 = byte
+    movs    r1, #0                      @ r1 = byte
     ldr     r2, =__bss_size             @ r2 = n
     bl      memory_set_32
 
     @ clear .sbss section
     ldr     r0, =__sbss_start           @ r0 = dest
-    mov     r1, #0                      @ r1 = byte
+    movs    r1, #0                      @ r1 = byte
     ldr     r2, =__sbss_size            @ r2 = n
     bl      memory_set_32
 
