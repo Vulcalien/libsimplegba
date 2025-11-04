@@ -2,13 +2,13 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-11
+:revdate: 2025-11-04
 :docdate: {revdate}
 
 == NAME
 math_min, math_max, math_abs, math_sign, math_pow, math_sqrt, math_clip,
 math_digits, math_brad, math_sin, math_cos, math_tan, math_asin,
-math_acos - various mathematical functions
+math_acos, math_atan - mathematical functions
 
 == SYNOPSIS
 [verse]
@@ -35,6 +35,7 @@ ____
 
 **i32 math_asin(i32 **__x__**);**
 **i32 math_acos(i32 **__x__**);**
+**i32 math_atan(i32 **__x__**);**
 ____
 
 == DESCRIPTION
@@ -73,18 +74,14 @@ The *math_brad*() function converts _angle_ from degrees to binary
 radians. Negative input values are allowed and result in negative output
 values.
 
-The *math_sin*(), *math_cos*() and *math_tan*() functions return,
-respectively, approximate values of sine, cosine and tangent of _angle_.
-The returned value is a signed fixed-point number with 14 fractional
-bits (1 = 0x4000).
+The *math_sin*(), *math_cos*() and *math_tan*() functions return
+approximate values of the sine, cosine and tangent of _angle_. The
+result is scaled by a factor of 0x4000.
 
-The *math_asin*() and *math_acos*() functions return, respectively,
-approximate values of the arcsine and arccosine of _x_. If _x_ is
-outside the range [-0x4000, 0x4000], 0 is returned. The returned value
-is an angle expressed in binary radians.
-
-== NOTES
-The result of *math_pow*(0, 0) is 1.
+The *math_asin*(), *math_acos*() and *math_atan*() functions return
+approximate values of the arcsine, arccosine and arctangent of _x_. The
+value of _x_ must be scaled by a factor of 0x4000. If _x_ is outside the
+range [-0x4000, 0x4000], *math_asin*() and *math_acos*() return 0.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
