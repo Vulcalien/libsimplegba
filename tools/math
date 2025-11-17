@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+
+# Copyright 2025 Vulcalien
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+import math
+
+# === Function Classes === #
+
+class Function:
+    def test(self, dump=False):
+        error_min   = 0
+        error_max   = 0
+        error_count = 0
+        error_avg   = 0
+        error_rms   = 0
+
+        for i in self.range():
+            target = self.target(i)
+            value  = self.get(i)
+
+            error = target - value
+
+            if dump:
+                print(i, target, value, error)
+
+            error_min = min(error_min, error)
+            error_max = max(error_max, error)
+            error_count += int(error != 0)
+            error_avg += error
+            error_rms += error ** 2
+
+        error_avg = error_avg / len(self.range())
+        error_rms = math.sqrt(error_rms / len(self.range()))
+
+        print()
+        print('Error:')
+        print('  Min: %d' % error_min)
+        print('  Max: %d' % error_max)
+        print('  Count: %d' % error_count)
+        print('  Average: %.5f' % error_avg)
+        print('  Root Mean Square: %.5f' % error_rms)
+
+    # range in which to test the function
+    def range(self):
+        raise NotImplementedError()
+
+    # the target value, which the function tries to approximate
+    def target(self, x):
+        raise NotImplementedError()
+
+    # the approximated value
+    def get(self, x):
+        raise NotImplementedError()
+
+class LutFunction(Function):
+    def __init__(self, scale, covered_range):
+        self.scale = scale
+        self.covered_range = covered_range
+        self.lut = [
+            self.get_lut_entry(i)
+            for i in range(covered_range // self.scale + 1)
+        ]
+
+    def range(self):
+        return range(self.covered_range)
+
+    def get(self, x):
+        index = x // self.scale
+        left  = self.lut[index] * (self.scale - (x % self.scale))
+        right = self.lut[index + 1] * (x % self.scale)
+        return (left + right) // self.scale
+
+# === Trigonometric Functions === #
+
+class Sin(LutFunction):
+    def __init__(self):
+        super().__init__(32, 0x8000)
+
+    def target(self, x):
+        x *= math.pi / 0x8000
+        y = math.sin(x) * 0x4000
+        return int(y)
+
+    def get_lut_entry(self, i):
+        return self.target(i * self.scale)
+
+class Tan(LutFunction):
+    def __init__(self):
+        super().__init__(32, 0x4000)
+        self.lut[-1] = int(
+            (0xffffffff - self.lut[-2]) / (self.scale - 1)
+        )
+
+    def target(self, x):
+        x *= math.pi / 0x8000
+        y = math.tan(x) * 0x4000
+        return int(y)
+
+    def get_lut_entry(self, i):
+        return self.target(i * self.scale)
+
+class Asin(LutFunction):
+    def __init__(self):
+        super().__init__(32, 0x4000 + 1)
+        self.lut.append(0) # prevents out-of-bounds access
+
+    def target(self, x):
+        x /= 0x4000
+        y = math.asin(x) * 0x8000 / math.pi
+        return int(y)
+
+    def get_lut_entry(self, i):
+        return self.target(i * self.scale)
+
+Sin().test()
+Tan().test()
+Asin().test()
