@@ -98,7 +98,9 @@ class Sin(LutFunction):
         return int(y)
 
     def get_lut_entry(self, i):
-        return self.target(i * self.scale)
+        x = i * self.scale * math.pi / 0x8000
+        y = math.sin(x) * 0x4000
+        return int(y)
 
 class Tan(LutFunction):
     def __init__(self):
@@ -110,10 +112,12 @@ class Tan(LutFunction):
     def target(self, x):
         x *= math.pi / 0x8000
         y = math.tan(x) * 0x4000
-        return int(y)
+        return int(y + 0.0001)
 
     def get_lut_entry(self, i):
-        return self.target(i * self.scale)
+        x = i * self.scale * math.pi / 0x8000
+        y = math.tan(x) * 0x4000
+        return int(y + 0.0001)
 
 class Asin(LutFunction):
     def __init__(self):
@@ -125,7 +129,9 @@ class Asin(LutFunction):
         return int(y)
 
     def get_lut_entry(self, i):
-        return self.target(i * self.scale)
+        x = i * self.scale / 0x4000
+        y = math.asin(x) * 0x8000 / math.pi
+        return int(y)
 
 Sin().test()
 Tan().test()
