@@ -80,14 +80,17 @@ class LutFunction(Function):
     def get(self, x):
         index = x // self.scale
         left  = self.lut[index] * (self.scale - (x % self.scale))
-        right = self.lut[index + 1] * (x % self.scale)
+        right = (
+            self.lut[index + 1] * (x % self.scale)
+            if index + 1 < len(self.lut) else 0
+        )
         return (left + right) // self.scale
 
 # === Trigonometric Functions === #
 
 class Sin(LutFunction):
     def __init__(self):
-        super().__init__(32, 0x8000)
+        super().__init__(32, 0x8000 + 1)
 
     def target(self, x):
         x *= math.pi / 0x8000
@@ -115,7 +118,6 @@ class Tan(LutFunction):
 class Asin(LutFunction):
     def __init__(self):
         super().__init__(32, 0x4000 + 1)
-        self.lut.append(0) # prevents out-of-bounds access
 
     def target(self, x):
         x /= 0x4000
