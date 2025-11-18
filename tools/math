@@ -83,7 +83,7 @@ class LutFunction(Function):
 
 class Sin(LutFunction):
     def __init__(self):
-        super().__init__(32, 0x8000 + 1)
+        super().__init__(128, 0x8000 + 1)
 
     def target(self, x):
         x *= math.pi / 0x8000
@@ -92,7 +92,7 @@ class Sin(LutFunction):
 
     def get_lut_entry(self, i):
         x = i * self.scale * math.pi / 0x8000
-        y = math.sin(x) * 0x4000
+        y = math.sin(x) * 0x4000 + 0.5
         return int(y)
 
 class Tan(LutFunction):
