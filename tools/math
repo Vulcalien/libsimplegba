@@ -65,12 +65,9 @@ class LutFunction(Function):
 
     def get(self, x):
         index = x // self.scale
-        left  = self.lut[index] * (self.scale - (x % self.scale))
-        right = (
-            self.lut[index + 1] * (x % self.scale)
-            if index + 1 < len(self.lut) else 0
-        )
-        return (left + right) // self.scale
+        left = self.lut[index]
+        right = self.lut[index + 1] if index + 1 < len(self.lut) else 0
+        return left + (right - left) * (x % self.scale) // self.scale
 
     def print_lut(self, entry_format, entries_per_line, line_prefix):
         for i in range(len(self.lut)):
