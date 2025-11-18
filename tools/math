@@ -93,6 +93,9 @@ class LutFunction(Function):
             print(entry_format % self.lut[i], end='')
         print()
 
+    def get_lut_entry(self, i):
+        raise NotImplementedError()
+
 # === Trigonometric Functions === #
 
 class Sin(LutFunction):
