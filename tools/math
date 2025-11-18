@@ -16,42 +16,28 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import math
+from statistics import mean
 
 # === Function Classes === #
 
 class Function:
     def test(self, dump=False):
-        error_min   = 0
-        error_max   = 0
-        error_count = 0
-        error_avg   = 0
-        error_rms   = 0
+        targets = [ self.target(i)         for i in self.range() ]
+        values  = [ self.get(i)            for i in self.range() ]
+        errors  = [ targets[i] - values[i] for i in self.range() ]
 
-        for i in self.range():
-            target = self.target(i)
-            value  = self.get(i)
-
-            error = target - value
-
-            if dump:
-                print(i, target, value, error)
-
-            error_min = min(error_min, error)
-            error_max = max(error_max, error)
-            error_count += int(error != 0)
-            error_avg += error
-            error_rms += error ** 2
-
-        error_avg = error_avg / len(self.range())
-        error_rms = math.sqrt(error_rms / len(self.range()))
+        if dump:
+            for i in self.range():
+                print(i, targets[i], values[i], errors[i])
 
         print()
         print('Error:')
-        print('  Min: %d' % error_min)
-        print('  Max: %d' % error_max)
-        print('  Count: %d' % error_count)
-        print('  Average: %.5f' % error_avg)
-        print('  Root Mean Square: %.5f' % error_rms)
+        print('  Min: %d' % min(errors))
+        print('  Max: %d' % max(errors))
+        print('  Count: %d' % sum(e != 0 for e in errors))
+        print('  Average: %.5f' % mean(errors))
+        print('  Root Mean Square: %.5f'
+              % math.sqrt(mean(e ** 2 for e in errors)))
 
     # range in which to test the function
     def range(self):
