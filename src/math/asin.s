@@ -105,9 +105,9 @@ asin_lut:
 
 @ register allocation:
 @   r0 = x
-@   r1 = abs(x), weight_r, weight_l
+@   r1 = abs(x), weight
 @   r2 = left, result
-@   r3 = right
+@   r3 = right, delta
 
 @ input:
 @   r0 = x : i32
@@ -132,15 +132,13 @@ BEGIN_GLOBAL_FUNC .text THUMB math_asin
     ldrh    r2, [r3]                    @ (r2) left  = asin_lut[index]
     ldrh    r3, [r3, #2]                @ (r3) right = asin_lut[index + 1]
 
-    @ interpolate entries: (left * weight_l + right * weight_r) / SCALE
+    @ interpolate entries: left + (right - left) * weight / SCALE
     lsls    r1, #(32 - SCALE_SHIFT)
-    lsrs    r1, #(32 - SCALE_SHIFT)     @ (r1) weight_r = abs(x) % SCALE
-    muls    r3, r1                      @ (r3) right *= weight_r
-    negs    r1, r1
-    adds    r1, #(1 << SCALE_SHIFT)     @ (r1) weight_l = SCALE - weight_r
-    muls    r2, r1                      @ (r2) left *= weight_l
-    adds    r2, r3
-    lsrs    r2, #SCALE_SHIFT            @ (r2) result = (left + right) / SCALE
+    lsrs    r1, #(32 - SCALE_SHIFT)     @ (r1) weight = abs(x) % SCALE
+    subs    r3, r2                      @ (r3) delta = right - left
+    muls    r3, r1                      @ delta *= weight
+    asrs    r3, #SCALE_SHIFT            @ delta /= SCALE
+    adds    r2, r3                      @ (r2) result = left + delta
 
     @ adjust sign of result
     cmp     r0, #0

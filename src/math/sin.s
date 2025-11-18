@@ -170,8 +170,8 @@ sin_lut:
 @ register allocation:
 @   r0 = left, result
 @   r1 = angle
-@   r2 = right
-@   r3 = weight_r, weight_l
+@   r2 = right, delta
+@   r3 = weight
 
 @ input:
 @   r0 = angle : i32
@@ -191,15 +191,13 @@ BEGIN_GLOBAL_FUNC .text THUMB math_sin
     ldrh    r0, [r2]                    @ (r0) left  = sin_lut[index]
     ldrh    r2, [r2, #2]                @ (r2) right = sin_lut[index + 1]
 
-    @ interpolate entries: (left * weight_l + right * weight_r) / SCALE
+    @ interpolate entries: left + (right - left) * weight / SCALE
     lsls    r3, r1, #(32 - SCALE_SHIFT)
-    lsrs    r3, #(32 - SCALE_SHIFT)     @ (r3) weight_r = angle % SCALE
-    muls    r2, r3                      @ (r2) right *= weight_r
-    negs    r3, r3
-    adds    r3, #(1 << SCALE_SHIFT)     @ (r3) weight_l = SCALE - weight_r
-    muls    r0, r3                      @ (r0) left *= weight_l
-    adds    r0, r2
-    lsrs    r0, #SCALE_SHIFT            @ (r0) result = (left + right) / SCALE
+    lsrs    r3, #(32 - SCALE_SHIFT)     @ (r3) weight = angle % SCALE
+    subs    r2, r0                      @ (r2) delta = right - left
+    muls    r2, r3                      @ delta *= weight
+    asrs    r2, #SCALE_SHIFT            @ delta /= SCALE
+    adds    r0, r2                      @ (r0) result = left + delta
 
     @ If angle > 180 deg, adjust sign of result.
     @ Since angle is in range [0, 360) deg, i.e. [0, 0xffff],

@@ -142,7 +142,7 @@ i32 math_tan(i32 angle) {
     u32 right = tan_lut[index + 1];
 
     // interpolate LUT entries
-    i32 result = (left * (SCALE - weight) + right * weight) / SCALE;
+    i32 result = left + (right - left) * weight / SCALE;
 
     // adjust sign
     if(angle < 0)
