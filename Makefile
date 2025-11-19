@@ -1,5 +1,5 @@
 # Vulcalien's Library Makefile
-# version 0.3.5
+# version 0.3.6
 #
 # Adapted for GBA libraries
 
@@ -96,6 +96,6 @@ $(OBJ_DIR)/%.s.$(OBJ_EXT): %.s | $(OBJ_DIRS)
 
 # create directories
 $(BIN_DIR) $(OBJ_DIRS):
-	$(MKDIR) "$@"
+	$(MKDIR) $@
 
 -include $(OBJ:.$(OBJ_EXT)=.d)
