@@ -1,4 +1,4 @@
-/* Copyright 2024-2025 Vulcalien
+/* Copyright 2025 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,31 +17,24 @@
 
 #include "libsimplegba/base.h"
 
-struct CartridgeHeader {
-    u32 entry_point;
-    u8  logo[156];
-
-    char game_title[12];
-    char game_code [4];
-    char maker_code[2];
-
-    u8 fixed_value; // must be 0x96
-
-    u8 main_unit_code;
-    u8 device_type;
-
-    u8 reserved_1[7];
-
-    u8 software_version;
-    u8 checksum;
-
-    u8 reserved_2[2];
-};
-
-INLINE const struct CartridgeHeader *cartridge_header(void) {
-    return (const struct CartridgeHeader *) 0x08000000;
+INLINE void gpio_toggle(bool enable) {
+    vu16 *control = (vu16 *) 0x080000c8;
+    *control = enable;
 }
 
-INLINE bool cartridge_missing(void) {
-    return cartridge_header()->fixed_value != 0x96;
+// 0=input      Cartridge ->    GBA
+// 1=output        GBA    -> Cartridge
+INLINE void gpio_config(u32 directions) {
+    vu16 *pin_control = (vu16 *) 0x080000c6;
+    *pin_control = directions;
+}
+
+INLINE u16 gpio_read(void) {
+    vu16 *pins = (vu16 *) 0x080000C4;
+    return *pins;
+}
+
+INLINE void gpio_write(u16 data) {
+    vu16 *pins = (vu16 *) 0x080000C4;
+    *pins = data;
 }

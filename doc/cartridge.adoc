@@ -6,23 +6,15 @@
 :docdate: {revdate}
 
 == NAME
-cartridge_header, cartridge_missing, cartridge_gpio_toggle,
-cartridge_gpio_config, cartridge_gpio_read, cartridge_gpio_write - game
-cartridge
+cartridge_header, cartridge_missing - game cartridge
 
 == SYNOPSIS
 [verse]
 ____
 *#include <libsimplegba.h>*
 
-*const struct CartridgeHeader +++*++cartridge_header(void);*
+*const struct CartridgeHeader +++*+++cartridge_header(void);*
 *bool cartridge_missing(void);*
-
-**void cartridge_gpio_toggle(bool **__enable__**);**
-**void cartridge_gpio_config(u32 **__directions__**);**
-
-**u16  cartridge_gpio_read(void);**
-**void cartridge_gpio_write(u16 **__data__**);**
 ____
 
 == DESCRIPTION
@@ -39,7 +31,7 @@ struct CartridgeHeader {
     char game_code [4];
     char maker_code[2];
 
-    u8 fixed_value; // must be 0x96
+    u8 fixed_value; // 0x96
 
     u8 main_unit_code;
     u8 device_type;
@@ -56,23 +48,6 @@ struct CartridgeHeader {
 The *cartridge_missing*() function returns true if the game cartridge is
 missing, false otherwise. To determine the result, the function looks
 for a fixed value in the cartridge header.
-
-=== 4-bit GPIO
-Some cartridges include extra devices (e.g., real-time clocks), which
-can be accessed through a General Purpose Input/Output (GPIO) port. The
-following functions provide generic support for using the GPIO port.
-
-The *cartridge_gpio_toggle*() function enables or disables the GPIO
-port, based on the value of _enable_.
-
-The *cartridge_gpio_config*() function configures GPIO pins as input or
-output, depending on the corresponding bit of _directions_. If the bit
-is 0, the pin is used as input (cartridge to GBA); if the bit is 1, the
-pin is used as output (GBA to cartridge).
-
-The *cartridge_gpio_read*() function returns the logical value of the
-GPIO pins. The *cartridge_gpio_write*() function writes the lowest bits
-of _data_ to the GPIO pins.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien

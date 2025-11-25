@@ -1,0 +1,41 @@
+= gpio(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2025-11-25
+:docdate: {revdate}
+
+== NAME
+gpio_toggle, gpio_config, gpio_read, gpio_write - 4-bit GPIO
+
+== SYNOPSIS
+[verse]
+____
+*#include <libsimplegba.h>*
+
+**void gpio_toggle(bool **__enable__**);**
+**void gpio_config(u32 **__directions__**);**
+
+**u16  gpio_read(void);**
+**void gpio_write(u16 **__data__**);**
+____
+
+== DESCRIPTION
+Some cartridges include extra devices (e.g., real-time clocks) that can
+be accessed through the 4-bit GPIO port.
+
+The *gpio_toggle*() function enables or disables the GPIO port, based on
+the value of _enable_.
+
+The *gpio_config*() function configures GPIO pins as input or output,
+depending on the corresponding bit of _directions_. If the bit is 0, the
+pin is used as input (cartridge to GBA); if the bit is 1, the pin is
+used as output (GBA to cartridge).
+
+The *gpio_read*() function returns the logical value of the GPIO pins.
+The *gpio_write*() function writes the lowest bits of _data_ to the GPIO
+pins.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.

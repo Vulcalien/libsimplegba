@@ -21,6 +21,7 @@
 // Cartridge
 #include "libsimplegba/cart/cartridge.h"
 #include "libsimplegba/cart/backup.h"
+#include "libsimplegba/cart/gpio.h"
 
 // Debug
 #include "libsimplegba/debug/profiler.h"
