@@ -17,8 +17,10 @@
 #include "libsimplegba/hw/input.h"
 #include "libsimplegba/hw/interrupt.h"
 #include "libsimplegba/hw/system.h"
-#include "libsimplegba/hw/cartridge.h"
-#include "libsimplegba/hw/backup.h"
+
+// Cartridge
+#include "libsimplegba/cart/cartridge.h"
+#include "libsimplegba/cart/backup.h"
 
 // Debug
 #include "libsimplegba/debug/profiler.h"

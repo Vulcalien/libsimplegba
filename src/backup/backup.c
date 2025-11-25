@@ -13,6 +13,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include "libsimplegba/hw/backup.h"
+#include "libsimplegba/cart/backup.h"
 
 const struct _BackupDriver *_backup_driver;
