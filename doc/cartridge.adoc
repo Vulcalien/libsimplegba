@@ -2,18 +2,20 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-11
+:revdate: 2025-11-25
 :docdate: {revdate}
 
 == NAME
-cartridge_missing, cartridge_gpio_toggle, cartridge_gpio_config,
-cartridge_gpio_read, cartridge_gpio_write - game cartridge
+cartridge_header, cartridge_missing, cartridge_gpio_toggle,
+cartridge_gpio_config, cartridge_gpio_read, cartridge_gpio_write - game
+cartridge
 
 == SYNOPSIS
 [verse]
 ____
 *#include <libsimplegba.h>*
 
+*const struct CartridgeHeader +++*++cartridge_header(void);*
 *bool cartridge_missing(void);*
 
 **void cartridge_gpio_toggle(bool **__enable__**);**
@@ -24,6 +26,33 @@ ____
 ____
 
 == DESCRIPTION
+The *cartridge_header*() function returns a pointer to the cartridge's
+header. The header structure is defined as follows:
+
+[source,c]
+----
+struct CartridgeHeader {
+    u32 entry_point;
+    u8  logo[156];
+
+    char game_title[12];
+    char game_code [4];
+    char maker_code[2];
+
+    u8 fixed_value; // must be 0x96
+
+    u8 main_unit_code;
+    u8 device_type;
+
+    u8 reserved_1[7];
+
+    u8 software_version;
+    u8 checksum;
+
+    u8 reserved_2[2];
+};
+----
+
 The *cartridge_missing*() function returns true if the game cartridge is
 missing, false otherwise. To determine the result, the function looks
 for a fixed value in the cartridge header.
@@ -44,13 +73,6 @@ pin is used as output (GBA to cartridge).
 The *cartridge_gpio_read*() function returns the logical value of the
 GPIO pins. The *cartridge_gpio_write*() function writes the lowest bits
 of _data_ to the GPIO pins.
-
-== RETURN VALUE
-The *cartridge_missing*() function returns true if the game cartridge is
-missing, false otherwise.
-
-The *cartridge_gpio_read*() function returns the logical value of the
-GPIO pins.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien

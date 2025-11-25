@@ -22,7 +22,7 @@ struct CartridgeHeader {
     u8  logo[156];
 
     char game_title[12];
-    char game_code[4];
+    char game_code [4];
     char maker_code[2];
 
     u8 fixed_value; // must be 0x96
@@ -38,11 +38,12 @@ struct CartridgeHeader {
     u8 reserved_2[2];
 };
 
-#define CARTRIDGE_HEADER \
-    ((volatile const struct CartridgeHeader *) 0x08000000)
+INLINE const struct CartridgeHeader *cartridge_header(void) {
+    return (const struct CartridgeHeader *) 0x08000000;
+}
 
 INLINE bool cartridge_missing(void) {
-    return CARTRIDGE_HEADER->fixed_value != 0x96;
+    return cartridge_header()->fixed_value != 0x96;
 }
 
 // === GPIO ===
