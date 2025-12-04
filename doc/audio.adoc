@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-11
+:revdate: 2025-12-04
 :docdate: {revdate}
 
 == NAME
@@ -82,23 +82,19 @@ going to play. If _channel_ is negative and no channel is available, or
 if the specified channel does not exist, a negative value is returned.
 
 == DRIVERS
-=== AUDIO_BASIC
-Channel count   - 2                              +
-Volume  control - limited (0-32=50%, 33-64=100%) +
-Panning control - limited (-64=left, +64=right)  +
+The *AUDIO_BASIC* driver offers limited features while using very little
+CPU and RAM, sending data directly to the GBA's direct sound channels.
+The *AUDIO_MIXER* supports more features at the cost of higher CPU and
+RAM usage, mixing its channels via software to periodically fill buffers
+in EWRAM.
 
-This driver maps both channels to the GBA's direct sound channels
-directly, so that its CPU usage and RAM usage remain very low, at the
-cost of only offering basic capabilities.
-
-=== AUDIO_MIXER
-Channel count   - 8               +
-Volume  control - fully supported +
-Panning control - fully supported +
-
-This driver mixes its eight channels via software, filling a buffer in
-EWRAM periodically. The CPU usage depends on the number of active
-channels.
+|===
+|                  |*AUDIO_BASIC*        |*AUDIO_MIXER*
+|*Channel count*   |2                    |8
+|*Pitch control*   |no support           |full support
+|*Volume control*  |0-32=50%, 33-64=100% |full support
+|*Panning control* |-64=left, +64=right  |full support
+|===
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
