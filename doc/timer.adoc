@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-11
+:revdate: 2025-12-26
 :docdate: {revdate}
 
 == NAME
@@ -36,7 +36,7 @@ decremented. When the counter reaches zero, the counter is immediately
 reset to the reload value, and the timer continues running.
 
 When the counter of a timer reaches zero, an interrupt request tied to
-that timer is raised, if enabled: see *interrupt_enable(3)*.
+that timer is raised, if enabled: see *interrupt_enable*(3).
 
 === Timer configuration
 The *timer_config*() function configures the timer and, if running,
