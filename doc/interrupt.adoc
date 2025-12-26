@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-08-15
+:revdate: 2025-12-26
 :docdate: {revdate}
 
 == NAME
@@ -35,15 +35,37 @@ other than acknowledging it.
 The *interrupt_wait*() function waits for the interrupt to be raised,
 then returns.
 
-=== List of interrupts
-Interrupts are identified by the constants listed below.
+=== Interrupts
+Interrupts are identified by the constants described below.
 
-|===
-|IRQ_VBLANK |IRQ_HBLANK  |IRQ_VCOUNT |
-|IRQ_TIMER0 |IRQ_TIMER1  |IRQ_TIMER2 |IRQ_TIMER3
-|IRQ_DMA0   |IRQ_DMA1    |IRQ_DMA2   |IRQ_DMA3
-|IRQ_KEYPAD |IRQ_GAMEPAK |IRQ_SERIAL |
-|===
+*IRQ_VBLANK*::
+Periodically raised at the start of VBlank, after the last row of pixels
+is rendered, with an approximate frequency of 59.73 Hz.
+
+*IRQ_HBLANK*::
+Periodically raised at the start of HBlank, after the last column of
+pixels is rendered for each row (including hidden rows), with an
+approximate frequency of 13.62 KHz.
+
+*IRQ_VCOUNT*::
+Periodically raised when the display's VCount reaches the configured
+number, with an approximate frequency of 59.73 Hz. TODO
+
+*IRQ_TIMER0*, *IRQ_TIMER1*, *IRQ_TIMER2*, *IRQ_TIMER3*::
+Raised when a timer's counter reaches zero. See *timer_config*(3).
+
+*IRQ_DMA0*, *IRQ_DMA1*, *IRQ_DMA2*, *IRQ_DMA3*::
+Raised when a DMA transfer is complete. See *dma_config*(3).
+
+*IRQ_KEYPAD*::
+TODO
+
+*IRQ_GAMEPAK*::
+Raised when the game cartridge is removed. Some cartridges may also
+raise it to signal special events.
+
+*IRQ_SERIAL*::
+TODO
 
 == NOTES
 Each interrupt can only be mapped to one ISR at a time, meaning that
