@@ -167,7 +167,7 @@ static void mixer_init(void) {
 
     // enable Timer 1 interrupt
     interrupt_toggle(IRQ_TIMER1, true);
-    interrupt_set_isr(IRQ_TIMER1, timer1_isr);
+    interrupt_isr(IRQ_TIMER1, timer1_isr);
 
     // setup channels with default configuration
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {

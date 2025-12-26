@@ -6,7 +6,7 @@
 :docdate: {revdate}
 
 == NAME
-interrupt_toggle, interrupt_set_isr, interrupt_wait - interrupt handling
+interrupt_toggle, interrupt_isr, interrupt_wait - interrupt handling
 
 == SYNOPSIS
 [verse]
@@ -14,7 +14,7 @@ ____
 *#include <libsimplegba.h>*
 
 **void interrupt_toggle(i32 **__id__**, bool **__enable__**);**
-**void interrupt_set_isr(i32 **__id__**, void (+++*+++**__isr__**)(void));**
+**void interrupt_isr(i32 **__id__**, void (+++*+++**__isr__**)(void));**
 **void interrupt_wait(i32 **__id__**);**
 ____
 
@@ -28,9 +28,9 @@ interrupt is handled after the ISR returns.
 The *interrupt_toggle*() function enables or disables the interrupt,
 based on the value of _enable_.
 
-The *interrupt_set_isr*() function maps the interrupt to its _isr_. If
-_isr_ is NULL, no action is performed when that interrupt is raised,
-other than acknowledging it.
+The *interrupt_isr*() function maps the interrupt to its _isr_. If _isr_
+is NULL, no action is performed when that interrupt is raised, other
+than acknowledging it.
 
 The *interrupt_wait*() function waits for the interrupt to be raised,
 then returns.
@@ -69,7 +69,7 @@ TODO
 
 == NOTES
 Each interrupt can only be mapped to one ISR at a time, meaning that
-calling *interrupt_set_isr*() overwrites the previous association. If an
+calling *interrupt_isr*() overwrites the previous association. If an
 interrupt needs multiple ISRs, the recommended approach is to write a
 wrapper function:
 
@@ -88,7 +88,7 @@ Enable the VBlank interrupt and map an ISR to it:
 ----
 int AgbMain(void) {
     interrupt_toggle(IRQ_VBLANK, true);
-    interrupt_set_isr(IRQ_VBLANK, vblank_isr);
+    interrupt_isr(IRQ_VBLANK, vblank_isr);
 }
 ----
 

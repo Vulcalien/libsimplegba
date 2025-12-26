@@ -119,12 +119,12 @@ BEGIN_GLOBAL_FUNC .text THUMB _interrupt_init
     bx      lr
 END_FUNC _interrupt_init
 
-@ --- interrupt_set_isr --- @
+@ --- interrupt_isr --- @
 
 @ input:
 @   r0 = id  : i32
 @   r1 = isr : function pointer
-BEGIN_GLOBAL_FUNC .text ARM interrupt_set_isr
+BEGIN_GLOBAL_FUNC .text ARM interrupt_isr
     @ check if the interrupt ID is valid
     cmp     r0, #INTERRUPT_COUNT
 
@@ -133,7 +133,7 @@ BEGIN_GLOBAL_FUNC .text ARM interrupt_set_isr
     strlo   r1, [r2, r0, lsl #2]
 
     bx      lr
-END_FUNC interrupt_set_isr
+END_FUNC interrupt_isr
 
 @ --- interrupt_wait --- @
 
