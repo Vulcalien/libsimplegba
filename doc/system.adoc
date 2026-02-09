@@ -1,0 +1,26 @@
+= system(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2026-02-09
+:docdate: {revdate}
+
+== NAME
+system_prefetch - system control
+
+== SYNOPSIS
+[verse]
+____
+*#define SYSTEM_FREQUENCY 16777216* // ~16.78 MHz
+
+**void system_prefetch(bool **__enable__**);**
+____
+
+== DESCRIPTION
+The *system_prefetch*() function enables or disables the GBA's prefetch
+buffer, based on the value of _enable_. When enabled, the prefetch
+buffer typically improves the performance of code living in ROM.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.

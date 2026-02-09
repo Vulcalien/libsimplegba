@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2024, 2026 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,3 +18,14 @@
 #include "libsimplegba/base.h"
 
 #define SYSTEM_FREQUENCY (16 * 1024 * 1024) // about 16.78 MHz
+
+#define _SYSTEM_WAITSTATE_CONTROL *((vu16 *) 0x04000204)
+
+INLINE void system_prefetch(bool enable) {
+    if(enable)
+        _SYSTEM_WAITSTATE_CONTROL |= BIT(14);
+    else
+        _SYSTEM_WAITSTATE_CONTROL &= ~BIT(14);
+}
+
+#undef _SYSTEM_WAITSTATE_CONTROL
