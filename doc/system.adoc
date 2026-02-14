@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-02-09
+:revdate: 2026-02-14
 :docdate: {revdate}
 
 == NAME
@@ -19,7 +19,8 @@ ____
 == DESCRIPTION
 The *system_prefetch*() function enables or disables the GBA's prefetch
 buffer, based on the value of _enable_. When enabled, the prefetch
-buffer typically improves the performance of code living in ROM.
+buffer typically improves the performance of code living in ROM. During
+startup, the prefetch buffer is enabled by the library.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
