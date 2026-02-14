@@ -34,6 +34,11 @@ BEGIN_GLOBAL_FUNC .crt0 ARM start_vector
 
     .thumb
 
+    @ enable prefetch buffer
+    ldr     r0, =0x04000204
+    ldr     r1, =0x4000
+    strh    r1, [r0]
+
     @ clear .bss section
     ldr     r0, =__bss_start            @ r0 = dest
     movs    r1, #0                      @ r1 = byte
