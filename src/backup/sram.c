@@ -46,7 +46,7 @@ static u16 sram_identify(void) {
 }
 
 THUMB
-static void sram_set_bank(u32 bank) {
+static void sram_bank(u32 bank) {
     // nothing to do
 }
 
@@ -68,7 +68,7 @@ const struct _BackupDriver _backup_driver_sram = {
     .write_byte = sram_write_byte,
 
     .identify = sram_identify,
-    .set_bank = sram_set_bank,
+    .bank     = sram_bank,
 
     .erase_chip   = sram_erase_chip,
     .erase_sector = sram_erase_sector

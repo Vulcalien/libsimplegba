@@ -67,7 +67,7 @@ static u16 flash_identify(void) {
 }
 
 THUMB
-static void flash_set_bank(u32 bank) {
+static void flash_bank(u32 bank) {
     // prepare to set memory bank
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;
@@ -116,7 +116,7 @@ const struct _BackupDriver _backup_driver_flash = {
     .write_byte = flash_write_byte,
 
     .identify = flash_identify,
-    .set_bank = flash_set_bank,
+    .bank     = flash_bank,
 
     .erase_chip   = flash_erase_chip,
     .erase_sector = flash_erase_sector

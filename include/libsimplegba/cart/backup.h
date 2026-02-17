@@ -25,7 +25,7 @@ extern const struct _BackupDriver {
     void (*write_byte)(u16 offset, i32 byte);
 
     u16  (*identify)(void);
-    void (*set_bank)(u32 bank);
+    void (*bank)(u32 bank);
 
     void (*erase_chip)(void);
     void (*erase_sector)(u32 n);
@@ -55,8 +55,8 @@ INLINE u16 backup_identify(void) {
     return _backup_driver->identify();
 }
 
-INLINE void backup_set_bank(u32 bank) {
-    _backup_driver->set_bank(bank);
+INLINE void backup_bank(u32 bank) {
+    _backup_driver->bank(bank);
 }
 
 INLINE void backup_erase_chip(void) {
