@@ -2,13 +2,13 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-02-17
+:revdate: 2026-02-19
 :docdate: {revdate}
 
 == NAME
 backup_init, backup_read, backup_write, backup_read_byte,
-backup_write_byte, backup_identify, backup_bank, backup_erase_chip,
-backup_erase_sector - backup memory
+backup_write_byte, backup_erase_chip, backup_erase_sector,
+backup_identify, backup_bank - backup memory
 
 == SYNOPSIS
 [verse]
@@ -23,11 +23,11 @@ ____
 **i32  backup_read_byte(u16 **__offset__**);**
 **void backup_write_byte(u16 **__offset__**, i32 **__byte__**);**
 
-**u16  backup_identify(void);**
-**void backup_bank(u32 **__bank__**);**
-
 **void backup_erase_chip(void);**
 **void backup_erase_sector(u32 **__n__**);**
+
+**u16  backup_identify(void);**
+**void backup_bank(u32 **__bank__**);**
 ____
 
 == DESCRIPTION
@@ -43,23 +43,23 @@ The *backup_read_byte*() function reads one unsigned byte from backup
 memory at address _offset_ and returns it. The *backup_write_byte*()
 function writes _byte_ into backup memory at address _offset_.
 
-=== Flash ROM functions
-These functions are specific to the Flash ROM driver. When called in
-other drivers, they perform no operation. Unlike other memory chips,
-Flash ROM must be erased before writing to it.
+The *backup_erase_chip*() function erases all data on the chip. The
+*backup_erase_sector*() function erases the 4 KB sector of index _n_.
+The value of _n_ should be in the range [0, 15]. Erased bytes are set to
+255 (0xff).
+
+=== Flash ROM
+These functions are specific to the Flash ROM driver. When a different
+driver is selected, these functions perform no operation. Unlike other
+memory chips, Flash ROM must be erased before writing to it.
 
 The *backup_identify*() reads the chip's 16-bit identification
 code and returns it.
 
 The *backup_bank*() function switches the chip's bank to the value of
 _bank_. This function should only be used on chips of size 128 KB, and
-the value of _bank_ should be either 0 or 1.
-
-The *backup_erase_chip*() function erases all data in the chip. The
-*backup_erase_sector*() function erases the 4 KB sector of index _n_.
-The value of _n_ should be in the range [0, 15] and, for 128 KB chips,
-the erased sector also depends on the currently selected bank. Erased
-bytes are set to 255 (0xff).
+the value of _bank_ should be either 0 or 1. The selected bank affects
+reads, writes and sector erasures.
 
 == RETURN VALUE
 The *backup_read_byte*() function returns the byte read from backup
