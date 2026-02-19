@@ -40,6 +40,16 @@ static void sram_write_byte(u16 offset, i32 byte) {
 }
 
 THUMB
+static void sram_erase_chip(void) {
+    // nothing to do
+}
+
+THUMB
+static void sram_erase_sector(u32 n) {
+    // nothing to do
+}
+
+THUMB
 static u16 sram_identify(void) {
     // nothing to do
     return 0;
@@ -50,16 +60,6 @@ static void sram_bank(u32 bank) {
     // nothing to do
 }
 
-THUMB
-static void sram_erase_chip(void) {
-    // nothing to do
-}
-
-THUMB
-static void sram_erase_sector(u32 n) {
-    // nothing to do
-}
-
 const struct _BackupDriver _backup_driver_sram = {
     .read  = sram_read,
     .write = sram_write,
@@ -67,9 +67,9 @@ const struct _BackupDriver _backup_driver_sram = {
     .read_byte  = sram_read_byte,
     .write_byte = sram_write_byte,
 
-    .identify = sram_identify,
-    .bank     = sram_bank,
-
     .erase_chip   = sram_erase_chip,
-    .erase_sector = sram_erase_sector
+    .erase_sector = sram_erase_sector,
+
+    .identify = sram_identify,
+    .bank     = sram_bank
 };

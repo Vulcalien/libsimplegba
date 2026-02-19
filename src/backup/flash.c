@@ -50,33 +50,6 @@ static void flash_write(u16 offset, const void *buffer, u32 n) {
 }
 
 THUMB
-static u16 flash_identify(void) {
-    // enter chip identification mode
-    FLASH[0x5555] = 0xaa;
-    FLASH[0x2aaa] = 0x55;
-    FLASH[0x5555] = 0x90;
-
-    u16 result = FLASH[0x0000] | FLASH[0x0001] << 8;
-
-    // exit chip identification mode
-    FLASH[0x5555] = 0xaa;
-    FLASH[0x2aaa] = 0x55;
-    FLASH[0x5555] = 0xf0;
-
-    return result;
-}
-
-THUMB
-static void flash_bank(u32 bank) {
-    // prepare to set memory bank
-    FLASH[0x5555] = 0xaa;
-    FLASH[0x2aaa] = 0x55;
-    FLASH[0x5555] = 0xb0;
-
-    FLASH[0x0000] = (bank & 1);
-}
-
-THUMB
 static void flash_erase_chip(void) {
     // prepare to erase
     FLASH[0x5555] = 0xaa;
@@ -108,6 +81,33 @@ static void flash_erase_sector(u32 n) {
     while(FLASH[n << 12] != 0xff);
 }
 
+THUMB
+static u16 flash_identify(void) {
+    // enter chip identification mode
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0x90;
+
+    u16 result = FLASH[0x0000] | FLASH[0x0001] << 8;
+
+    // exit chip identification mode
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0xf0;
+
+    return result;
+}
+
+THUMB
+static void flash_bank(u32 bank) {
+    // prepare to set memory bank
+    FLASH[0x5555] = 0xaa;
+    FLASH[0x2aaa] = 0x55;
+    FLASH[0x5555] = 0xb0;
+
+    FLASH[0x0000] = (bank & 1);
+}
+
 const struct _BackupDriver _backup_driver_flash = {
     .read  = flash_read,
     .write = flash_write,
@@ -115,9 +115,9 @@ const struct _BackupDriver _backup_driver_flash = {
     .read_byte  = flash_read_byte,
     .write_byte = flash_write_byte,
 
-    .identify = flash_identify,
-    .bank     = flash_bank,
-
     .erase_chip   = flash_erase_chip,
-    .erase_sector = flash_erase_sector
+    .erase_sector = flash_erase_sector,
+
+    .identify = flash_identify,
+    .bank     = flash_bank
 };
