@@ -41,12 +41,13 @@ static void sram_write_byte(u16 offset, i32 byte) {
 
 THUMB
 static void sram_erase_chip(void) {
-    // nothing to do
+    // SRAM size is unknown, so erase 64 KB to be safe
+    memory_set_8(SRAM, 0xff, 64 * 1024);
 }
 
 THUMB
 static void sram_erase_sector(u32 n) {
-    // nothing to do
+    memory_set_8(SRAM + (n % 16) * 4096, 0xff, 4096);
 }
 
 THUMB
