@@ -1,0 +1,45 @@
+= types(3type)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2026-03-02
+:docdate: {revdate}
+
+== NAME
+bool, u8, u16, u32, i8, i16, i32 - basic data types
+
+== SYNOPSIS
+[verse]
+____
+*#include <libsimplegba.h>*
+
+*typedef ... bool;*
+
+*typedef ... u8;*
+*typedef ... u16;*
+*typedef ... u32;*
+
+*typedef ... i8;*
+*typedef ... i16;*
+*typedef ... i32;*
+____
+
+== DESCRIPTION
+*bool* is a boolean type that can represent the logical values *true*
+and *false*.
+
+*u8*, *u16* and *u32* are unsigned fixed-width integer types. Their
+minimum value is zero, while their maximum values are *U8_MAX*,
+*U16_MAX* and *U32_MAX*.
+
+*i8*, *i16* and *i32* are signed fixed-width integer types. Their
+minimum values are *I8_MIN*, *I16_MIN* and *I32_MIN*, while their
+maximum values are *I8_MAX*, *I16_MAX* and *I32_MAX*.
+
+== NOTES
+The library also offers volatile versions of the fixed-width integer
+types: *vu8*, *vu16*, *vu32*, *vi8*, *vi16* and *vi32*.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
