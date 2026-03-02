@@ -12,7 +12,7 @@ endif
 SRC_DIR := .
 OUT_DIR := out
 
-SRC_SUBDIRS :=
+SRC_SUBDIRS := misc hardware cartridge debug
 
 # === Commands ===
 ifeq ($(CURRENT_OS),UNIX)
