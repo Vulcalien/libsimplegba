@@ -17,8 +17,6 @@
 
 #include "libsimplegba/base.h"
 
-#define DMA_COUNT 4
-
 #define DMA0 0
 #define DMA1 1
 #define DMA2 2
@@ -48,13 +46,15 @@ struct DMA {
     u16 repeat       : 1; // 0=disable, 1=enable
 };
 
+#define _DMA_COUNT 4
+
 #define _DMA_GET_CONTROL(id) ((vu16 *) (0x040000ba + id * 12))
 
 #define _DMA_IRQ_BIT    BIT(14)
 #define _DMA_ENABLE_BIT BIT(15)
 
 INLINE void dma_config(i32 id, const struct DMA *config) {
-    if(id < 0 || id >= DMA_COUNT)
+    if(id < 0 || id >= _DMA_COUNT)
         return;
 
     vu16 *control = _DMA_GET_CONTROL(id);
@@ -73,7 +73,7 @@ INLINE void dma_config(i32 id, const struct DMA *config) {
 
 INLINE void dma_transfer(i32 id, volatile void *dest,
                          volatile const void *src, u32 n) {
-    if(id < 0 || id >= DMA_COUNT)
+    if(id < 0 || id >= _DMA_COUNT)
         return;
 
     vu32 *src_addr   = (vu32 *) (0x040000b0 + id * 12);
@@ -89,12 +89,14 @@ INLINE void dma_transfer(i32 id, volatile void *dest,
 }
 
 INLINE void dma_stop(i32 id) {
-    if(id < 0 || id >= DMA_COUNT)
+    if(id < 0 || id >= _DMA_COUNT)
         return;
 
     vu16 *control = _DMA_GET_CONTROL(id);
     *control &= ~_DMA_ENABLE_BIT;
 }
+
+#undef _DMA_COUNT
 
 #undef _DMA_GET_CONTROL
 
