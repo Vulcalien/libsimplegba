@@ -31,8 +31,6 @@
 // If irq=1, an interrupt request is raised when the counter
 // reaches zero.
 
-#define TIMER_COUNT 4
-
 #define TIMER0 0
 #define TIMER1 1
 #define TIMER2 2
@@ -47,6 +45,8 @@
 
 #define TIMER_CASCADE BIT(2)
 
+#define _TIMER_COUNT 4
+
 #define _TIMER_GET_CONTROL(id) ((vu16 *) (0x04000102 + id * 4))
 #define _TIMER_GET_RELOAD(id)  ((vu16 *) (0x04000100 + id * 4))
 
@@ -54,7 +54,7 @@
 #define _TIMER_ENABLE_BIT BIT(7)
 
 INLINE void timer_config(i32 id, u16 config) {
-    if(id < 0 || id >= TIMER_COUNT)
+    if(id < 0 || id >= _TIMER_COUNT)
         return;
 
     vu16 *control = _TIMER_GET_CONTROL(id);
@@ -64,7 +64,7 @@ INLINE void timer_config(i32 id, u16 config) {
 }
 
 INLINE void timer_start(i32 id, u32 ticks) {
-    if(id < 0 || id >= TIMER_COUNT)
+    if(id < 0 || id >= _TIMER_COUNT)
         return;
 
     vu16 *reload = _TIMER_GET_RELOAD(id);
@@ -75,7 +75,7 @@ INLINE void timer_start(i32 id, u32 ticks) {
 }
 
 INLINE void timer_stop(i32 id) {
-    if(id < 0 || id >= TIMER_COUNT)
+    if(id < 0 || id >= _TIMER_COUNT)
         return;
 
     vu16 *control = _TIMER_GET_CONTROL(id);
@@ -89,12 +89,14 @@ INLINE void timer_restart(i32 id, u32 ticks) {
 
 // returns values in range [1, TIMER_COUNTER_MAX]
 INLINE i32 timer_get_counter(i32 id) {
-    if(id < 0 || id >= TIMER_COUNT)
+    if(id < 0 || id >= _TIMER_COUNT)
         return 0;
 
     vu16 *counter = _TIMER_GET_RELOAD(id);
     return TIMER_COUNTER_MAX - *counter;
 }
+
+#undef _TIMER_COUNT
 
 #undef _TIMER_GET_CONTROL
 #undef _TIMER_GET_RELOAD
