@@ -17,8 +17,6 @@
 
 #include "libsimplegba/base.h"
 
-#define WINDOW_COUNT 4
-
 #define WINDOW_0   0
 #define WINDOW_1   1
 #define WINDOW_OUT 2
@@ -33,8 +31,10 @@ struct Window {
     u8 effects : 1;
 };
 
+#define _WINDOW_COUNT 4
+
 INLINE void window_config(i32 id, const struct Window *config) {
-    if(id < 0 || id >= WINDOW_COUNT)
+    if(id < 0 || id >= _WINDOW_COUNT)
         return;
 
     // if config is NULL, use a default configuration instead
@@ -67,10 +67,10 @@ INLINE void window_viewport(i32 id, u32 x, u32 y,
 }
 
 INLINE void window_toggle(i32 id, bool enable) {
-    if(id < 0 || id >= WINDOW_COUNT)
+    if(id < 0 || id >= _WINDOW_COUNT)
         return;
 
-    const u16 bit = (u16 [WINDOW_COUNT]) {
+    const u16 bit = (u16 [_WINDOW_COUNT]) {
         [WINDOW_0]   = BIT(13),
         [WINDOW_1]   = BIT(14),
         [WINDOW_OUT] = 0,
@@ -83,3 +83,5 @@ INLINE void window_toggle(i32 id, bool enable) {
     else
         *display_control &= ~bit;
 }
+
+#undef _WINDOW_COUNT
