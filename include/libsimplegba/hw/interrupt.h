@@ -17,35 +17,31 @@
 
 #include "libsimplegba/base.h"
 
-#define INTERRUPT_COUNT 14
-
 #define IRQ_VBLANK  0
 #define IRQ_HBLANK  1
 #define IRQ_VCOUNT  2
-
 #define IRQ_TIMER0  3
 #define IRQ_TIMER1  4
 #define IRQ_TIMER2  5
 #define IRQ_TIMER3  6
-
 #define IRQ_SERIAL  7
-
 #define IRQ_DMA0    8
 #define IRQ_DMA1    9
 #define IRQ_DMA2    10
 #define IRQ_DMA3    11
-
 #define IRQ_KEYPAD  12
 #define IRQ_GAMEPAK 13
 
+#define _INTERRUPT_COUNT 14
+
 INLINE void interrupt_toggle(i32 id, bool enable) {
-    if(id < 0 || id >= INTERRUPT_COUNT)
+    if(id < 0 || id >= _INTERRUPT_COUNT)
         return;
 
     const struct {
         u16 offset;
         u16 bit;
-    } senders[INTERRUPT_COUNT] = {
+    } senders[_INTERRUPT_COUNT] = {
         [IRQ_VBLANK]  = { 0x0004, BIT(3)  },
         [IRQ_HBLANK]  = { 0x0004, BIT(4)  },
         [IRQ_VCOUNT]  = { 0x0004, BIT(5)  },
@@ -77,3 +73,5 @@ INLINE void interrupt_toggle(i32 id, bool enable) {
 
 extern void interrupt_isr(i32 id, void (*isr)(void));
 extern void interrupt_wait(i32 id);
+
+#undef _INTERRUPT_COUNT
