@@ -17,8 +17,6 @@
 
 #include "libsimplegba/base.h"
 
-#define BACKGROUND_COUNT 4
-
 #define BG0 0
 #define BG1 1
 #define BG2 2
@@ -38,8 +36,10 @@ struct Background {
     u16 size     : 2; // 0-3
 };
 
+#define _BACKGROUND_COUNT 4
+
 INLINE void background_config(i32 id, const struct Background *config) {
-    if(id < 0 || id >= BACKGROUND_COUNT)
+    if(id < 0 || id >= _BACKGROUND_COUNT)
         return;
 
     vu16 *control = (vu16 *) (0x04000008 + id * 2);
@@ -53,7 +53,7 @@ INLINE void background_config(i32 id, const struct Background *config) {
 }
 
 INLINE void background_offset(i32 id, u16 x, u16 y) {
-    if(id < 0 || id >= BACKGROUND_COUNT)
+    if(id < 0 || id >= _BACKGROUND_COUNT)
         return;
 
     vu32 *offset = (vu32 *) (0x04000010 + id * 4);
@@ -61,7 +61,7 @@ INLINE void background_offset(i32 id, u16 x, u16 y) {
 }
 
 INLINE void background_toggle(i32 id, bool enable) {
-    if(id < 0 || id >= BACKGROUND_COUNT)
+    if(id < 0 || id >= _BACKGROUND_COUNT)
         return;
 
     const u16 bit = BIT(8 + id);
@@ -77,3 +77,5 @@ INLINE void background_mosaic(u32 x, u32 y) {
     vu8 *mosaic = (vu8 *) 0x0400004c;
     *mosaic = (x & 15) | (y & 15) << 4;
 }
+
+#undef _BACKGROUND_COUNT
