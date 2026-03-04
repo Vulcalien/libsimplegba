@@ -67,15 +67,13 @@ INLINE void window_viewport(i32 id, u32 x, u32 y,
 }
 
 INLINE void window_toggle(i32 id, bool enable) {
-    if(id < 0 || id >= _WINDOW_COUNT)
-        return;
-
-    const u16 bit = (u16 [_WINDOW_COUNT]) {
-        [WINDOW_0]   = BIT(13),
-        [WINDOW_1]   = BIT(14),
-        [WINDOW_OUT] = 0,
-        [WINDOW_SPR] = BIT(15)
-    }[id];
+    u16 bit;
+    switch(id) {
+        case WINDOW_0:   bit = BIT(13); break;
+        case WINDOW_1:   bit = BIT(14); break;
+        case WINDOW_SPR: bit = BIT(15); break;
+        default: return;
+    }
 
     vu16 *display_control = (vu16 *) 0x04000000;
     if(enable)
