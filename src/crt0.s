@@ -51,12 +51,6 @@ BEGIN_GLOBAL_FUNC .crt0 ARM start_vector
     ldr     r2, =__sbss_size            @ r2 = n
     bl      memory_set_32
 
-    @ copy .data section
-    ldr     r0, =__data_start           @ r0 = dest
-    ldr     r1, =__data_lma             @ r1 = src
-    ldr     r2, =__data_size            @ r2 = n
-    bl      memory_copy_32
-
     @ copy .iwram section
     ldr     r0, =__iwram_start          @ r0 = dest
     ldr     r1, =__iwram_lma            @ r1 = src

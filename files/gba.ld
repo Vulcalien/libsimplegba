@@ -1,4 +1,4 @@
-/* Copyright 2023 Vulcalien
+/* Copyright 2023, 2026 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,21 +46,13 @@ SECTIONS {
         *(.glue_7)
         *(.glue_7t)
 
-        . = ALIGN(4);
-        __text_end = ABSOLUTE(.);
-    } >ROM =0xff
-    __text_size = SIZEOF(.text);
-
-    .rodata : ALIGN(4) {
-        __rodata_start = ABSOLUTE(.);
-
         *(.rodata)
         *(.rodata.*)
 
         . = ALIGN(4);
-        __rodata_end = ABSOLUTE(.);
+        __text_end = ABSOLUTE(.);
     } >ROM =0xff
-    __rodata_size = SIZEOF(.rodata);
+    __text_size = SIZEOF(.text);
 
     /* ========================================================== */
     /*                           IWRAM                            */
@@ -71,6 +63,9 @@ SECTIONS {
 
         *(.iwram)
         *(.iwram.*)
+
+        *(.data)
+        *(.data.*)
 
         . = ALIGN(4);
         __iwram_end = ABSOLUTE(.);
@@ -90,18 +85,6 @@ SECTIONS {
         __bss_end = ABSOLUTE(.);
     } >IWRAM
     __bss_size = SIZEOF(.bss);
-
-    .data : ALIGN(4) {
-        __data_start = ABSOLUTE(.);
-
-        *(.data)
-        *(.data.*)
-
-        . = ALIGN(4);
-        __data_end = ABSOLUTE(.);
-    } >IWRAM AT>ROM =0xff
-    __data_size = SIZEOF(.data);
-    __data_lma = LOADADDR(.data);
 
     /* ========================================================== */
     /*                           EWRAM                            */
