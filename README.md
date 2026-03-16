@@ -50,14 +50,14 @@ To let the build tool know where to find library files:
 - Add the `include` directory to the include path
 - Add the `bin` directory to the library search path
 - Add `libsimplegba` to the list of libraries to link against
-- Set `lnkscript` as the linker script
+- Set `gba.ld` as the linker script
 
 If using a `Makefile` to build the program and assuming the library is
 located at `lib/libsimplegba`, add these lines:
 
 ```Makefile
 # linker script
-LDFLAGS += -nostartfiles -Tlib/libsimplegba/lnkscript
+LDFLAGS += -nostartfiles -Tlib/libsimplegba/files/gba.ld
 
 # libsimplegba
 CPPFLAGS += -Ilib/libsimplegba/include
