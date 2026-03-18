@@ -134,7 +134,7 @@ INLINE void sprite_hide(i32 id) {
         sprite_hide_range(id, id + 1);
 }
 
-INLINE void sprite_mosaic(u32 x, u32 y) {
+INLINE void sprite_mosaic(i32 x, i32 y) {
     vu8 *mosaic = (vu8 *) 0x0400004d;
     *mosaic = (x & 15) | (y & 15) << 4;
 }

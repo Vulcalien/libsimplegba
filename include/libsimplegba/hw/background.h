@@ -73,7 +73,7 @@ INLINE void background_toggle(i32 id, bool enable) {
         *display_control &= ~bit;
 }
 
-INLINE void background_mosaic(u32 x, u32 y) {
+INLINE void background_mosaic(i32 x, i32 y) {
     vu8 *mosaic = (vu8 *) 0x0400004c;
     *mosaic = (x & 15) | (y & 15) << 4;
 }
