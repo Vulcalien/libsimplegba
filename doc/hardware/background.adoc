@@ -1,0 +1,34 @@
+= background(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2026-03-18
+:docdate: {revdate}
+
+== NAME
+background_config, background_offset, background_toggle,
+background_mosaic - tiled backgrounds
+
+== SYNOPSIS
+[verse]
+____
+*#include <libsimplegba.h>*
+
+*#define BG0*
+*#define BG1*
+*#define BG2*
+*#define BG3*
+
+**void background_config(i32 **__id__**, const struct Background +++*+++**__config__**);**
+**void background_offset(i32 **__id__**, u16 **__x__**, u16 **__y__**);**
+**void background_toggle(i32 **__id__**, bool **__enable__**);**
+
+**void background_mosaic(u32 **__x__**, u32 **__y__**);**
+____
+
+== DESCRIPTION
+TODO
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien
+<\vulcalien@vulcalien.net>.
