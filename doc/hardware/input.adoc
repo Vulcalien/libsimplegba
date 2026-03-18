@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-11
+:revdate: 2026-03-18
 :docdate: {revdate}
 
 == NAME
@@ -79,4 +79,4 @@ The *libsimplegba* library was written by Vulcalien
 <\vulcalien@vulcalien.net>.
 
 == SEE ALSO
-*interrupt_toggle*(3), *interrupt_set_isr*(3)
+*interrupt_toggle*(3), *interrupt_isr*(3)
