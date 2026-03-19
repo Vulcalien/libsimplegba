@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-18
+:revdate: 2026-03-19
 :docdate: {revdate}
 
 == NAME
@@ -142,7 +142,7 @@ pixels horizontally and (_y_ & 15) pixels vertically.
 The *sprite_affine*() function sets the values of the affine matrix
 identified by _parameter_ (0 to 31). The 2x2 matrix describes an affine
 transformation used for *inverse texture mapping*. Its values are signed
-16-bit fixed-point numbers, with 8 bits as fractional part (1 = 256).
+16-bit fixed-point numbers scaled by a factor of 256.
 
 == NOTES
 If a sprite uses 256-color mode, each tile occupies double the amount of
