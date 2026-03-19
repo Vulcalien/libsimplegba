@@ -88,7 +88,7 @@ INLINE void timer_restart(i32 id, u32 ticks) {
 }
 
 // returns values in range [1, TIMER_COUNTER_MAX]
-INLINE i32 timer_get_counter(i32 id) {
+INLINE i32 timer_counter(i32 id) {
     if(id < 0 || id >= _TIMER_COUNT)
         return 0;
 

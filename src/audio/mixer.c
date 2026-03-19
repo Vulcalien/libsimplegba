@@ -193,7 +193,7 @@ static void mixer_update(void) {
     // - start = first sample that needs updating
     // - stop  = sample about to be played, that should NOT be updated
     static u32 start = 0;
-    const u32 stop = (BUFFER_SIZE - timer_get_counter(TIMER1)) & ~3;
+    const u32 stop = (BUFFER_SIZE - timer_counter(TIMER1)) & ~3;
 
     if(start < stop) {
         // update start...stop

@@ -37,8 +37,8 @@ INLINE void profiler_start(void) {
 INLINE u32 profiler_stop(void) {
     timer_stop(TIMER2); // no need to also stop timer 3
 
-    u32 t2 = TIMER_COUNTER_MAX - timer_get_counter(TIMER2);
-    u32 t3 = TIMER_COUNTER_MAX - timer_get_counter(TIMER3);
+    u32 t2 = TIMER_COUNTER_MAX - timer_counter(TIMER2);
+    u32 t3 = TIMER_COUNTER_MAX - timer_counter(TIMER3);
 
     return t3 << 16 | t2;
 }

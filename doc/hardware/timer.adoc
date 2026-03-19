@@ -2,11 +2,11 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-18
+:revdate: 2026-03-19
 :docdate: {revdate}
 
 == NAME
-timer_config, timer_start, timer_stop, timer_restart, timer_get_counter
+timer_config, timer_start, timer_stop, timer_restart, timer_counter
 - hardware timers
 
 == SYNOPSIS
@@ -25,7 +25,7 @@ ____
 **void timer_stop(i32 **__id__**);**
 **void timer_restart(i32 **__id__**, u32 **__ticks__**);**
 
-**i32 timer_get_counter(i32 **__id__**);**
+**i32 timer_counter(i32 **__id__**);**
 ____
 
 == DESCRIPTION
@@ -62,12 +62,12 @@ The *timer_restart*() function restarts the timer, ensuring that its
 counter is reset without waiting for it to first reach zero. This is
 equivalent to stopping the timer and then starting it.
 
-The *timer_get_counter*() function returns the timer's counter value.
-Since stopping a timer does not affect its counter, it is safe to call
-this function on stopped timers.
+The *timer_counter*() function returns the timer's counter value. Since
+stopping a timer does not affect its counter, it is safe to call this
+function on stopped timers.
 
 == RETURN VALUE
-The *timer_get_counter*() function returns the timer's counter value, an
+The *timer_counter*() function returns the timer's counter value, an
 integer in the range [1, *TIMER_COUNTER_MAX*].
 
 == NOTES

@@ -139,7 +139,7 @@ static INLINE void playback_start(i32 channel) {
     // give back unplayed samples to other channel
     struct Channel *other = &channels[channel ^ 1];
     if(other->data && !other->paused)
-        other->data -= timer_get_counter(TIMER1);
+        other->data -= timer_counter(TIMER1);
 
     // reschedule the next IRQ
     schedule_timer1_irq();
@@ -160,7 +160,7 @@ static void basic_pause(i32 c) {
     playback_stop(c);
 
     // give back unplayed samples
-    channel->data -= timer_get_counter(TIMER1);
+    channel->data -= timer_counter(TIMER1);
 }
 
 THUMB
