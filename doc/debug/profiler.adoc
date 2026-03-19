@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-11
+:revdate: 2026-03-19
 :docdate: {revdate}
 
 == NAME
@@ -26,10 +26,6 @@ cycles elapsed since the last call to *profiler_start*(). The returned
 value is not perfectly accurate because a few cycles necessary to
 execute the *profiler_start*() and *profiler_stop*() functions
 themselves will be counted as well.
-
-== RETURN VALUE
-The *profiler_stop*() function returns an indicative count of CPU clock
-cycles elapsed since the last call to *profiler_start*().
 
 == NOTES
 These profiler functions use two of the GBA's timers: Timer 2 and
