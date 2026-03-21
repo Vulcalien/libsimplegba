@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2024, 2026 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,13 +39,15 @@
 #define BACKGROUND_COLORS_256 1
 
 struct Background {
+    u16 size     : 2; // 0-3
     u16 priority : 2; // 0-3, 0=highest
+    u16 overflow : 1; // 0=transparent, 1=wraparound (only BG2/BG3)
+
     u16 tileset  : 2; // 0-3, in units of 16 KB
+    u16 tilemap  : 5; // 0-31, in units of 2 KB
+
     u16 mosaic   : 1; // 0=disable, 1=enable
     u16 colors   : 1; // 0=16-color mode, 1=256-color mode
-    u16 tilemap  : 5; // 0-31, in units of 2 KB
-    u16 overflow : 1; // 0=transparent, 1=wraparound (only BG2/BG3)
-    u16 size     : 2; // 0-3
 };
 
 #define _BACKGROUND_COUNT 4
