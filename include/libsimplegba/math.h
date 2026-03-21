@@ -58,11 +58,11 @@ INLINE i32 math_clip(i32 x, i32 min, i32 max) {
     return x;
 }
 
-INLINE i32 math_digits(i32 x, u32 base) {
+INLINE i32 math_digits(i32 x, i32 base) {
     i32 result = 0;
     do {
         result++;
-        x /= (i32) base;
+        x /= base;
     } while(x != 0);
     return result;
 }
