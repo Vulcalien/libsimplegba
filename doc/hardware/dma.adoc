@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-11
+:revdate: 2026-03-21
 :docdate: {revdate}
 
 == NAME
@@ -35,11 +35,11 @@ channel will be disabled. The structure is defined as follows:
 [source,c]
 ----
 struct DMA {
-    u16 dest_control : 2;
-    u16 src_control  : 2;
-    u16 chunk        : 1;
-    u16 start_timing : 2;
-    u16 repeat       : 1;
+    u8 dest_control : 2;
+    u8 src_control  : 2;
+    u8 chunk        : 1;
+    u8 start_timing : 2;
+    u8 repeat       : 1;
 };
 ----
 

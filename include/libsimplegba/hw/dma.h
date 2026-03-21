@@ -39,11 +39,11 @@
 #define DMA_START_SPECIAL     3
 
 struct DMA {
-    u16 dest_control : 2; // 0=increment, 1=decrement, 2=fixed, 3=reload
-    u16 src_control  : 2; // 0=increment, 1=decrement, 2=fixed
-    u16 chunk        : 1; // 0=16-bit, 1=32-bit
-    u16 start_timing : 2; // 0=immediately, 1=VBlank, 2=HBlank, 3=special
-    u16 repeat       : 1; // 0=disable, 1=enable
+    u8 dest_control : 2; // 0=increment, 1=decrement, 2=fixed, 3=reload
+    u8 src_control  : 2; // 0=increment, 1=decrement, 2=fixed
+    u8 chunk        : 1; // 0=16-bit, 1=32-bit
+    u8 start_timing : 2; // 0=immediately, 1=VBlank, 2=HBlank, 3=special
+    u8 repeat       : 1; // 0=disable, 1=enable
 };
 
 #define _DMA_COUNT 4
