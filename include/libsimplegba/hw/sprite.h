@@ -134,17 +134,17 @@ INLINE void sprite_hide(i32 id) {
         sprite_hide_range(id, id + 1);
 }
 
-INLINE void sprite_mosaic(i32 x, i32 y) {
-    vu8 *mosaic = (vu8 *) 0x0400004d;
-    *mosaic = (x & 15) | (y & 15) << 4;
-}
-
 INLINE void sprite_affine(u32 parameter, i16 matrix[4]) {
     if(parameter >= 32)
         return;
 
     for(u32 i = 0; i < 4; i++)
         _SPRITE_OAM[parameter * 16 + i * 4 + 3] = matrix[i];
+}
+
+INLINE void sprite_mosaic(i32 x, i32 y) {
+    vu8 *mosaic = (vu8 *) 0x0400004d;
+    *mosaic = (x & 15) | (y & 15) << 4;
 }
 
 #undef _SPRITE_OAM

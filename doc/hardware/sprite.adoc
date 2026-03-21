@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-19
+:revdate: 2026-03-21
 :docdate: {revdate}
 
 == NAME
-sprite_config, sprite_hide, sprite_hide_range, sprite_mosaic,
-sprite_affine - sprite functions
+sprite_config, sprite_hide, sprite_hide_range, sprite_affine,
+sprite_mosaic - sprite functions
 
 == SYNOPSIS
 [verse]
@@ -19,8 +19,8 @@ ____
 **void sprite_hide(i32 **__id__**);**
 **void sprite_hide_range(i32 **__start__**, i32 **__stop__**);**
 
-**void sprite_mosaic(i32 **__x__**, i32 **__y__**);**
 **void sprite_affine(u32 **__parameter__**, i16 **__matrix__**[4]);**
+**void sprite_mosaic(i32 **__x__**, i32 **__y__**);**
 ____
 
 == DESCRIPTION
@@ -134,15 +134,15 @@ sprites if a negative value is passed.
 The *sprite_hide_range*() function hides all sprites whose ID is between
 _start_ (inclusive) and _stop_ (exclusive).
 
-=== Mosaic and Affine
-The *sprite_mosaic*() function sets the parameters of the mosaic graphic
-effect of sprites. When enabled, the image is stretched by (_x_ & 15)
-pixels horizontally and (_y_ & 15) pixels vertically.
-
+=== Affine and Mosaic
 The *sprite_affine*() function sets the values of the affine matrix
 identified by _parameter_ (0 to 31). The 2x2 matrix describes an affine
 transformation used for *inverse texture mapping*. Its values are signed
 16-bit fixed-point numbers scaled by a factor of 256.
+
+The *sprite_mosaic*() function sets the parameters of the mosaic graphic
+effect of sprites. When enabled, the image is stretched by (_x_ & 15)
+pixels horizontally and (_y_ & 15) pixels vertically.
 
 == NOTES
 If a sprite uses 256-color mode, each tile occupies double the amount of
