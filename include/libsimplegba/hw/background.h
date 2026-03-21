@@ -87,6 +87,15 @@ INLINE void background_toggle(i32 id, bool enable) {
         *display_control &= ~bit;
 }
 
+INLINE void background_affine(i32 id, i16 matrix[4]) {
+    if(id != BG2 && id != BG3)
+        return;
+
+    vu32 *parameter = (vu32 *) (0x04000020 + (id - 2) * 16);
+    parameter[0] = (matrix[0] & 0xffff) | matrix[1] << 16;
+    parameter[1] = (matrix[2] & 0xffff) | matrix[3] << 16;
+}
+
 INLINE void background_mosaic(i32 x, i32 y) {
     vu8 *mosaic = (vu8 *) 0x0400004c;
     *mosaic = (x & 15) | (y & 15) << 4;

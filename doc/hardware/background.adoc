@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-18
+:revdate: 2026-03-21
 :docdate: {revdate}
 
 == NAME
 background_config, background_offset, background_toggle,
-background_mosaic - tiled backgrounds
+background_affine background_mosaic - tiled backgrounds
 
 == SYNOPSIS
 [verse]
@@ -23,6 +23,7 @@ ____
 **void background_offset(i32 **__id__**, u16 **__x__**, u16 **__y__**);**
 **void background_toggle(i32 **__id__**, bool **__enable__**);**
 
+**void background_affine(i32 **__id__**, i16 **__matrix__**[4]);**
 **void background_mosaic(i32 **__x__**, i32 **__y__**);**
 ____
 
