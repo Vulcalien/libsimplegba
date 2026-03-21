@@ -76,7 +76,7 @@ struct Sprite {
 
 #define _SPRITE_OAM ((vu16 *) 0x07000000)
 
-INLINE void sprite_config(i32 id, const struct Sprite *sprite) {
+INLINE void sprite_config(i32 id, const struct Sprite *config) {
     if(id < 0 || id >= SPRITE_COUNT)
         return;
 
@@ -85,35 +85,35 @@ INLINE void sprite_config(i32 id, const struct Sprite *sprite) {
     u32 attr0_bit_9;
     u32 attr1_bits_9_13;
 
-    if(sprite->affine) {
-        attr0_bit_9     = sprite->double_size;
-        attr1_bits_9_13 = sprite->affine_parameter;
+    if(config->affine) {
+        attr0_bit_9     = config->double_size;
+        attr1_bits_9_13 = config->affine_parameter;
     } else {
-        attr0_bit_9     = sprite->disable;
-        attr1_bits_9_13 = sprite->flip << 3;
+        attr0_bit_9     = config->disable;
+        attr1_bits_9_13 = config->flip << 3;
     }
 
-    const u32 shape = (sprite->size >> 2) & 3;
-    const u32 size = sprite->size & 3;
+    const u32 shape = (config->size >> 2) & 3;
+    const u32 size = config->size & 3;
 
     // if in 256-colors mode, double the tile number
-    const u32 tile = (sprite->tile << sprite->colors) & BITMASK(10);
+    const u32 tile = (config->tile << config->colors) & BITMASK(10);
 
-    attribs[0] = sprite->y      << 0  |
-                 sprite->affine << 8  |
+    attribs[0] = config->y      << 0  |
+                 config->affine << 8  |
                  attr0_bit_9    << 9  |
-                 sprite->mode   << 10 |
-                 sprite->mosaic << 12 |
-                 sprite->colors << 13 |
+                 config->mode   << 10 |
+                 config->mosaic << 12 |
+                 config->colors << 13 |
                  shape          << 14;
 
-    attribs[1] = sprite->x       << 0  |
+    attribs[1] = config->x       << 0  |
                  attr1_bits_9_13 << 9  |
                  size            << 14;
 
     attribs[2] = tile             << 0  |
-                 sprite->priority << 10 |
-                 sprite->palette  << 12;
+                 config->priority << 10 |
+                 config->palette  << 12;
 }
 
 // 'start' is included, 'stop' is not included

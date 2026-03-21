@@ -14,7 +14,7 @@ sprite_mosaic - sprite functions
 ____
 *#include <libsimplegba.h>*
 
-**void sprite_config(i32 **__id__**, const struct Sprite +++*+++**__sprite__**);**
+**void sprite_config(i32 **__id__**, const struct Sprite +++*+++**__config__**);**
 
 **void sprite_hide(i32 **__id__**);**
 **void sprite_hide_range(i32 **__start__**, i32 **__stop__**);**
