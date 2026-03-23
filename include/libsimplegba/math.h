@@ -86,3 +86,9 @@ extern i32 math_asin(i32 x);
 INLINE i32 math_acos(i32 x) {
     return math_brad(90) - math_asin(x);
 }
+
+extern i32 math_atan2(i32 y, i32 x);
+
+INLINE i32 math_atan(i32 x) {
+    return math_atan2(x, 0x4000);
+}
