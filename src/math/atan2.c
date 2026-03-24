@@ -68,15 +68,26 @@ INLINE i32 octantify(i32 *x, i32 *y) {
     return phi;
 }
 
+INLINE u32 safe_ratio(u32 num, u32 den, u16 scale) {
+    // If (num * scale) would overflow, divide both parts by scale.
+    //
+    // Note that, in such case, (den / scale) is always nonzero:
+    // 1. den >= num   |  because of octantify
+    // 2. num > scale  |  since (scale < 2^16) and (num * scale >= 2^32)
+    if(num > U32_MAX / scale) {
+        num /= scale;
+        den /= scale;
+    }
+    return num * scale / den;
+}
+
 THUMB
 i32 math_atan2(i32 y, i32 x) {
     if(x == 0 && y == 0)
         return 0;
 
-    // TODO handle all overflow hazards
-
     i32 phi = octantify(&x, &y);
-    u32 ratio = (u32) y * 0x4000 / x;
+    u32 ratio = safe_ratio(y, x, 0x4000);
 
     u32 index  = ratio / SCALE;
     u32 weight = ratio % SCALE;
