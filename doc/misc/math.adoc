@@ -45,8 +45,7 @@ The *math_min*() and *math_max*() functions return, respectively, the
 minimum and maximum between the two values _a_ and _b_.
 
 The *math_abs*() function returns the absolute value of _x_. If _x_ is
-the most negative 32-bit integer (*I32_MIN*), the result of this
-function is undefined.
+the most negative 32-bit integer (*I32_MIN*), the result is undefined.
 
 The *math_sign*() function returns +1 if _x_ is positive, -1 if _x_ is
 negative and 0 if _x_ is zero.
