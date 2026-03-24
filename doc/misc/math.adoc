@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-21
+:revdate: 2026-03-24
 :docdate: {revdate}
 
 == NAME
@@ -36,6 +36,8 @@ ____
 **i32 math_asin(i32 **__x__**);**
 **i32 math_acos(i32 **__x__**);**
 **i32 math_atan(i32 **__x__**);**
+**i32 math_atan2(i32 **__y__**, i32 **__x__**);**
+
 ____
 
 == DESCRIPTION
@@ -82,6 +84,9 @@ The *math_asin*(), *math_acos*() and *math_atan*() functions return
 approximate values of the arcsine, arccosine and arctangent of _x_. The
 value of _x_ must be scaled by a factor of 0x4000. If _x_ is outside the
 range [-0x4000, 0x4000], *math_asin*() and *math_acos*() return 0.
+
+The *math_atan2*() function returns an approximate measure of the angle
+between the x-axis and the line connecting the origin to (_x_, _y_).
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien
