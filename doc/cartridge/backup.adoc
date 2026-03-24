@@ -69,5 +69,4 @@ The *backup_identify*() function returns the Flash ROM chip's 16-bit
 identification code.
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

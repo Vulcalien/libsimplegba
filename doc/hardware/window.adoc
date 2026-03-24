@@ -63,5 +63,4 @@ In areas where windows overlap, their priority is the following:
 *WINDOW_0* (highest), *WINDOW_1* (medium), *WINDOW_SPR* (lowest).
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

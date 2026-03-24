@@ -50,5 +50,4 @@ missing, false otherwise. To determine the result, the function looks
 for a fixed value in the cartridge header.
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

@@ -41,5 +41,4 @@ The library also offers volatile versions of the fixed-width integer
 types: *vu8*, *vu16*, *vu32*, *vi8*, *vi16* and *vi32*.
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

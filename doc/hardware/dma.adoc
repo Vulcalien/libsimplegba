@@ -89,5 +89,4 @@ The DMA 0 channel can only read from internal memory. Meanwhile, the DMA
 effect there would need to be compatible hardware.
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

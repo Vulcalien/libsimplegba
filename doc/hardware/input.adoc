@@ -75,5 +75,4 @@ The *input_down*(), *input_press*(), *input_release*() and
 currently in the matching state, false otherwise.
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

@@ -91,5 +91,4 @@ bits-per-pixel that depend on the video mode.
 Video memory should only be written to using 16-bit or 32-bit writes.
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

@@ -151,5 +151,4 @@ use charblock 4 to display pixels, meaning that only the second half of
 the tiles is available.
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

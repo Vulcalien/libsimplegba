@@ -43,5 +43,4 @@ memory that only accepts reads/writes of a specific width. The variants
 have a '_x' suffix in the name: e.g. 'memory_set_8'.
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

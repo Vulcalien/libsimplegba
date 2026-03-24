@@ -23,5 +23,4 @@ buffer typically improves the performance of code living in ROM. During
 startup, the prefetch buffer is enabled by the library.
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

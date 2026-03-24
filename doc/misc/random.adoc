@@ -35,5 +35,4 @@ The *random_seed*() function returns the previously stored seed value as
 a _u32_ (unsigned 32-bit integer).
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.

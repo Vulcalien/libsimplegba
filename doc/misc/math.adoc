@@ -88,5 +88,4 @@ The *math_atan2*() function returns an approximate measure of the angle
 between the x-axis and the line connecting the origin to (_x_, _y_).
 
 == AUTHORS
-The *libsimplegba* library was written by Vulcalien
-<\vulcalien@vulcalien.net>.
+The *libsimplegba* library was written by Vulcalien.
