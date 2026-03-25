@@ -25,9 +25,6 @@
 #define MGBA_LOG_INFO  3
 #define MGBA_LOG_DEBUG 4
 
-extern bool mgba_open(void);
-extern void mgba_close(void);
-
 extern void mgba_log_level(u32 level);
 
 extern void mgba_puts(const char *str);

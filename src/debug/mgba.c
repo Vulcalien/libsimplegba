@@ -23,21 +23,15 @@
 #define MGBA_DEBUG_FLAGS  *((vu16 *) 0x04fff700)
 #define MGBA_DEBUG_STRING  ((char *) 0x04fff600)
 
-static u8 debug_level;
-
-bool mgba_open(void) {
-    mgba_log_level(MGBA_LOG_INFO); // default log level is 'info'
-
-    MGBA_DEBUG_ENABLE = 0xc0de;
-    return MGBA_DEBUG_ENABLE == 0x1dea;
-}
-
-void mgba_close(void) {
-    MGBA_DEBUG_ENABLE = 0;
-}
+static u8 log_level = MGBA_LOG_INFO;
 
 void mgba_log_level(u32 level) {
-    debug_level = level;
+    log_level = level;
+}
+
+static INLINE void write_log(void) {
+    MGBA_DEBUG_ENABLE = 0xc0de;
+    MGBA_DEBUG_FLAGS = log_level | 0x100;
 }
 
 void mgba_puts(const char *str) {
@@ -51,7 +45,7 @@ void mgba_puts(const char *str) {
         if(str[i] == '\0')
             break;
     }
-    MGBA_DEBUG_FLAGS = debug_level | 0x100;
+    write_log();
 }
 
 static INLINE void print_unsigned(u32 val, u32 base, u32 *index) {
@@ -131,6 +125,5 @@ void mgba_printf(const char *format, ...) {
             break;
     }
     va_end(args);
-
-    MGBA_DEBUG_FLAGS = debug_level | 0x100;
+    write_log();
 }
