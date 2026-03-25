@@ -1,51 +1,45 @@
 # Vulcalien's Manual Makefile
-# version 0.0.1
+# version 0.1.0
 
-# === Detect OS ===
-ifeq ($(OS),Windows_NT)
-    CURRENT_OS := WINDOWS
-else
-    CURRENT_OS := UNIX
-endif
+# ==================================================================== #
+#                              Basic Info                              #
+# ==================================================================== #
 
-# === Basic Info ===
 SRC_DIR := .
 OUT_DIR := out
 
 SRC_SUBDIRS := misc hardware cartridge debug
 
-# === Commands ===
-ifeq ($(CURRENT_OS),UNIX)
-    MKDIR := mkdir -p
-    RM    := rm -rfv
-else ifeq ($(CURRENT_OS),WINDOWS)
-    MKDIR := mkdir
-    RM    := rmdir /Q /S
-endif
+# ==================================================================== #
+#                               Commands                               #
+# ==================================================================== #
 
-# === Resources ===
+MKDIR := mkdir -p
+RM    := rm -rfv
 
-# list of source directories
-SRC_DIRS := $(SRC_DIR)\
-            $(foreach SUBDIR,$(SRC_SUBDIRS),$(SRC_DIR)/$(SUBDIR))
+# ==================================================================== #
+#                              Resources                               #
+# ==================================================================== #
 
-# list of AsciiDoc files
-ADOC := $(foreach DIR,$(SRC_DIRS),\
-          $(wildcard $(DIR)/*.adoc))
+SRC_DIRS := $(SRC_DIR) $(foreach SUB,$(SRC_SUBDIRS),$(SRC_DIR)/$(SUB))
 
-# === Targets ===
+SRC := $(foreach DIR,$(SRC_DIRS),\
+         $(wildcard $(DIR)/*.adoc))
 
-.PHONY: all asciidoc clean
+# ==================================================================== #
+#                               Targets                                #
+# ==================================================================== #
 
-all: asciidoc
+.PHONY: all build clean
 
-# convert .adoc files
-asciidoc: | $(OUT_DIR)
-	asciidoctor -D $(OUT_DIR) -b manpage $(ADOC)
+all: build
+
+build: | $(OUT_DIR)
+	asciidoctor -D $(OUT_DIR) -b manpage $(SRC)
 
 clean:
 	@$(RM) $(OUT_DIR)
 
 # create directories
 $(OUT_DIR):
-	$(MKDIR) "$@"
+	$(MKDIR) $@
