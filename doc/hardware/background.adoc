@@ -7,7 +7,7 @@
 
 == NAME
 background_config, background_offset, background_toggle,
-background_affine background_mosaic - tiled backgrounds
+background_affine, background_mosaic - tiled backgrounds
 
 == SYNOPSIS
 [verse]
