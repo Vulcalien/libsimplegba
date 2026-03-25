@@ -37,7 +37,7 @@ static const u16 atan_lut[0x4000 / SCALE + 1] = {
     0x2000
 };
 
-INLINE i32 octantify(i32 *x, i32 *y) {
+static INLINE i32 octantify(i32 *x, i32 *y) {
     i32 phi = 0;
     if(*y < 0) {
         const i32 x0 = *x;
@@ -68,7 +68,7 @@ INLINE i32 octantify(i32 *x, i32 *y) {
     return phi;
 }
 
-INLINE u32 safe_ratio(u32 num, u32 den, u16 scale) {
+static INLINE u32 safe_ratio(u32 num, u32 den, u16 scale) {
     // If (num * scale) would overflow, divide both parts by scale.
     //
     // Note that, in such case, (den / scale) is always nonzero:
