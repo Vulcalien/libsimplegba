@@ -31,11 +31,50 @@
 BEGIN_GLOBAL_FUNC .iwram ARM math_udiv
     mov     r2, #0                      @ (r2) quotient = 0
 
-    .set i, 31
-    .rept 32
-        STEP(i)
-        .set i, i-1
-    .endr
+    @ based on size of num, skip unnecessary steps
+    cmp     r0, #(1 << 8)
+    blo     .L_8bit
+    cmp     r0, #(1 << 16)
+    blo     .L_16bit
+    cmp     r0, #(1 << 24)
+    blo     .L_24bit
+
+.L_32bit:
+    STEP(31)
+    STEP(30)
+    STEP(29)
+    STEP(28)
+    STEP(27)
+    STEP(26)
+    STEP(25)
+    STEP(24)
+.L_24bit:
+    STEP(23)
+    STEP(22)
+    STEP(21)
+    STEP(20)
+    STEP(19)
+    STEP(18)
+    STEP(17)
+    STEP(16)
+.L_16bit:
+    STEP(15)
+    STEP(14)
+    STEP(13)
+    STEP(12)
+    STEP(11)
+    STEP(10)
+    STEP(9)
+    STEP(8)
+.L_8bit:
+    STEP(7)
+    STEP(6)
+    STEP(5)
+    STEP(4)
+    STEP(3)
+    STEP(2)
+    STEP(1)
+    STEP(0)
 
     @ return quotient and remainder
     mov     r1, r0                      @ r1 = remainder
