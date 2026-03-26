@@ -50,7 +50,6 @@ SECTIONS {
         *(.rodata.*)
 
         . = ALIGN(4);
-        __text_end = ABSOLUTE(.);
     } >ROM =0xff
     __text_size = SIZEOF(.text);
 
@@ -68,7 +67,6 @@ SECTIONS {
         *(.data.*)
 
         . = ALIGN(4);
-        __iwram_end = ABSOLUTE(.);
     } >IWRAM AT>ROM =0xff
     __iwram_size = SIZEOF(.iwram);
     __iwram_lma = LOADADDR(.iwram);
@@ -82,7 +80,6 @@ SECTIONS {
         *(COMMON)
 
         . = ALIGN(4);
-        __bss_end = ABSOLUTE(.);
     } >IWRAM
     __bss_size = SIZEOF(.bss);
 
@@ -97,7 +94,6 @@ SECTIONS {
         *(.ewram.*)
 
         . = ALIGN(4);
-        __ewram_end = ABSOLUTE(.);
     } >EWRAM AT>ROM =0xff
     __ewram_size = SIZEOF(.ewram);
     __ewram_lma = LOADADDR(.ewram);
@@ -109,7 +105,6 @@ SECTIONS {
         *(.sbss.*)
 
         . = ALIGN(4);
-        __sbss_end = ABSOLUTE(.);
     } >EWRAM
     __sbss_size = SIZEOF(.sbss);
 }
