@@ -21,6 +21,7 @@ The following modules are available:
 | -         | Background | tiled backgrounds                           |
 | -         | Sprite     | sprites                                     |
 | -         | Window     | display windows (e.g. viewports)            |
+| -         | Effects    | color effects (e.g. blending)               |
 | -         | Audio      | digital audio driver                        |
 | -         | Timer      | hardware timers                             |
 | -         | DMA        | direct memory access                        |

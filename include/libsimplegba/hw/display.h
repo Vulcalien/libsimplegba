@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2024, 2026 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,90 +85,5 @@ INLINE void display_set_page(i32 page) {
     else
         _DISPLAY_CONTROL &= ~BIT(4);
 }
-
-// === Graphic Effects ===
-
-struct DisplayTarget {
-    u8 bg0 : 1;
-    u8 bg1 : 1;
-    u8 bg2 : 1;
-    u8 bg3 : 1;
-
-    u8 obj : 1;
-
-    u8 backdrop : 1;
-};
-
-#define _DISPLAY_EFFECTS_CONTROL    *((vu16 *) 0x04000050)
-#define _DISPLAY_EFFECTS_ALPHA      *((vu16 *) 0x04000052)
-#define _DISPLAY_EFFECTS_BRIGHTNESS *((vu16 *) 0x04000054)
-
-#define _DISPLAY_DEFAULT_TARGET (&(struct DisplayTarget) {          \
-    .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1, .obj = 1, .backdrop = 1 \
-})
-
-INLINE void display_blend(const struct DisplayTarget *target_1st,
-                          const struct DisplayTarget *target_2nd,
-                          u32 weight_1st, u32 weight_2nd) {
-    target_1st = (target_1st ? target_1st : _DISPLAY_DEFAULT_TARGET);
-    target_2nd = (target_2nd ? target_2nd : _DISPLAY_DEFAULT_TARGET);
-
-    _DISPLAY_EFFECTS_CONTROL = target_1st->bg0      << 0  |
-                               target_1st->bg1      << 1  |
-                               target_1st->bg2      << 2  |
-                               target_1st->bg3      << 3  |
-                               target_1st->obj      << 4  |
-                               target_1st->backdrop << 5  |
-                               1                    << 6  |
-                               target_2nd->bg0      << 8  |
-                               target_2nd->bg1      << 9  |
-                               target_2nd->bg2      << 10 |
-                               target_2nd->bg3      << 11 |
-                               target_2nd->obj      << 12 |
-                               target_2nd->backdrop << 13;
-
-    _DISPLAY_EFFECTS_ALPHA = (weight_1st & 0x1f) << 0 |
-                             (weight_2nd & 0x1f) << 8;
-}
-
-INLINE void display_brighten(const struct DisplayTarget *target,
-                             u32 weight) {
-    target = (target ? target : _DISPLAY_DEFAULT_TARGET);
-
-    _DISPLAY_EFFECTS_CONTROL = target->bg0      << 0 |
-                               target->bg1      << 1 |
-                               target->bg2      << 2 |
-                               target->bg3      << 3 |
-                               target->obj      << 4 |
-                               target->backdrop << 5 |
-                               2                << 6;
-    _DISPLAY_EFFECTS_BRIGHTNESS = weight & 0x1f;
-}
-
-INLINE void display_darken(const struct DisplayTarget *target,
-                           u32 weight) {
-    target = (target ? target : _DISPLAY_DEFAULT_TARGET);
-
-    _DISPLAY_EFFECTS_CONTROL = target->bg0      << 0 |
-                               target->bg1      << 1 |
-                               target->bg2      << 2 |
-                               target->bg3      << 3 |
-                               target->obj      << 4 |
-                               target->backdrop << 5 |
-                               3                << 6;
-    _DISPLAY_EFFECTS_BRIGHTNESS = weight & 0x1f;
-}
-
-INLINE void display_disable_effects(void) {
-    _DISPLAY_EFFECTS_CONTROL = 0;
-}
-
-#undef _DISPLAY_EFFECTS_CONTROL
-#undef _DISPLAY_EFFECTS_ALPHA
-#undef _DISPLAY_EFFECTS_BRIGHTNESS
-
-#undef _DISPLAY_DEFAULT_TARGET
-
-// ===== ===== =====
 
 #undef _DISPLAY_CONTROL

@@ -11,6 +11,7 @@
 #include "libsimplegba/hw/background.h"
 #include "libsimplegba/hw/sprite.h"
 #include "libsimplegba/hw/window.h"
+#include "libsimplegba/hw/effects.h"
 #include "libsimplegba/hw/audio.h"
 #include "libsimplegba/hw/timer.h"
 #include "libsimplegba/hw/dma.h"

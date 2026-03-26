@@ -1,0 +1,31 @@
+= effects(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2026-03-26
+:docdate: {revdate}
+
+== NAME
+effects_blend, effects_brighten, effects_darken, effects_disable - color
+effects
+
+== SYNOPSIS
+[verse]
+____
+*#include <libsimplegba.h>*
+
+**void effects_blend(const struct EffectsTarget +++*+++**__first__**,**
+                   **const struct EffectsTarget +++*+++**__second__**,**
+                   **i32 **__weight_1__**, i32 **__weight_2__**);**
+
+**void effects_brighten(const struct EffectsTarget +++*+++**__target__**, i32 **__weight__**);**
+**void effects_darken(const struct EffectsTarget +++*+++**__target__**, i32 **__weight__**);**
+
+*void effects_disable(void);*
+____
+
+== DESCRIPTION
+TODO
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien.
