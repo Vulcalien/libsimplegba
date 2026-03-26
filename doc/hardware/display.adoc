@@ -36,9 +36,9 @@ that any enabled background or window is disabled, and the raster page
 is set to 0.
 
 Video modes 0-2 use tiled backgrounds (tilemaps). Which backgrounds are
-available, and how they are treated (regular or affine), depend on the
-video mode selected. Charblocks are allocated as follows: 0-3 background
-tilesets, 4-5 sprite tileset.
+available and their type (regular or affine) depend on the video mode
+selected. Charblocks are allocated as follows: 0-3 background tilesets,
+4-5 sprite tileset.
 
 .Tilemap video modes
 |===
