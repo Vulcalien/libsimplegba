@@ -89,6 +89,10 @@ INLINE vu16 *display_screenblock(i32 block) {
 
 // === Bitmap-specific ===
 
+INLINE vu16 *display_raster(i32 page) {
+    return (vu16 *) (0x06000000 + (page & 1) * 0xa000);
+}
+
 INLINE i32 display_get_page(void) {
     return (_DISPLAY_CONTROL >> 4) & 1;
 }
@@ -98,10 +102,6 @@ INLINE void display_set_page(i32 page) {
         _DISPLAY_CONTROL |= BIT(4);
     else
         _DISPLAY_CONTROL &= ~BIT(4);
-}
-
-INLINE vu16 *display_get_raster(i32 page) {
-    return (vu16 *) (0x06000000 + (page & 1) * 0xa000);
 }
 
 // === Graphic Effects ===

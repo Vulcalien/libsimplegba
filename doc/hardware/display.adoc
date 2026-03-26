@@ -6,9 +6,8 @@
 :docdate: {revdate}
 
 == NAME
-display_config, display_charblock, display_screenblock,
-display_get_page, display_set_page, display_get_raster - display
-functions
+display_config, display_charblock, display_screenblock, display_raster,
+display_get_page, display_set_page - display functions
 
 == SYNOPSIS
 [verse]
@@ -23,9 +22,9 @@ ____
 **vu16 +++*+++display_charblock(i32 **__block__**);**
 **vu16 +++*+++display_screenblock(i32 **__block__**);**
 
+**vu16 +++*+++display_raster(i32 **__page__**);**
 **i32  display_get_page(void);**
 **void display_set_page(i32 **__page__**);**
-**vu16 +++*+++display_get_raster(i32 **__page__**);**
 ____
 
 == DESCRIPTION
@@ -75,13 +74,13 @@ memory used to store tilemaps. The value of _block_ should be in the
 range [0, 31].
 
 === Display pages (bitmap modes only)
+The *display_raster*() function returns a pointer to the raster of the
+specified _page_. The raster is an array of colors, with size and
+bits-per-pixel that depend on the video mode.
+
 The *display_get_page*() function returns the index of the display page
 currently being shown. The *display_set_page*() function sets the
 display page to show to _page_.
-
-The *display_get_raster*() function returns a pointer to the raster of
-the specified _page_. The raster is an array of colors, with size and
-bits-per-pixel that depend on the video mode.
 
 == NOTES
 Video memory should only be written to using 16-bit or 32-bit writes.
