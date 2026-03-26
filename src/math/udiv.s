@@ -23,11 +23,11 @@
 .endm
 
 @ input:
-@   r0 = num
-@   r1 = den
+@   r0 = num : u32
+@   r1 = den : u32
 @ output:
-@   r0 = quotient
-@   r1 = remainder
+@   r0 = quotient  : u32
+@   r1 = remainder : u32
 BEGIN_GLOBAL_FUNC .iwram ARM math_udiv
     mov     r2, #0                      @ (r2) quotient = 0
 
