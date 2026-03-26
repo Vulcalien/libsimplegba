@@ -53,33 +53,18 @@
 
 #define _DISPLAY_CONTROL *((vu16 *) 0x04000000)
 
-INLINE void display_config(u32 video_mode) {
-    if(video_mode >= 6)
-        return;
-
-    // clear all bits except force blank
-    u16 val = _DISPLAY_CONTROL & BIT(7);
-
-    val |= video_mode;
-    val |= 0 << 4  | // select raster page 0
-           0 << 5  | // disable access to OAM during HBlank
-           1 << 6  | // linear sprite mapping
-           0 << 8  | // disable all backgrounds
-           1 << 12 | // enable sprites
-           0 << 13;  // disable all windows
-
-    // if configuring a bitmap Video Mode, enable BG 2
-    if(video_mode >= 3)
-        val |= BIT(10);
-
-    _DISPLAY_CONTROL = val;
-}
-
-INLINE void display_force_blank(bool flag) {
-    if(flag)
-        _DISPLAY_CONTROL |= BIT(7);
-    else
-        _DISPLAY_CONTROL &= ~BIT(7);
+INLINE void display_config(i32 mode) {
+    // side effects:
+    // - set raster page to 0
+    // - disable all backgrounds (except BG2 if bitmap mode)
+    // - disable all windows
+    _DISPLAY_CONTROL = (
+        (mode & 7) << 0  | // video mode
+        1          << 6  | // linear sprite mapping
+        (mode < 0) << 7  | // force blank if mode < 0
+        (mode > 2) << 10 | // enable BG2 if bitmap mode
+        1          << 12   // enable sprites
+    );
 }
 
 // TODO This function remains undocumented: should it really exist?

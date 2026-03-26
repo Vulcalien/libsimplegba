@@ -2,13 +2,13 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-07-16
+:revdate: 2026-03-26
 :docdate: {revdate}
 
 == NAME
-display_config, display_force_blank, display_charblock,
-display_screenblock, display_get_page, display_set_page,
-display_get_raster - display functions
+display_config, display_charblock, display_screenblock,
+display_get_page, display_set_page, display_get_raster - display
+functions
 
 == SYNOPSIS
 [verse]
@@ -18,8 +18,7 @@ ____
 *#define DISPLAY_WIDTH  240*
 *#define DISPLAY_HEIGHT 160*
 
-**void display_config(u32 **__video_mode__**);**
-**void display_force_blank(bool **__flag__**);**
+**void display_config(i32 **__mode__**);**
 
 **vu16 +++*+++display_charblock(i32 **__block__**);**
 **vu16 +++*+++display_screenblock(i32 **__block__**);**
@@ -31,10 +30,11 @@ ____
 
 == DESCRIPTION
 === Display configuration
-The *display_config*() function sets the __video_mode__ of the display.
+The *display_config*() function sets the video _mode_ of the display.
 The video mode determines how the display is drawn and how video memory
-is allocated. The __video_mode__ argument can be any of the
-*DISPLAY_MODE_x* constants, with *x* replaced by the video mode number.
+is allocated. If _mode_ is negative, all pixels are set to white. Note
+that any enabled background or window is disabled, and the raster page
+is set to 0.
 
 Video modes 0-2 use tiled backgrounds (tilemaps). Which backgrounds are
 available, and how they are treated (regular or affine), depend on the
@@ -62,10 +62,6 @@ follows: 0-4 raster, 5 sprite tileset.
 |4      |240x160 |8     |2
 |5      |160x128 |16    |2
 |===
-
-The *display_force_blank*() function enables or disables forced blank,
-based on the value of _flag_. When forced blank is enabled, all pixels
-of the display are set to white.
 
 === Video memory
 The *display_charblock*() function returns a pointer to the charblock of
