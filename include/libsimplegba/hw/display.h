@@ -33,24 +33,6 @@
 #define DISPLAY_MODE_4 4
 #define DISPLAY_MODE_5 5
 
-// Video Modes
-//
-// Tilemap modes:
-//   | Mode | BG0 | BG1 | BG2 | BG3 |
-//   | ---- | --- | --- | --- | --- |
-//   |   0  | reg | reg | reg | reg |
-//   |   1  | reg | reg | aff |     |
-//   |   2  |     |     | aff | aff |
-// reg: regular background
-// aff: affine background
-//
-// Bitmap modes:
-//   | Mode |   Size  | BPP | Pages |
-//   | ---- | ------- | --- | ----- |
-//   |   3  | 240x160 |  16 |   1   |
-//   |   4  | 240x160 |  8  |   2   |
-//   |   5  | 160x128 |  16 |   2   |
-
 #define _DISPLAY_CONTROL *((vu16 *) 0x04000000)
 
 INLINE void display_config(i32 mode) {
