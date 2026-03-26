@@ -15,6 +15,13 @@
 
 .include "assembly.inc"
 
+@ determine i-th bit of quotient
+.macro STEP i:req
+    cmp     r1, r0, lsr #\i             @ if den <= (num >> i):
+    subls   r0, r0, r1, lsl #\i         @   (r0) num -= (den << i)
+    orrls   r2, r2, #(1 << \i)          @   (r2) quotient |= BIT(i)
+.endm
+
 @ input:
 @   r0 = num
 @   r1 = den
@@ -23,12 +30,10 @@
 @   r1 = remainder
 BEGIN_GLOBAL_FUNC .iwram ARM math_udiv
     mov     r2, #0                      @ (r2) quotient = 0
-.L_loop:
+
     .set i, 31
-    .rept 32                            @ for i = 31 to 0:
-        cmp     r1, r0, lsr #i          @   if den <= (num >> i):
-        subls   r0, r0, r1, lsl #i      @     (r0) num -= (den << i)
-        orrls   r2, r2, #(1 << i)       @     (r2) quotient |= BIT(i)
+    .rept 32
+        STEP(i)
         .set i, i-1
     .endr
 
