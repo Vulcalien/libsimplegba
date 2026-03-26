@@ -15,8 +15,6 @@
 
 .include "assembly.inc"
 
-@ --- memory_copy_8 --- @
-
 @ Copy data from one memory area to another, using only 8-bit reads and
 @ writes.
 @

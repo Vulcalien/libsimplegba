@@ -15,8 +15,6 @@
 
 .include "assembly.inc"
 
-@ --- memset --- @
-
 @ Fill a memory area with a given byte value. This is an implementation
 @ of the C standard function 'memset'.
 @

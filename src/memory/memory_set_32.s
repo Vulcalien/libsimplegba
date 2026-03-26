@@ -15,8 +15,6 @@
 
 .include "assembly.inc"
 
-@ --- memory_set_32 --- @
-
 @ Fill a memory area with a given byte, using only 32-bit writes.
 @
 @ Constraints:

@@ -15,8 +15,6 @@
 
 .include "assembly.inc"
 
-@ --- memory_compare_8 --- @
-
 @ Compare memory areas, using only 8-bit reads.
 @
 @ Return value:

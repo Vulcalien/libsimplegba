@@ -15,8 +15,6 @@
 
 .include "assembly.inc"
 
-@ --- memory_set_8 --- @
-
 @ Fill a memory area with a given byte, using only 8-bit writes.
 @
 @ Notes:

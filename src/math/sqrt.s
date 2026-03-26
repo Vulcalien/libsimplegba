@@ -15,8 +15,6 @@
 
 .include "assembly.inc"
 
-@ --- math_sqrt --- @
-
 @ register allocation:
 @   r0 = x, result
 @   r1 = low
