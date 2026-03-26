@@ -1,0 +1,51 @@
+= math_trig(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2026-03-26
+:docdate: {revdate}
+
+== NAME
+math_brad, math_sin, math_cos, math_tan, math_asin, math_acos,
+math_atan, math_atan2 - trigonometric functions
+
+== SYNOPSIS
+[verse]
+____
+*#include <libsimplegba.h>*
+
+**i32 math_brad(i32 **__angle__**);**
+
+**i32 math_sin(i32 **__angle__**);**
+**i32 math_cos(i32 **__angle__**);**
+**i32 math_tan(i32 **__angle__**);**
+
+**i32 math_asin(i32 **__x__**);**
+**i32 math_acos(i32 **__x__**);**
+**i32 math_atan(i32 **__x__**);**
+
+**i32 math_atan2(i32 **__y__**, i32 **__x__**);**
+____
+
+== DESCRIPTION
+These functions use 16-bit binary radians (brad) to measure angles, with
+0x4000 representing 90 degrees.
+
+The *math_brad*() function converts _angle_ from degrees to binary
+radians. Negative input values are allowed and result in negative output
+values.
+
+The *math_sin*(), *math_cos*() and *math_tan*() functions return
+approximate values of the sine, cosine and tangent of _angle_. The
+result is scaled by a factor of 0x4000.
+
+The *math_asin*(), *math_acos*() and *math_atan*() functions return
+approximate values of the arcsine, arccosine and arctangent of _x_. The
+value of _x_ must be scaled by a factor of 0x4000. If _x_ is outside the
+range [-0x4000, 0x4000], *math_asin*() and *math_acos*() return 0.
+
+The *math_atan2*() function returns an approximate measure of the angle
+between the x-axis and the line connecting the origin to (_x_, _y_).
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien.
