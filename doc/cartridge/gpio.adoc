@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-11-25
+:revdate: 2026-03-27
 :docdate: {revdate}
 
 == NAME
@@ -14,10 +14,10 @@ ____
 *#include <libsimplegba.h>*
 
 **void gpio_toggle(bool **__enable__**);**
-**void gpio_config(u32 **__directions__**);**
+**void gpio_config(i32 **__directions__**);**
 
-**u16  gpio_read(void);**
-**void gpio_write(u16 **__data__**);**
+**i32  gpio_read(void);**
+**void gpio_write(i32 **__data__**);**
 ____
 
 == DESCRIPTION

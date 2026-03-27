@@ -24,17 +24,17 @@ INLINE void gpio_toggle(bool enable) {
 
 // 0=input      Cartridge ->    GBA
 // 1=output        GBA    -> Cartridge
-INLINE void gpio_config(u32 directions) {
+INLINE void gpio_config(i32 directions) {
     vu16 *pin_control = (vu16 *) 0x080000c6;
     *pin_control = directions;
 }
 
-INLINE u16 gpio_read(void) {
-    vu16 *pins = (vu16 *) 0x080000C4;
+INLINE i32 gpio_read(void) {
+    vu16 *pins = (vu16 *) 0x080000c4;
     return *pins;
 }
 
-INLINE void gpio_write(u16 data) {
-    vu16 *pins = (vu16 *) 0x080000C4;
+INLINE void gpio_write(i32 data) {
+    vu16 *pins = (vu16 *) 0x080000c4;
     *pins = data;
 }
