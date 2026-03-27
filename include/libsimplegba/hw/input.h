@@ -17,6 +17,8 @@
 
 #include "libsimplegba/base.h"
 
+#include "libsimplegba/math.h"
+
 #define KEY_A      BIT(0)
 #define KEY_B      BIT(1)
 #define KEY_SELECT BIT(2)
@@ -42,16 +44,10 @@ extern u8 _input_repeat_interval;
 
 INLINE void input_init(i32 repeat_delay, i32 repeat_interval) {
     // clip repeat interval in range [1, 240]
-    if(repeat_interval < 1)
-        repeat_interval = 1;
-    if(repeat_interval > 240)
-        repeat_interval = 240;
+    repeat_interval = math_clip(repeat_interval, 1, 240);
 
     // clip repeat delay in range [interval, 240]
-    if(repeat_delay < repeat_interval)
-        repeat_delay = repeat_interval;
-    if(repeat_delay > 240)
-        repeat_delay = 240;
+    repeat_delay = math_clip(repeat_delay, repeat_interval, 240);
 
     _input_repeat_delay = repeat_delay;
     _input_repeat_interval = repeat_interval;
