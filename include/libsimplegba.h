@@ -23,6 +23,7 @@
 #include "libsimplegba/cart/cartridge.h"
 #include "libsimplegba/cart/backup.h"
 #include "libsimplegba/cart/gpio.h"
+#include "libsimplegba/cart/rtc.h"
 
 // Debug
 #include "libsimplegba/debug/profiler.h"
