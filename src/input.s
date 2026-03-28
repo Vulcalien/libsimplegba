@@ -26,25 +26,31 @@
 .global _input_is_down
 _input_is_down:
     .space 2
+.size _input_is_down, .-_input_is_down
 
 .global _input_was_down
 _input_was_down:
     .space 2
+.size _input_was_down, .-_input_was_down
 
 .global _input_repeated
 _input_repeated:
     .space 2
+.size _input_repeated, .-_input_repeated
 
 .global _input_repeat_delay
 _input_repeat_delay:
     .space 1
+.size _input_repeat_delay, .-_input_repeat_delay
 
 .global _input_repeat_interval
 _input_repeat_interval:
     .space 1
+.size _input_repeat_interval, .-_input_repeat_interval
 
 time_down:
     .space COUNT
+.size time_down, .-time_down
 
 @ --- input_update --- @
 
