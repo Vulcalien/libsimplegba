@@ -32,7 +32,7 @@ The following modules are available:
 | Cartridge | Cartridge  | game cartridge (e.g. header)                |
 | -         | Backup     | backup memory                               |
 | -         | GPIO       | 4-bit GPIO port                             |
-| -         | RTC        | Real-time clock                             |
+| -         | RTC        | real-time clock                             |
 |           |            |                                             |
 | Debug     | Profiler   | code profiler                               |
 | -         | mGBA       | printing to mGBA output (e.g. mgba_printf)  |

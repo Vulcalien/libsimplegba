@@ -1,0 +1,48 @@
+= rtc(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2026-03-30
+:docdate: {revdate}
+
+== NAME
+rtc_read, rtc_write - real-time clock
+
+== SYNOPSIS
+[verse]
+____
+*#include <libsimplegba.h>*
+
+**void rtc_read(struct RTC +++*+++**__datetime__**);**
+**void rtc_write(const struct RTC +++*+++**__datetime__**);**
+____
+
+== DESCRIPTION
+Some cartridges include a real-time clock that keeps track of date and
+time. Only the last two digits of the year are used. The RTC's datetime
+structure is defined as follows:
+
+[source,c]
+----
+struct RTC {
+    u8 year;  // [0, 99]
+    u8 month; // [1, 12]
+    u8 day;   // [1, 31]
+
+    u8 hour;   // [0, 23]
+    u8 minute; // [0, 59]
+    u8 second; // [0, 59]
+
+    u8 day_of_week; // 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
+};
+----
+
+The *rtc_read*() function retrieves the RTC's datetime and copies it
+into the _datetime_ structure.
+
+The *rtc_write*() function overwrites the RTC's datetime with the one
+specified in the _datetime_ structure. Be aware that this feature is not
+widely supported by emulators.
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien.
