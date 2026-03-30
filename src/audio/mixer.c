@@ -18,8 +18,8 @@
 #include "libsimplegba/hw/interrupt.h"
 #include "libsimplegba/hw/timer.h"
 #include "libsimplegba/hw/dma.h"
-#include "libsimplegba/memory.h"
-#include "libsimplegba/math.h"
+#include "libsimplegba/misc/memory.h"
+#include "libsimplegba/misc/math.h"
 
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include "libsimplegba/math.h"
+#include "libsimplegba/misc/math.h"
 
 #define SCALE 128
 

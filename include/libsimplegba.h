@@ -1,10 +1,12 @@
 #pragma once
 
-// Misc
 #include "libsimplegba/base.h"
-#include "libsimplegba/math.h"
-#include "libsimplegba/random.h"
-#include "libsimplegba/memory.h"
+
+// Misc
+#include "libsimplegba/misc/types.h"
+#include "libsimplegba/misc/math.h"
+#include "libsimplegba/misc/random.h"
+#include "libsimplegba/misc/memory.h"
 
 // Hardware
 #include "libsimplegba/hw/display.h"

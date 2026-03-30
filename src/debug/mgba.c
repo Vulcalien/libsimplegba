@@ -17,7 +17,7 @@
 
 #include <stdarg.h>
 
-#include "libsimplegba/math.h"
+#include "libsimplegba/misc/math.h"
 
 #define MGBA_DEBUG_ENABLE *((vu16 *) 0x04fff780)
 #define MGBA_DEBUG_FLAGS  *((vu16 *) 0x04fff700)

@@ -15,49 +15,12 @@
  */
 #pragma once
 
-// Basic types and definitions used throughout the program.
-
-// === Data Types ===
+#include "libsimplegba/misc/types.h"
 
 #define NULL ((void *) 0)
 
-#define bool _Bool
-#define true  1
-#define false 0
-
-typedef unsigned char   u8;
-typedef unsigned short  u16;
-typedef unsigned int    u32;
-typedef   signed char   i8;
-typedef   signed short  i16;
-typedef   signed int    i32;
-
-typedef volatile u8     vu8;
-typedef volatile u16    vu16;
-typedef volatile u32    vu32;
-typedef volatile i8     vi8;
-typedef volatile i16    vi16;
-typedef volatile i32    vi32;
-
-// Limits
-#define  U8_MAX 255
-#define U16_MAX 65535
-#define U32_MAX 4294967295
-
-#define  I8_MIN (-128)
-#define I16_MIN (-32768)
-#define I32_MIN (-2147483648)
-
-#define  I8_MAX 127
-#define I16_MAX 32767
-#define I32_MAX 2147483647
-
-// === Macros ===
-
 #define BIT(n) (1 << (n))
 #define BITMASK(n) ((1 << (n)) - 1)
-
-// ===== ===== =====
 
 #define static_assert _Static_assert
 

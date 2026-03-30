@@ -15,7 +15,7 @@
  */
 #include "libsimplegba/cart/backup.h"
 
-#include "libsimplegba/memory.h"
+#include "libsimplegba/misc/memory.h"
 
 #define SRAM ((vu8 *) 0x0e000000)
 

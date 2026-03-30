@@ -17,7 +17,7 @@
 
 #include "libsimplegba/base.h"
 
-#include "libsimplegba/math.h"
+#include "libsimplegba/misc/math.h"
 
 #define KEY_A      BIT(0)
 #define KEY_B      BIT(1)
