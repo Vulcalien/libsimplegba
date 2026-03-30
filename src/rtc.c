@@ -17,8 +17,7 @@
 
 #include "libsimplegba/cart/gpio.h"
 
-#define CMD_READ_DATETIME  0xa6
-#define CMD_WRITE_DATETIME 0x26
+// === Helper Functions ===
 
 static const u8 bin_to_bcd[100] = {
     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
@@ -47,6 +46,8 @@ static NO_INLINE void delay(void) {
     #pragma GCC unroll 0
     for(vi32 i = 0; i < 8; i++);
 }
+
+// === Input/Output ===
 
 THUMB
 static NO_INLINE i32 read_byte(void) {
@@ -79,17 +80,30 @@ static NO_INLINE void write_byte(i32 val) {
     }
 }
 
-THUMB
-void rtc_read(struct RTC *datetime) {
+static INLINE void cmd_start(i32 cmd) {
     gpio_toggle(true);
-
     gpio_config(7); // CS=out, SIO=out, SCK=out
+
     gpio_write(1); // CS=0, SIO=0, SCK=1
     delay();
     gpio_write(5); // CS=1, SIO=0, SCK=1
     delay();
 
-    write_byte(CMD_READ_DATETIME);
+    write_byte(cmd);
+}
+
+static INLINE void cmd_end(void) {
+    gpio_write(1); // CS=0, SIO=0, SCK=1
+}
+
+// === Commands ===
+
+#define CMD_READ_DATETIME  0xa6
+#define CMD_WRITE_DATETIME 0x26
+
+THUMB
+void rtc_read(struct RTC *datetime) {
+    cmd_start(CMD_READ_DATETIME);
 
     datetime->year        = bin(read_byte());
     datetime->month       = bin(read_byte());
@@ -99,20 +113,12 @@ void rtc_read(struct RTC *datetime) {
     datetime->minute      = bin(read_byte());
     datetime->second      = bin(read_byte());
 
-    gpio_write(1); // CS=0, SIO=0, SCK=1
+    cmd_end();
 }
 
 THUMB
 void rtc_write(const struct RTC *datetime) {
-    gpio_toggle(true);
-
-    gpio_config(7); // CS=out, SIO=out, SCK=out
-    gpio_write(1); // CS=0, SIO=0, SCK=1
-    delay();
-    gpio_write(5); // CS=1, SIO=0, SCK=1
-    delay();
-
-    write_byte(CMD_WRITE_DATETIME);
+    cmd_start(CMD_WRITE_DATETIME);
 
     write_byte(bcd(datetime->year));
     write_byte(bcd(datetime->month));
@@ -122,5 +128,5 @@ void rtc_write(const struct RTC *datetime) {
     write_byte(bcd(datetime->minute));
     write_byte(bcd(datetime->second));
 
-    gpio_write(1); // CS=0, SIO=0, SCK=1
+    cmd_end();
 }
