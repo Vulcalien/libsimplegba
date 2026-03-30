@@ -217,7 +217,7 @@ static i32 mixer_available_channel(void) {
     return -1;
 }
 
-const struct _AudioDriver _audio_driver_mixer = {
+const struct AudioDriver _audio_driver_mixer = {
     .init   = mixer_init,
     .update = mixer_update,
 

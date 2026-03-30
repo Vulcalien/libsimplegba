@@ -15,4 +15,4 @@
  */
 #include "libsimplegba/cart/backup.h"
 
-const struct _BackupDriver *_backup_driver;
+const struct BackupDriver *_backup_driver;

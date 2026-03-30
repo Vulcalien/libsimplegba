@@ -17,7 +17,7 @@
 
 #include "libsimplegba/base.h"
 
-extern const struct _BackupDriver {
+extern const struct BackupDriver {
     void (*read)(u16 offset, void *buffer, u32 n);
     void (*write)(u16 offset, const void *buffer, u32 n);
 
@@ -32,7 +32,7 @@ extern const struct _BackupDriver {
 } *_backup_driver;
 
 INLINE void backup_init(const void *driver) {
-    _backup_driver = (const struct _BackupDriver *) driver;
+    _backup_driver = (const struct BackupDriver *) driver;
 }
 
 INLINE void backup_read(u16 offset, void *buffer, u32 n) {
@@ -67,7 +67,7 @@ INLINE void backup_bank(u32 bank) {
     _backup_driver->bank(bank);
 }
 
-extern const struct _BackupDriver
+extern const struct BackupDriver
     _backup_driver_sram,
     _backup_driver_flash;
 

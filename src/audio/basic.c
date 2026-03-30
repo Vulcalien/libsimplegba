@@ -284,7 +284,7 @@ static i32 basic_available_channel(void) {
     return -1;
 }
 
-const struct _AudioDriver _audio_driver_basic = {
+const struct AudioDriver _audio_driver_basic = {
     .init   = basic_init,
     .update = basic_update,
 

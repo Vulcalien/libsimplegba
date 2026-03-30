@@ -28,7 +28,7 @@
 #define AUDIO_PANNING_MIN (-64)
 #define AUDIO_PANNING_MAX (+64)
 
-extern const struct _AudioDriver {
+extern const struct AudioDriver {
     void (*init)(void);
     void (*update)(void);
 
@@ -49,7 +49,7 @@ extern const struct _AudioDriver {
 } *_audio_driver;
 
 INLINE void audio_init(const void *driver) {
-    _audio_driver = (const struct _AudioDriver *) driver;
+    _audio_driver = (const struct AudioDriver *) driver;
     _audio_driver->init();
 }
 
@@ -138,7 +138,7 @@ INLINE void audio_sample_rate(u32 sample_rate) {
     timer_start(TIMER0, cycles_per_sample);
 }
 
-extern const struct _AudioDriver
+extern const struct AudioDriver
     _audio_driver_basic,
     _audio_driver_mixer;
 

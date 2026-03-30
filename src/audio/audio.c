@@ -15,4 +15,4 @@
  */
 #include "libsimplegba/hw/audio.h"
 
-const struct _AudioDriver *_audio_driver;
+const struct AudioDriver *_audio_driver;

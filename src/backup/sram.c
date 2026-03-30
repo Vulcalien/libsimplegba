@@ -61,7 +61,7 @@ static void sram_bank(u32 bank) {
     // nothing to do
 }
 
-const struct _BackupDriver _backup_driver_sram = {
+const struct BackupDriver _backup_driver_sram = {
     .read  = sram_read,
     .write = sram_write,
 

@@ -108,7 +108,7 @@ static void flash_bank(u32 bank) {
     FLASH[0x0000] = (bank & 1);
 }
 
-const struct _BackupDriver _backup_driver_flash = {
+const struct BackupDriver _backup_driver_flash = {
     .read  = flash_read,
     .write = flash_write,
 
