@@ -19,8 +19,7 @@ ____
 
 == DESCRIPTION
 Some cartridges include a real-time clock that keeps track of date and
-time. Only the last two digits of the year are used. The RTC's datetime
-structure is defined as follows:
+time. The RTC's datetime structure is defined as follows:
 
 [source,c]
 ----
