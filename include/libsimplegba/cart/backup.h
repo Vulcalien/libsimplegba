@@ -69,9 +69,7 @@ INLINE void backup_bank(u32 bank) {
 
 extern const struct _BackupDriver
     _backup_driver_sram,
-    _backup_driver_flash,
-    _backup_driver_eeprom;
+    _backup_driver_flash;
 
 #define BACKUP_SRAM   (&_backup_driver_sram)
 #define BACKUP_FLASH  (&_backup_driver_flash)
-#define BACKUP_EEPROM (&_backup_driver_eeprom)
