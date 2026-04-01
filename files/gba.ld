@@ -41,13 +41,13 @@ SECTIONS {
         *(.crt0)
 
         *(.text)
-        *(.text.*)
+        *(SORT(.text.*))
 
         *(.glue_7)
         *(.glue_7t)
 
         *(.rodata)
-        *(.rodata.*)
+        *(SORT(.rodata.*))
 
         . = ALIGN(4);
     } >ROM =0xff
@@ -61,10 +61,10 @@ SECTIONS {
         __iwram_start = ABSOLUTE(.);
 
         *(.iwram)
-        *(.iwram.*)
+        *(SORT(.iwram.*))
 
         *(.data)
-        *(.data.*)
+        *(SORT(.data.*))
 
         . = ALIGN(4);
     } >IWRAM AT>ROM =0xff
@@ -75,7 +75,7 @@ SECTIONS {
         __bss_start = ABSOLUTE(.);
 
         *(.bss)
-        *(.bss.*)
+        *(SORT(.bss.*))
 
         *(COMMON)
 
@@ -91,7 +91,7 @@ SECTIONS {
         __ewram_start = ABSOLUTE(.);
 
         *(.ewram)
-        *(.ewram.*)
+        *(SORT(.ewram.*))
 
         . = ALIGN(4);
     } >EWRAM AT>ROM =0xff
@@ -102,7 +102,7 @@ SECTIONS {
         __sbss_start = ABSOLUTE(.);
 
         *(.sbss)
-        *(.sbss.*)
+        *(SORT(.sbss.*))
 
         . = ALIGN(4);
     } >EWRAM

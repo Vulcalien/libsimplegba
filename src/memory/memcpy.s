@@ -30,7 +30,7 @@
 @   r2 = n    : u32
 @ output:
 @   r0 = dest : void *
-BEGIN_GLOBAL_FUNC .text THUMB memcpy
+BEGIN_GLOBAL_FUNC .text.memcpy THUMB memcpy
     @ tmp = (dest | src | n)
     movs    r3, r0                      @ tmp = dest
     orrs    r3, r1                      @ tmp |= src

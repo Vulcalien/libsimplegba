@@ -28,7 +28,7 @@
 @   r2 = n : u32
 @ output:
 @   r0 = diff : i32
-BEGIN_GLOBAL_FUNC .text THUMB memory_compare_8
+BEGIN_GLOBAL_FUNC .text.memcmp THUMB memory_compare_8
     @ if n == 0, return 0
     cmp     r2, #0
     beq     .L_return_zero
