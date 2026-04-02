@@ -15,8 +15,6 @@
 
 .include "assembly.inc"
 
-@ This function acts as a wrapper around the memory_copy_x.
-
 @ Small wrapper around width-speficic memory_copy_x functions.
 @
 @ The smallest alignment between 'dest', 'src' and 'n' determines the
