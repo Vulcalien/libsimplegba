@@ -28,7 +28,7 @@
 @ output:
 @   r0 = quotient  : u32
 @   r1 = remainder : u32
-BEGIN_FUNC .iwram ARM math_udiv
+BEGIN_GLOBAL_FUNC .iwram ARM math_udiv
     mov     r2, #0                      @ (r2) quotient = 0
 
     @ based on size of num, skip unnecessary steps
