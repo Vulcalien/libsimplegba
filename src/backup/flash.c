@@ -20,33 +20,26 @@
 #define FLASH ((vu8 *) 0x0e000000)
 
 THUMB
-static i32 flash_read_byte(u16 offset) {
-    return FLASH[offset];
-}
-
-THUMB
-static void flash_write_byte(u16 offset, i32 byte) {
-    byte &= 0xff;
-
-    // prepare to write byte
-    FLASH[0x5555] = 0xaa;
-    FLASH[0x2aaa] = 0x55;
-    FLASH[0x5555] = 0xa0;
-
-    FLASH[offset] = byte;
-
-    while(FLASH[offset] != byte);
-}
-
-THUMB
 static void flash_read(u16 offset, void *buffer, u32 n) {
     memory_copy_8(buffer, FLASH + offset, n);
 }
 
 THUMB
 static void flash_write(u16 offset, const void *buffer, u32 n) {
-    for(u32 i = 0; i < n; i++)
-        flash_write_byte(offset + i, ((u8 *) buffer)[i]);
+    const u8 *data = buffer;
+
+    for(i32 i = 0; i < n; i++) {
+        // prepare to write byte
+        FLASH[0x5555] = 0xaa;
+        FLASH[0x2aaa] = 0x55;
+        FLASH[0x5555] = 0xa0;
+
+        FLASH[offset + i] = data[i];
+    }
+
+    for(i32 i = 0; i < n; i++) {
+        while(FLASH[offset + i] != data[i]);
+    }
 }
 
 THUMB
@@ -111,9 +104,6 @@ static void flash_bank(u32 bank) {
 const struct BackupDriver _backup_driver_flash = {
     .read  = flash_read,
     .write = flash_write,
-
-    .read_byte  = flash_read_byte,
-    .write_byte = flash_write_byte,
 
     .erase_chip   = flash_erase_chip,
     .erase_sector = flash_erase_sector,

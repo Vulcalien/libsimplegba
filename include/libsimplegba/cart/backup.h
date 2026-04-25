@@ -21,9 +21,6 @@ extern const struct BackupDriver {
     void (*read)(u16 offset, void *buffer, u32 n);
     void (*write)(u16 offset, const void *buffer, u32 n);
 
-    i32  (*read_byte)(u16 offset);
-    void (*write_byte)(u16 offset, i32 byte);
-
     void (*erase_chip)(void);
     void (*erase_sector)(u32 n);
 
@@ -41,14 +38,6 @@ INLINE void backup_read(u16 offset, void *buffer, u32 n) {
 
 INLINE void backup_write(u16 offset, const void *buffer, u32 n) {
     _backup_driver->write(offset, buffer, n);
-}
-
-INLINE i32 backup_read_byte(u16 offset) {
-    return _backup_driver->read_byte(offset);
-}
-
-INLINE void backup_write_byte(u16 offset, i32 byte) {
-    _backup_driver->write_byte(offset, byte);
 }
 
 INLINE void backup_erase_chip(void) {
