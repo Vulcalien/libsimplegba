@@ -43,8 +43,6 @@ The *interrupt_wait*() function waits for the interrupt to be raised,
 then returns.
 
 === Interrupts
-Interrupts are identified by the constants described below.
-
 *IRQ_VBLANK*::
 Periodically raised at the start of VBlank, after the last visible row
 of pixels is rendered, with an approximate frequency of 59.73 Hz.
