@@ -34,6 +34,24 @@
 
 #define _INTERRUPT_COUNT 14
 
+INLINE void interrupt_config(i32 id, i32 config) {
+    switch(id) {
+        case IRQ_VCOUNT: {
+            vu8 *vcount = (vu8 *) 0x04000005;
+            *vcount = config;
+        } break;
+
+        case IRQ_KEYPAD: {
+            vu16 *control = (vu16 *) 0x04000132;
+            const u16 irq = BIT(14);
+
+            u16 tmp = *control & irq;
+            tmp |= config & ~irq;
+            *control = tmp;
+        } break;
+    }
+}
+
 extern void interrupt_isr(i32 id, void (*isr)(void));
 
 INLINE void interrupt_toggle(i32 id, bool enable) {

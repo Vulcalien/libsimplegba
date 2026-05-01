@@ -6,14 +6,17 @@
 :docdate: {revdate}
 
 == NAME
-interrupt_isr, interrupt_toggle, interrupt_wait - interrupt handling
+interrupt_config, interrupt_isr, interrupt_toggle, interrupt_wait -
+interrupt handling
 
 == SYNOPSIS
 [verse]
 ____
 *#include <libsimplegba.h>*
 
+**void interrupt_config(i32 **__id__**, i32 **__config__**);**
 **void interrupt_isr(i32 **__id__**, void (+++*+++**__isr__**)(void));**
+
 **void interrupt_toggle(i32 **__id__**, bool **__enable__**);**
 **void interrupt_wait(i32 **__id__**);**
 ____
@@ -24,6 +27,10 @@ normal flow of execution. Interrupts can be assigned an ISR (Interrupt
 Service Routine), a function to execute right after the interrupt is
 acknowledged. If an interrupt is raised while an ISR is running, the
 interrupt is handled after the ISR returns.
+
+The *interrupt_config*() function configures the interrupt. See the list
+of interrupts below to see how _config_ is interpreted. Note that most
+interrupts do not need configuration.
 
 The *interrupt_isr*() function maps the interrupt to its _isr_. If _isr_
 is NULL, no action is performed when that interrupt is raised, other
@@ -39,17 +46,18 @@ then returns.
 Interrupts are identified by the constants described below.
 
 *IRQ_VBLANK*::
-Periodically raised at the start of VBlank, after the last row of pixels
-is rendered, with an approximate frequency of 59.73 Hz.
+Periodically raised at the start of VBlank, after the last visible row
+of pixels is rendered, with an approximate frequency of 59.73 Hz.
 
 *IRQ_HBLANK*::
-Periodically raised at the start of HBlank, after the last column of
-pixels is rendered for each row (including hidden rows), with an
-approximate frequency of 13.62 KHz.
+Periodically raised at the start of HBlank, after the last visible pixel
+is rendered for each row (including hidden rows), with an approximate
+frequency of 13.62 KHz.
 
 *IRQ_VCOUNT*::
-Periodically raised when the display's VCount reaches the configured
-number, with an approximate frequency of 59.73 Hz. TODO
+Periodically raised when a specific row of pixels begins being rendered,
+with an approximate frequency of 59.73 Hz. The row can be selected by
+calling *interrupt_config*() with _config_ in the range [0, 227].
 
 *IRQ_TIMER0*, *IRQ_TIMER1*, *IRQ_TIMER2*, *IRQ_TIMER3*::
 Raised when a timer's counter reaches zero. See *timer_config*(3).
