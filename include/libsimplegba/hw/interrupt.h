@@ -34,6 +34,8 @@
 
 #define _INTERRUPT_COUNT 14
 
+extern void interrupt_isr(i32 id, void (*isr)(void));
+
 INLINE void interrupt_toggle(i32 id, bool enable) {
     if(id < 0 || id >= _INTERRUPT_COUNT)
         return;
@@ -71,7 +73,6 @@ INLINE void interrupt_toggle(i32 id, bool enable) {
     }
 }
 
-extern void interrupt_isr(i32 id, void (*isr)(void));
 extern void interrupt_wait(i32 id);
 
 #undef _INTERRUPT_COUNT
