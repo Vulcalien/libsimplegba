@@ -32,9 +32,6 @@
 #define KEY_R      BIT(8)
 #define KEY_L      BIT(9)
 
-#define _INPUT_KEY_CONTROL *((vu16 *) 0x04000132)
-#define _INPUT_IRQ_BIT BIT(14)
-
 extern u16 _input_is_down;
 extern u16 _input_was_down;
 extern u16 _input_repeated;
@@ -76,18 +73,3 @@ INLINE bool input_repeat(u32 key) {
     bool is_repeated = (_input_repeated & key);
     return is_repeated;
 }
-
-// all_keys: if true, all specified keys must be pressed at the same
-//           time to raise the interrupt; if false, any of the specified
-//           keys will raise the interrupt.
-// keys: list of keys joined using logical OR (e.g. KEY_A | KEY_START).
-INLINE void input_irq_config(bool all_keys, u32 keys) {
-    // clear all bits, except IRQ enable
-    u16 val = _INPUT_KEY_CONTROL & _INPUT_IRQ_BIT;
-
-    val |= keys << 0 | all_keys << 15;
-    _INPUT_KEY_CONTROL = val;
-}
-
-#undef _INPUT_KEY_CONTROL
-#undef _INPUT_IRQ_BIT

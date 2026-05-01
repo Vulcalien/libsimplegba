@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-19
+:revdate: 2026-05-01
 :docdate: {revdate}
 
 == NAME
 input_init, input_update, input_down, input_press, input_release,
-input_repeat, input_irq_config - input detection
+input_repeat - input detection
 
 == SYNOPSIS
 [verse]
@@ -21,8 +21,6 @@ ____
 **bool input_press(u32 **__key__**);**
 **bool input_release(u32 **__key__**);**
 **bool input_repeat(u32 **__key__**);**
-
-**void input_irq_config(bool **__all_keys__**, u32 **__keys__**);**
 ____
 
 == DESCRIPTION
@@ -58,16 +56,6 @@ The *input_repeat*() function returns true if the specified _key_ has
 just been pressed or is being repeated. A key is repeated, with a period
 equal to the repeat interval, if it has been held down for longer than
 the repeat delay. See *input_init*() above.
-
-=== Input interrupt
-The *input_irq_config*() function configures the keypad interrupt
-condition. If __all_keys__ is true, the interrupt is raised if all of
-the specified keys are down at the same time; if __all_keys__ is false,
-the interrupt is raised if any of those keys is down. The _keys_
-argument is a list of keys joined together using the bitwise OR operator
-(e.g., *KEY_A* | *KEY_START*). For the interrupt to be acknowledged, it
-must also be enabled by calling the *interrupt_toggle*(3) function
-passing *IRQ_KEYPAD* as argument.
 
 == RETURN VALUE
 The *input_down*(), *input_press*(), *input_release*() and
