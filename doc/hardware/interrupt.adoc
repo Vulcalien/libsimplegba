@@ -53,9 +53,9 @@ is rendered for each row (including hidden rows), with an approximate
 frequency of 13.62 KHz.
 
 *IRQ_VCOUNT*::
-Periodically raised when a specific row of pixels begins being rendered,
-with an approximate frequency of 59.73 Hz. The row can be selected by
-calling *interrupt_config*() with _config_ in the range [0, 227].
+Periodically raised when a specific row of pixels begins rendering, with
+an approximate frequency of 59.73 Hz. The row can be selected by calling
+*interrupt_config*() with _config_ in the range [0, 227].
 
 *IRQ_TIMER0*, *IRQ_TIMER1*, *IRQ_TIMER2*, *IRQ_TIMER3*::
 Raised when a timer's counter reaches zero. See *timer_config*(3).
