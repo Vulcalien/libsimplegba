@@ -17,20 +17,6 @@
 
 #include "libsimplegba/base.h"
 
-// This is how timers are considered to work by this driver.
-//
-// Each timer has its own counter, which can have values in range
-// [1, TIMER_COUNTER_MAX]. When started, a timer is given a counter
-// value. Timers decrement their counter when ticking until it reaches
-// zero. When that happens, the timer immediately loads the counter's
-// next value (the same value specified when started, unless changed).
-//
-// 'prescaler' is the number of CPU cycles it takes a timer to tick.
-// If cascade=1, Timer X will tick only when the counter of Timer X-1
-// reaches zero and 'prescaler' will be ignored.
-// If irq=1, an interrupt request is raised when the counter
-// reaches zero.
-
 #define TIMER0 0
 #define TIMER1 1
 #define TIMER2 2
