@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-19
+:revdate: 2026-05-07
 :docdate: {revdate}
 
 == NAME
@@ -39,10 +39,10 @@ When the counter of a timer reaches zero, an interrupt request tied to
 that timer is raised, if enabled: see *interrupt_toggle*(3).
 
 === Timer configuration
-The *timer_config*() function configures the timer and, if running,
-stops it. The _config_ argument can be any of these constants:
-*TIMER_PRESCALER_1*, *TIMER_PRESCALER_64*, *TIMER_PRESCALER_256*,
-*TIMER_PRESCALER_1024*, *TIMER_CASCADE*.
+The *timer_config*() function stops the timer and configures it. The
+_config_ argument can be any of these constants: *TIMER_PRESCALER_1*,
+*TIMER_PRESCALER_64*, *TIMER_PRESCALER_256*, *TIMER_PRESCALER_1024*,
+*TIMER_CASCADE*.
 
 If configured with one of the prescaler constants, the timer ticks every
 1, 64, 256 or 1024 CPU cycles. If configured to run in cascade mode, the
