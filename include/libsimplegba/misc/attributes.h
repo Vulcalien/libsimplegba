@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2026 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,10 @@
  */
 #pragma once
 
-#include "libsimplegba/misc/types.h"
-#include "libsimplegba/misc/attributes.h"
+#define ALIGNED(x) __attribute__((aligned(x)))
 
-#define BIT(n) (1 << (n))
-#define BITMASK(n) ((1 << (n)) - 1)
+#define INLINE inline __attribute__((always_inline))
+#define NO_INLINE __attribute__((noinline, noclone))
 
-#define static_assert _Static_assert
-
-// Sections
-#define SBSS_SECTION         __attribute__((section(".sbss")))
-#define EWRAM_SECTION        __attribute__((section(".ewram")))
-#define EWRAM_RODATA_SECTION __attribute__((section(".ewram.rodata")))
-#define IWRAM_SECTION        __attribute__((section(".iwram")))
-#define IWRAM_RODATA_SECTION __attribute__((section(".iwram.rodata")))
+#define ARM   __attribute__((target("arm")))
+#define THUMB __attribute__((target("thumb")))

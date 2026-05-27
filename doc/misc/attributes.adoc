@@ -1,0 +1,60 @@
+= attributes(3attr)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2026-05-27
+:docdate: {revdate}
+
+== NAME
+ALIGNED, INLINE, NO_INLINE, ARM, THUMB - compilation attributes
+
+== SYNOPSIS
+[verse]
+____
+*#include <libsimplegba.h>*
+
+*#define ALIGNED(x)*
+
+*#define INLINE*
+*#define NO_INLINE*
+
+*#define ARM*
+*#define THUMB*
+____
+
+== DESCRIPTION
+The *ALIGNED* attribute sets the minimum alignment of the variable or
+type to _x_ bytes, with _x_ power of 2.
+
+The *INLINE* function attribute instructs the compiler to always inline
+the function, while the *NO_INLINE* attribute prohibits the compiler
+from inlining or cloning the function.
+
+The *ARM* and *THUMB* function attributes instruct the compiler to
+compile the function into ARM (32-bit) or Thumb (16-bit) machine
+code.
+
+== NOTES
+Functions defined as *INLINE* are never directly compiled into machine
+code. Instead, they are embedded into the functions that call them.
+Because of this, the *ARM* and *THUMB* attributes are disregarded.
+
+== EXAMPLES
+Align variables and types to a given byte boundary:
+
+[source,c]
+----
+u8 array[5] ALIGNED(4);
+struct ALIGNED(8) type { ... };
+----
+
+Compile a function into 16-bit machine code and prevent it from being
+inlined or cloned:
+
+[source,c]
+----
+THUMB NO_INLINE func(void) { ... }
+----
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien.
