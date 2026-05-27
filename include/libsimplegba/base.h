@@ -17,8 +17,6 @@
 
 #include "libsimplegba/misc/types.h"
 
-#define NULL ((void *) 0)
-
 #define BIT(n) (1 << (n))
 #define BITMASK(n) ((1 << (n)) - 1)
 
