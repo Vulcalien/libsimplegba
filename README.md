@@ -12,7 +12,8 @@ hardware registers directly.
 The following modules are available:
 | Category  | Module     | Description                                 |
 | :-------: | ---------- | ------------------------------------------- |
-| Misc      | Base       | basic definitions (types, macros...)        |
+| Misc      | Types      | basic data types                            |
+| -         | Attributes | compilation attributes                      |
 | -         | Math       | various mathematical functions              |
 | -         | Random     | pseudo-random number generator              |
 | -         | Memory     | memory manipulation                         |
