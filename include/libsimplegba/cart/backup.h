@@ -18,6 +18,8 @@
 #include "libsimplegba/base.h"
 
 extern const struct BackupDriver {
+    char id[16];
+
     void (*read)(u16 offset, void *buffer, u32 n);
     void (*write)(u16 offset, const void *buffer, u32 n);
 
@@ -58,7 +60,9 @@ INLINE void backup_bank(u32 bank) {
 
 extern const struct BackupDriver
     _backup_driver_sram,
-    _backup_driver_flash;
+    _backup_driver_flash_64k,
+    _backup_driver_flash_128k;
 
-#define BACKUP_SRAM   (&_backup_driver_sram)
-#define BACKUP_FLASH  (&_backup_driver_flash)
+#define BACKUP_SRAM       (&_backup_driver_sram)
+#define BACKUP_FLASH_64K  (&_backup_driver_flash_64k)
+#define BACKUP_FLASH_128K (&_backup_driver_flash_128k)

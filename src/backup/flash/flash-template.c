@@ -1,4 +1,4 @@
-/* Copyright 2025 Vulcalien
+/* Copyright 2025-2026 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -101,7 +101,17 @@ static void flash_bank(u32 bank) {
     FLASH[0x0000] = (bank & 1);
 }
 
-const struct BackupDriver _backup_driver_flash = {
+#if DRIVER_FLASH_SIZE == 64
+    #define DRIVER_NAME _backup_driver_flash_64k
+    #define DRIVER_ID   "FLASH512_Vnnn"
+#elif DRIVER_FLASH_SIZE == 128
+    #define DRIVER_NAME _backup_driver_flash_128k
+    #define DRIVER_ID   "FLASH1M_Vnnn"
+#endif
+
+const struct BackupDriver DRIVER_NAME = {
+    .id = DRIVER_ID,
+
     .read  = flash_read,
     .write = flash_write,
 

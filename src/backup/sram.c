@@ -52,6 +52,8 @@ static void sram_bank(u32 bank) {
 }
 
 const struct BackupDriver _backup_driver_sram = {
+    .id = "SRAM_Vnnn",
+
     .read  = sram_read,
     .write = sram_write,
 

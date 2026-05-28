@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-04-25
+:revdate: 2026-05-29
 :docdate: {revdate}
 
 == NAME
@@ -29,7 +29,8 @@ ____
 == DESCRIPTION
 The *backup_init*() function initializes the specified _driver_. This
 function should only be called once. Based on the backup chip being
-used, _driver_ should be either *BACKUP_SRAM* or *BACKUP_FLASH*.
+used, _driver_ should be either *BACKUP_SRAM*, *BACKUP_FLASH_64K* or
+*BACKUP_FLASH_128K*.
 
 The *backup_read*() and *backup_write*() functions, respectively, read
 from and write to backup memory, transferring _n_ bytes between _buffer_
@@ -41,7 +42,7 @@ The value of _n_ should be in the range [0, 15]. Erased bytes are set to
 255 (0xff).
 
 === Flash ROM
-These functions are specific to the Flash ROM driver. When a different
+These functions are specific to the Flash ROM drivers. When a different
 driver is selected, these functions perform no operation. Unlike other
 memory chips, Flash ROM must be erased before writing to it.
 
