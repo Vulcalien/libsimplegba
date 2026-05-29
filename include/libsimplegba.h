@@ -4,6 +4,7 @@
 
 // Misc
 #include "libsimplegba/misc/types.h"
+#include "libsimplegba/misc/attributes.h"
 #include "libsimplegba/misc/math.h"
 #include "libsimplegba/misc/random.h"
 #include "libsimplegba/misc/memory.h"
