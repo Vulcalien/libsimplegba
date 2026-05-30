@@ -101,14 +101,6 @@ static void flash_bank(u32 bank) {
     FLASH[0x0000] = (bank & 1);
 }
 
-#if DRIVER_FLASH_SIZE == 64
-    #define DRIVER_NAME _backup_driver_flash_64k
-    #define DRIVER_ID   "FLASH512_Vnnn"
-#elif DRIVER_FLASH_SIZE == 128
-    #define DRIVER_NAME _backup_driver_flash_128k
-    #define DRIVER_ID   "FLASH1M_Vnnn"
-#endif
-
 const struct BackupDriver DRIVER_NAME = {
     .id = DRIVER_ID,
 

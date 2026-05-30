@@ -29,8 +29,8 @@ ____
 == DESCRIPTION
 The *backup_init*() function initializes the specified _driver_. This
 function should only be called once. Based on the backup chip being
-used, _driver_ should be either *BACKUP_SRAM*, *BACKUP_FLASH_64K* or
-*BACKUP_FLASH_128K*.
+used, _driver_ should be either *BACKUP_SRAM*, *BACKUP_FLASH_64KB* or
+*BACKUP_FLASH_128KB*.
 
 The *backup_read*() and *backup_write*() functions, respectively, read
 from and write to backup memory, transferring _n_ bytes between _buffer_
