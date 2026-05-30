@@ -58,8 +58,8 @@ static void flash_erase_chip(void) {
 }
 
 THUMB
-static void flash_erase_sector(u32 n) {
-    n %= 16;
+static void flash_erase_sector(i32 n) {
+    n &= 15;
 
     // prepare to erase
     FLASH[0x5555] = 0xaa;
@@ -92,7 +92,7 @@ static u16 flash_identify(void) {
 }
 
 THUMB
-static void flash_bank(u32 bank) {
+static void flash_bank(i32 bank) {
     // prepare to set memory bank
     FLASH[0x5555] = 0xaa;
     FLASH[0x2aaa] = 0x55;

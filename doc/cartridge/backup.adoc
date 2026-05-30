@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-05-29
+:revdate: 2026-05-30
 :docdate: {revdate}
 
 == NAME
@@ -20,10 +20,10 @@ ____
 **void backup_write(u16 **__offset__**, const void +++*+++**__buffer__**, u32 **__n__**);**
 
 **void backup_erase_chip(void);**
-**void backup_erase_sector(u32 **__n__**);**
+**void backup_erase_sector(i32 **__n__**);**
 
 **u16  backup_identify(void);**
-**void backup_bank(u32 **__bank__**);**
+**void backup_bank(i32 **__bank__**);**
 ____
 
 == DESCRIPTION

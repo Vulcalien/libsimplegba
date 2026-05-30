@@ -36,8 +36,8 @@ static void sram_erase_chip(void) {
 }
 
 THUMB
-static void sram_erase_sector(u32 n) {
-    memory_set_8(SRAM + (n % 16) * 4096, 0xff, 4096);
+static void sram_erase_sector(i32 n) {
+    memory_set_8(SRAM + (n & 15) * 4096, 0xff, 4096);
 }
 
 THUMB
@@ -47,7 +47,7 @@ static u16 sram_identify(void) {
 }
 
 THUMB
-static void sram_bank(u32 bank) {
+static void sram_bank(i32 bank) {
     // nothing to do
 }
 
