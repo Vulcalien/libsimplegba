@@ -1,14 +1,13 @@
 # libsimplegba
-*libsimplegba* is a collection of functions and constants that can be
-used to interface with the GBA hardware hiding some of the complexity
-and low-level details.
-
-The library focuses on ease of use without sacrificing efficiency: most
-of the functions are implemented as *inline functions*, meaning that
-under most circumstances they are just as efficient as writing to the
-hardware registers directly.
+*libsimplegba* is a utility library for the *Game Boy Advance* that
+provides interfaces to hardware components, debug tools, compilation
+files and more.
 
 ## Modules
+The library is made up of many *modules*, each handling a specific area
+or hardware component. Most modules are accompanied by a manual: see the
+[doc](doc) directory.
+
 The following modules are available:
 | Category  | Module     | Description                                 |
 | :-------: | ---------- | ------------------------------------------- |
@@ -38,25 +37,15 @@ The following modules are available:
 | Debug     | Profiler   | code profiler                               |
 | -         | mGBA       | printing to mGBA output (e.g. mgba_printf)  |
 
-Most modules are accompanied by a manual: see the [doc](doc) directory.
-
-## Building
-First, make sure the *arm-none-eabi-gcc* compiler and *make* tool are
-installed. Then, run `make` to generate the static library file
+## Usage
+### Building the library
+Make sure the *arm-none-eabi-gcc* compiler and the *GNU make* tool.
+Then, simply run `make` to generate the static library file
 `bin/libsimplegba.a`.
 
-## Usage
-Follow these instructions to use *libsimplegba* in a project.
-
 ### Adding the library
-To let the build tool know where to find library files:
-- Add the `include` directory to the include path
-- Add the `bin` directory to the library search path
-- Add `libsimplegba` to the list of libraries to link against
-- Set `gba.ld` as the linker script
-
-If using a `Makefile` to build the program and assuming the library is
-located at `lib/libsimplegba`, add these lines:
+Assuming the library is located at `lib/libsimplegba`, instruct your
+build tool as follows.
 
 ```Makefile
 # linker script
@@ -68,14 +57,22 @@ LDFLAGS  += -Llib/libsimplegba/bin
 LDLIBS   += -lsimplegba
 ```
 
+### Defining the ROM header
+*Game Boy Advance* ROMs need a header, which contains metadata for the
+program. Copy the template from `files/header.s` into your source code
+directory, then change *Game Title*, *Game Code* and (optionally)
+*Software Version*.
+
+After making those changes, you'll need to update the *Header Checksum*.
+To do that, compile the ROM and run the `tools/verify-rom` script on it.
+Use the checksum the script prints, then verify the ROM again.
+
 ### Using the library
 Use `#include <libsimplegba.h>` to retrieve the library's single header.
-All library functions, types, constants... will be available.
+All the functions, types, constants... will be available.
 
-The library expects the `void AgbMain(void)` function to be defined,
-which will be used as the entry point of the program. This function
-should first perform initialization, then enter an infinite loop. For
-example:
+Your program's entry point will be the `AgbMain` function. This function
+should perform initialization, then enter an infinite loop. For example:
 
 ```c
 void AgbMain(void) {
