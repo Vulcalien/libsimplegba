@@ -79,5 +79,3 @@ BEGIN_GLOBAL_FUNC .text.memcpy THUMB memory_copy_16
     pop     {r0, r4}
     bx      lr
 END_FUNC memory_copy_16
-
-.end

@@ -149,5 +149,3 @@ BEGIN_GLOBAL_FUNC .text THUMB interrupt_wait
     swi     0x04
     bx      lr
 END_FUNC interrupt_wait
-
-.end

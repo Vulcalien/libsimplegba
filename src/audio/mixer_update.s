@@ -254,5 +254,3 @@ mix_channel_pitch_near_end:
     MIX_CHANNEL 1 1
 
 END_FUNC _mixer_update
-
-.end

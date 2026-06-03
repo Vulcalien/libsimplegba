@@ -75,5 +75,3 @@ BEGIN_GLOBAL_FUNC .crt0 ARM start_vector
     ldr     r0, =AgbMain
     bx      r0
 END_FUNC start_vector
-
-.end

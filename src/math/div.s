@@ -52,5 +52,3 @@ END_FUNC math_div
 
 .global __aeabi_idivmod
 .set __aeabi_idivmod, math_div
-
-.end

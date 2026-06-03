@@ -130,5 +130,3 @@ BEGIN_GLOBAL_FUNC .text.memset THUMB memset
 
     b       .L_unaligned_end_return
 END_FUNC memset
-
-.end

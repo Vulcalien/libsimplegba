@@ -44,5 +44,3 @@ BEGIN_GLOBAL_FUNC .text.memcpy THUMB memcpy
 
     b       memory_copy_8
 END_FUNC memcpy
-
-.end

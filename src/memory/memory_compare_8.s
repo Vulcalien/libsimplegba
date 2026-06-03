@@ -97,5 +97,3 @@ BEGIN_GLOBAL_FUNC .text.memcmp THUMB memory_compare_8
     movs    r0, #0
     bx      lr
 END_FUNC memory_compare_8
-
-.end

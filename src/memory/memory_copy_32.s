@@ -64,5 +64,3 @@ BEGIN_GLOBAL_FUNC .text.memcpy THUMB memory_copy_32
     pop     {r0, r4-r7}
     bx      lr
 END_FUNC memory_copy_32
-
-.end

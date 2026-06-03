@@ -69,5 +69,3 @@ BEGIN_GLOBAL_FUNC .iwram ARM math_sqrt
     pop     {r4}
     bx      lr
 END_FUNC math_sqrt
-
-.end

@@ -154,5 +154,3 @@ BEGIN_GLOBAL_FUNC .text THUMB math_asin
     movs    r0, #0
     bx      lr
 END_FUNC math_asin
-
-.end

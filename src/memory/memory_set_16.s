@@ -74,5 +74,3 @@ BEGIN_GLOBAL_FUNC .text.memset THUMB memory_set_16
     pop     {r0}
     bx      lr
 END_FUNC memory_set_16
-
-.end

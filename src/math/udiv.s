@@ -87,5 +87,3 @@ END_FUNC math_udiv
 
 .global __aeabi_uidivmod
 .set __aeabi_uidivmod, math_udiv
-
-.end

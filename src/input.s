@@ -130,5 +130,3 @@ BEGIN_GLOBAL_FUNC .text THUMB input_update
     orrs    r4, r5                      @ (r4) repeated |= key_bit
     b       .L_continue_repeated_loop
 END_FUNC input_update
-
-.end

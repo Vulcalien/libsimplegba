@@ -107,5 +107,3 @@ BEGIN_GLOBAL_FUNC .text THUMB math_sin
 
     bx      lr
 END_FUNC math_sin
-
-.end
