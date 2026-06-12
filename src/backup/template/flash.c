@@ -35,9 +35,7 @@ static void flash_write(u16 offset, const void *buffer, u32 n) {
         FLASH[0x5555] = 0xa0;
 
         FLASH[offset + i] = data[i];
-    }
 
-    for(i32 i = 0; i < n; i++) {
         while(FLASH[offset + i] != data[i]);
     }
 }
