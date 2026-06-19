@@ -15,7 +15,13 @@
  */
 #include "libsimplegba/cart/rtc.h"
 
-#include "libsimplegba/cart/gpio.h"
+#define GPIO_ENABLE *((vu16 *) 0x080000c8)
+#define GPIO_CONFIG *((vu16 *) 0x080000c6) // 0=input, 1=output
+#define GPIO_DATA   *((vu16 *) 0x080000c4)
+
+#define  CS(x) (x << 2)
+#define SIO(x) (x << 1)
+#define SCK(x) (x << 0)
 
 // === Helper Functions ===
 
@@ -51,16 +57,16 @@ static NO_INLINE void delay(void) {
 
 THUMB
 static NO_INLINE i32 read_byte(void) {
-    gpio_config(5); // CS=out, SIO=in, SCK=out
+    GPIO_CONFIG = CS(1) | SIO(0) | SCK(1);
 
     i32 result = 0;
     for(i32 i = 0; i < 8; i++) {
-        gpio_write(4); // CS=1, SCK=0
+        GPIO_DATA = CS(1) | SCK(0);
         delay();
-        gpio_write(5); // CS=1, SCK=1
+        GPIO_DATA = CS(1) | SCK(1);
         delay();
 
-        i32 x = (gpio_read() >> 1) & 1;
+        i32 x = (GPIO_DATA >> 1) & 1;
         result |= (x << i);
     }
     return result;
@@ -68,32 +74,32 @@ static NO_INLINE i32 read_byte(void) {
 
 THUMB
 static NO_INLINE void write_byte(i32 val) {
-    gpio_config(7); // CS=out, SIO=out, SCK=out
+    GPIO_CONFIG = CS(1) | SIO(1) | SCK(1);
 
     for(i32 i = 0; i < 8; i++) {
         i32 x = (val >> i) & 1;
 
-        gpio_write(4 | x << 1); // CS=1, SIO=x, SCK=0
+        GPIO_DATA = CS(1) | SIO(x) | SCK(0);
         delay();
-        gpio_write(5 | x << 1); // CS=1, SIO=x, SCK=1
+        GPIO_DATA = CS(1) | SIO(x) | SCK(1);
         delay();
     }
 }
 
 static INLINE void cmd_start(i32 cmd) {
-    gpio_toggle(true);
-    gpio_config(7); // CS=out, SIO=out, SCK=out
+    GPIO_ENABLE = 1;
+    GPIO_CONFIG = CS(1) | SIO(1) | SCK(1);
 
-    gpio_write(1); // CS=0, SIO=0, SCK=1
+    GPIO_DATA = CS(0) | SIO(0) | SCK(1);
     delay();
-    gpio_write(5); // CS=1, SIO=0, SCK=1
+    GPIO_DATA = CS(1) | SIO(0) | SCK(1);
     delay();
 
     write_byte(cmd);
 }
 
 static INLINE void cmd_end(void) {
-    gpio_write(1); // CS=0, SIO=0, SCK=1
+    GPIO_DATA = CS(0) | SIO(0) | SCK(1);
 }
 
 // === Commands ===
