@@ -37,10 +37,9 @@ The following modules are available:
 
 |||
 
-.4+^.^|Cartridge
+.3+^.^|Cartridge
 |Cartridge  |game cartridge (e.g. header)
 |Backup     |backup memory
-|GPIO       |4-bit GPIO port
 |RTC        |real-time clock
 
 |||
