@@ -37,16 +37,24 @@
 
 INLINE void display_config(i32 mode) {
     // side effects:
-    // - set raster page to 0
     // - disable all backgrounds (except BG2 if bitmap mode)
     // - disable all windows
+    // - set raster page to 0
+    // - enable forced blank
     _DISPLAY_CONTROL = (
         (mode & 7) << 0  | // video mode
         1          << 6  | // linear sprite mapping
-        (mode < 0) << 7  | // force blank if mode < 0
+        1          << 7  | // enable forced blank
         (mode > 2) << 10 | // enable BG2 if bitmap mode
         1          << 12   // enable sprites
     );
+}
+
+INLINE void display_blank(bool flag) {
+    if(flag)
+        _DISPLAY_CONTROL |= BIT(7);
+    else
+        _DISPLAY_CONTROL &= ~BIT(7);
 }
 
 // TODO This function remains undocumented: should it really exist?
