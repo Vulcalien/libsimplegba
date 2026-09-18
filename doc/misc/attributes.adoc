@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-05-27
+:revdate: 2026-09-18
 :docdate: {revdate}
 
 == NAME
@@ -13,7 +13,7 @@ ALIGNED, INLINE, NO_INLINE, ARM, THUMB - compilation attributes
 ____
 *#include <libsimplegba.h>*
 
-*#define ALIGNED(x)*
+**#define ALIGNED(**__x__**)**
 
 *#define INLINE*
 *#define NO_INLINE*
