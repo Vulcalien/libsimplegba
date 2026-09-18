@@ -19,7 +19,6 @@
 #include "libsimplegba/misc/attributes.h"
 
 #define BIT(n) (1 << (n))
-#define BITMASK(n) ((1 << (n)) - 1)
 
 #define static_assert _Static_assert
 

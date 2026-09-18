@@ -127,7 +127,7 @@ static const u32 tan_lut[0x4000 / SCALE + 1] = {
 THUMB
 i32 math_tan(i32 angle) {
     // normalize angle in range [-90, 90] degrees
-    angle &= BITMASK(15);
+    angle &= 0x7fff;
     if(angle > math_brad(90))
         angle -= math_brad(180);
 
