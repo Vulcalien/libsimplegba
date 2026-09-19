@@ -83,6 +83,9 @@ SECTIONS {
     } >IWRAM
     __bss_size = SIZEOF(.bss);
 
+    __stack_start = ABSOLUTE(.);
+    __stack_size = __sp_usr - __stack_start;
+
     /* ========================================================== */
     /*                           EWRAM                            */
     /* ========================================================== */
