@@ -84,7 +84,7 @@ After making these changes, you'll need to update the _Header Checksum_.
 To do that, compile the ROM and run the `tools/verify-rom` script on it.
 Use the checksum that the script prints, then verify the ROM again.
 
-### Using the library
+=== Using the library
 Use `#include <libsimplegba.h>` to retrieve the library's single header.
 All the functions, types, constants... will be available.
 
@@ -112,7 +112,7 @@ void AgbMain(void) {
 }
 ----
 
-## License
+== License
 _libsimplegba_ is released under the GNU General Public License, either
 version 3 of the License or any later version. Any work that uses this
 library must be released under a
