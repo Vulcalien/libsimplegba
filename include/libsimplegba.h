@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "libsimplegba/base.h"
 
 // Misc
@@ -30,3 +34,7 @@
 // Debug
 #include "libsimplegba/debug/profiler.h"
 #include "libsimplegba/debug/mgba.h"
+
+#ifdef __cplusplus
+}
+#endif
