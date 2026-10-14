@@ -17,9 +17,11 @@
 
 #define NULL ((void *) 0)
 
-#define bool _Bool
-#define true  1
-#define false 0
+#if !defined(__cplusplus) && (__STDC_VERSION__ < 202311L)
+    #define bool _Bool
+    #define true  1
+    #define false 0
+#endif
 
 typedef unsigned char   u8;
 typedef unsigned short  u16;
