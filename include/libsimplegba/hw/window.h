@@ -1,4 +1,4 @@
-/* Copyright 2024 Vulcalien
+/* Copyright 2024, 2026 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,15 +33,16 @@ struct Window {
 
 #define _WINDOW_COUNT 4
 
+#define _WINDOW_DEFAULT_CONFIG { \
+    .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1, .sprites = 1, .effects = 1 \
+}
+
 INLINE void window_config(i32 id, const struct Window *config) {
     if(id < 0 || id >= _WINDOW_COUNT)
         return;
 
-    // if config is NULL, use a default configuration instead
-    config = (config ? config : (&(struct Window) {
-        .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1,
-        .sprites = 1, .effects = 1
-    }));
+    const struct Window default_config = _WINDOW_DEFAULT_CONFIG;
+    if(!config) config = &default_config;
 
     vu8 *control = (vu8 *) (0x04000048 + id);
     *control = (
@@ -83,3 +84,5 @@ INLINE void window_toggle(i32 id, bool enable) {
 }
 
 #undef _WINDOW_COUNT
+
+#undef _WINDOW_DEFAULT_CONFIG

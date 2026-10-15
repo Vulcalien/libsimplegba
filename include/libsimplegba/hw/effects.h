@@ -31,15 +31,16 @@ struct EffectsTarget {
 #define _EFFECTS_ALPHA      *((vu16 *) 0x04000052)
 #define _EFFECTS_BRIGHTNESS *((vu16 *) 0x04000054)
 
-#define _EFFECTS_DEFAULT_TARGET (&(struct EffectsTarget) {          \
+#define _EFFECTS_DEFAULT_TARGET { \
     .bg0 = 1, .bg1 = 1, .bg2 = 1, .bg3 = 1, .obj = 1, .backdrop = 1 \
-})
+}
 
 INLINE void effects_blend(const struct EffectsTarget *first,
                           const struct EffectsTarget *second,
                           i32 weight_1, i32 weight_2) {
-    first  = (first  ? first  : _EFFECTS_DEFAULT_TARGET);
-    second = (second ? second : _EFFECTS_DEFAULT_TARGET);
+    const struct EffectsTarget default_target = _EFFECTS_DEFAULT_TARGET;
+    if(!first)  first  = &default_target;
+    if(!second) second = &default_target;
 
     _EFFECTS_CONTROL = first->bg0      << 0  |
                        first->bg1      << 1  |
@@ -60,7 +61,8 @@ INLINE void effects_blend(const struct EffectsTarget *first,
 
 INLINE void effects_brighten(const struct EffectsTarget *target,
                              i32 weight) {
-    target = (target ? target : _EFFECTS_DEFAULT_TARGET);
+    const struct EffectsTarget default_target = _EFFECTS_DEFAULT_TARGET;
+    if(!target) target = &default_target;
 
     _EFFECTS_CONTROL = target->bg0      << 0 |
                        target->bg1      << 1 |
@@ -74,7 +76,8 @@ INLINE void effects_brighten(const struct EffectsTarget *target,
 
 INLINE void effects_darken(const struct EffectsTarget *target,
                            i32 weight) {
-    target = (target ? target : _EFFECTS_DEFAULT_TARGET);
+    const struct EffectsTarget default_target = _EFFECTS_DEFAULT_TARGET;
+    if(!target) target = &default_target;
 
     _EFFECTS_CONTROL = target->bg0      << 0 |
                        target->bg1      << 1 |
