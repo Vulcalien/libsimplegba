@@ -18,3 +18,6 @@
 #include <libsimplegba.h>
 
 #define TEST(name) IWRAM_SECTION bool test_ ## name(void)
+
+extern void test_run(bool (*test)(void), const char *name);
+extern void test_run_all(void);

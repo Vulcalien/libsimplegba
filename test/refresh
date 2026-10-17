@@ -11,26 +11,14 @@ OUTPUT=$(
     printf '#include "test.h"\n'
     printf '\n'
     echo "$(for file in $TEST_FILES; do
-    printf '#include "%s"' "$file"
+        printf '#include "%s"' "$file"
     done)"
     printf '\n'
-    printf 'void AgbMain(void) {\n'
-    printf '    i32 tests_passed = 0;\n'
-    printf '\n'
+    printf 'void test_run_all(void) {\n'
     echo "$(for test in $TESTS; do
-    printf '    mgba_puts("%s");\n' "$test"
-    printf '    if(test_%s()) {\n' "$test"
-    printf '        tests_passed++;\n'
-    printf '        mgba_puts("passed");\n'
-    printf '    } else {\n'
-    printf '        mgba_puts("FAILED");\n'
-    printf '    }\n'
-    printf '\n'
+        printf 'test_run(test_%s, "%s");\n' "$test" "$test"
     done)"
-    printf '\n'
-    printf '    mgba_printf("Passed: %%d / %%d", tests_passed, %d);\n' "$TEST_COUNT"
-    printf '    while(true);\n'
     printf '}\n'
 )
 
-echo "$OUTPUT" > src/main.c
+echo "$OUTPUT" > src/test.c
