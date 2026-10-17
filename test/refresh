@@ -1,9 +1,10 @@
 #!/bin/sh
 
 REGEX="TEST([A-Za-z_]*)"
+FILES_TO_SEARCH=$(find src -type f -name "*.c")
 
-TESTS=$(grep -rho "$REGEX" src | sed "s/TEST(\(.*\))/\1/")
-TEST_FILES=$(grep -rl "$REGEX" src | sed "s/src\/\(.*\)/\1/")
+TESTS=$(grep -ho "$REGEX" $FILES_TO_SEARCH | sed "s/TEST(\(.*\))/\1/")
+TEST_FILES=$(grep -l "$REGEX" $FILES_TO_SEARCH | sed "s/src\/\(.*\)/\1/")
 TEST_COUNT=$(echo "$TESTS" | wc -l)
 
 OUTPUT=$(
