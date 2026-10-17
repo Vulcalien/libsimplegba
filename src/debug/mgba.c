@@ -76,6 +76,7 @@ static INLINE void print_unsigned(u32 val, u32 base, u32 *index) {
 //   %u - u32 (unsigned decimal)
 //   %x - u32 (hexadecimal)
 //   %c - char
+//   %s - string
 void mgba_printf(const char *format, ...) {
     va_list args;
     va_start(args, format);
@@ -90,6 +91,11 @@ void mgba_printf(const char *format, ...) {
             } else if(c == 'c') {
                 u32 val = va_arg(args, u32);
                 MGBA_DEBUG_STRING[index++] = (char) val;
+            } else if(c == 's') {
+                const char *str = va_arg(args, const char *);
+                // FIXME this can easily go over the 256 char limit
+                while(*str != '\0')
+                    MGBA_DEBUG_STRING[index++] = *str++;
             } else if(c == 'd') {
                 i32 val = va_arg(args, i32);
 
