@@ -23,6 +23,8 @@
 #define MGBA_DEBUG_FLAGS  *((vu16 *) 0x04fff700)
 #define MGBA_DEBUG_STRING  ((char *) 0x04fff600)
 
+#define MAX_LENGTH 256
+
 static u8 log_level = MGBA_LOG_INFO;
 
 void mgba_log_level(u32 level) {
@@ -35,7 +37,7 @@ static INLINE void write_log(void) {
 }
 
 void mgba_puts(const char *str) {
-    for(u32 i = 0; i < 256; i++) {
+    for(u32 i = 0; i < MAX_LENGTH; i++) {
         MGBA_DEBUG_STRING[i] = str[i];
 
         // After '\0' was written, break.
@@ -59,6 +61,7 @@ static INLINE void print_unsigned(u32 val, u32 base, u32 *index) {
         } while(tmp != 0);
     }
 
+    // FIXME check for MAX_LENGTH
     *index += len;
     for(u32 i = 0; i < len; i++) {
         u32 digit = val % base;
@@ -67,6 +70,14 @@ static INLINE void print_unsigned(u32 val, u32 base, u32 *index) {
         digit += (digit < 10 ? '0' : 'a' - 10);
         MGBA_DEBUG_STRING[*index - i - 1] = digit;
     }
+}
+
+static INLINE void print_signed(i32 val, u32 *index) {
+    if(val < 0)
+        MGBA_DEBUG_STRING[(*index)++] = '-';
+
+    u32 abs = (val != I32_MIN) ? math_abs(val) : (u32) I32_MAX + 1;
+    print_unsigned(abs, 10, index);
 }
 
 // This function does not implement the full functionality of 'printf',
@@ -82,41 +93,40 @@ void mgba_printf(const char *format, ...) {
     va_start(args, format);
 
     bool converting_special = false;
-    for(u32 index = 0; index < 256; format++) {
+    for(u32 index = 0; index < MAX_LENGTH; format++) {
         char c = *format;
 
         if(converting_special) {
-            if(c == '%') {
-                MGBA_DEBUG_STRING[index++] = '%';
-            } else if(c == 'c') {
-                u32 val = va_arg(args, u32);
-                MGBA_DEBUG_STRING[index++] = (char) val;
-            } else if(c == 's') {
-                const char *str = va_arg(args, const char *);
-                // FIXME this can easily go over the 256 char limit
-                while(*str != '\0')
-                    MGBA_DEBUG_STRING[index++] = *str++;
-            } else if(c == 'd') {
-                i32 val = va_arg(args, i32);
+            switch(c) {
+                case '%': {
+                    MGBA_DEBUG_STRING[index++] = '%';
+                } break;
 
-                // if negative, write sign
-                if(val < 0)
-                    MGBA_DEBUG_STRING[index++] = '-';
+                case 'c': {
+                    u32 val = va_arg(args, u32);
+                    MGBA_DEBUG_STRING[index++] = (char) val;
+                } break;
 
-                // get absolute value of number
-                u32 abs;
-                if(val != I32_MIN)
-                    abs = math_abs(val);
-                else
-                    abs = (u32) I32_MAX + 1;
+                case 's': {
+                    const char *str = va_arg(args, const char *);
+                    while(*str != '\0' && index < MAX_LENGTH)
+                        MGBA_DEBUG_STRING[index++] = *str++;
+                } break;
 
-                print_unsigned(abs, 10, &index);
-            } else if(c == 'u') {
-                u32 val = va_arg(args, u32);
-                print_unsigned(val, 10, &index);
-            } else if(c == 'x') {
-                u32 val = va_arg(args, u32);
-                print_unsigned(val, 16, &index);
+                case 'd': {
+                    i32 val = va_arg(args, i32);
+                    print_signed(val, &index);
+                } break;
+
+                case 'u': {
+                    u32 val = va_arg(args, u32);
+                    print_unsigned(val, 10, &index);
+                } break;
+
+                case 'x': {
+                    u32 val = va_arg(args, u32);
+                    print_unsigned(val, 16, &index);
+                } break;
             }
 
             converting_special = false;
