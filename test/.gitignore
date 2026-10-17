@@ -1,0 +1,6 @@
+# binary
+/obj
+/bin
+
+# generated source code
+src/main.c
