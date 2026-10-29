@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-21
+:revdate: 2026-10-29
 :docdate: {revdate}
 
 == NAME
@@ -19,7 +19,7 @@ ____
 **void sprite_hide(i32 **__id__**);**
 **void sprite_hide_range(i32 **__start__**, i32 **__stop__**);**
 
-**void sprite_affine(u32 **__parameter__**, i16 **__matrix__**[4]);**
+**void sprite_affine(i32 **__parameter__**, i16 **__matrix__**[4]);**
 **void sprite_mosaic(i32 **__x__**, i32 **__y__**);**
 ____
 

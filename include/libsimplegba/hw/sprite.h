@@ -134,8 +134,8 @@ INLINE void sprite_hide(i32 id) {
         sprite_hide_range(id, id + 1);
 }
 
-INLINE void sprite_affine(u32 parameter, i16 matrix[4]) {
-    if(parameter >= 32)
+INLINE void sprite_affine(i32 parameter, i16 matrix[4]) {
+    if(parameter < 0 || parameter >= 32)
         return;
 
     for(u32 i = 0; i < 4; i++)
