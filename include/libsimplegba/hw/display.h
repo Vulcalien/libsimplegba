@@ -20,9 +20,6 @@
 #define DISPLAY_WIDTH  240
 #define DISPLAY_HEIGHT 160
 
-#define DISPLAY_BG_PALETTE  ((vu16 *) 0x05000000)
-#define DISPLAY_OBJ_PALETTE ((vu16 *) 0x05000200)
-
 // Tilemap video modes
 #define DISPLAY_MODE_0 0
 #define DISPLAY_MODE_1 1
@@ -75,6 +72,10 @@ INLINE vu16 *display_charblock(i32 block) {
 // Screenblocks 0-31 are 2 KB areas of VRAM used to store tilemaps.
 INLINE vu16 *display_screenblock(i32 block) {
     return (vu16 *) (0x06000000 + block * 0x800);
+}
+
+INLINE vu16 *display_palette(i32 palette) {
+    return (vu16 *) (0x05000000 + (palette & 1) * 0x200);
 }
 
 // === Bitmap-specific ===

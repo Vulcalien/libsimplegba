@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-07-05
+:revdate: 2026-10-29
 :docdate: {revdate}
 
 == NAME
@@ -22,6 +22,7 @@ ____
 
 **vu16 +++*+++display_charblock(i32 **__block__**);**
 **vu16 +++*+++display_screenblock(i32 **__block__**);**
+**vu16 +++*+++display_palette(i32 **__palette__**);**
 
 **vu16 +++*+++display_raster(i32 **__page__**);**
 **i32  display_get_page(void);**
@@ -75,6 +76,11 @@ The *display_screenblock*() function returns a pointer to the
 screenblock of index _block_. Screenblocks are 2 KB areas of video
 memory used to store tilemaps. The value of _block_ should be in the
 range [0, 31].
+
+The *display_palette*() function returns a pointer to the background
+palette (0) or the sprite palette (1). Each palette contains 256 colors,
+which are 15-bit RGB values. The first color of the background palette
+is used as backdrop color.
 
 === Display pages (bitmap modes only)
 The *display_raster*() function returns a pointer to the raster of the
