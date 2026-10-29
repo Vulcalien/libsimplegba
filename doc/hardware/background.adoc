@@ -28,8 +28,13 @@ ____
 ____
 
 == DESCRIPTION
-TODO describe backgrounds
-TODO explain regular/affine backgrounds, and refer to display_config
+Backgrounds are rectangular graphical layers composed of tiles. Tilesets
+provide a collection of tiles (8x8 images), while tilemaps determine the
+placement of tiles on a background.
+
+Depending on the video mode, each background can be *regular* or
+*affine*, which determines how tilemap data is interpreted and whether
+affine transformations are allowed. See *display_config*(3).
 
 === Background configuration
 The *background_config*() function configures the background with the
@@ -51,7 +56,15 @@ struct Background {
 };
 ----
 
-The _size_ field TODO
+The _size_ field specifies the size of the background. Its value can be
+any of the *BACKGROUND_SIZE_REG_x* or *BACKGROUND_SIZE_AFF_x* constants,
+with *x* replaced by one of the following sizes:
+
+.Background sizes
+|===
+|*Regular* |256x256 |512x256 |256x512 |512x512
+|*Affine*  |128x128 |256x256 |512x512 |1024x1024
+|===
 
 The _priority_ field TODO
 
@@ -69,6 +82,7 @@ determining how VRAM data for its tiles is interpreted. In 16-color mode
 pixels are mapped to one 16-color row of the background palette, while
 in 256-color mode pixels are mapped to the entire background palette.
 Possible values are: *BACKGROUND_COLORS_16*, *BACKGROUND_COLORS_256*.
+TODO ignored if background is affine
 
 // TODO
 === TODO
