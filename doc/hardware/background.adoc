@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-21
+:revdate: 2026-10-29
 :docdate: {revdate}
 
 == NAME
@@ -28,7 +28,63 @@ ____
 ____
 
 == DESCRIPTION
-TODO
+TODO describe backgrounds
+TODO explain regular/affine backgrounds, and refer to display_config
+
+=== Background configuration
+The *background_config*() function configures the background with the
+settings specified in the _config_ structure. The structure is defined
+as follows:
+
+[source,c]
+----
+struct Background {
+    u16 size     : 2;
+    u16 priority : 2;
+    u16 overflow : 1;
+
+    u16 tileset : 2;
+    u16 tilemap : 5;
+
+    u16 mosaic : 1;
+    u16 colors : 1;
+};
+----
+
+The _size_ field TODO
+
+The _priority_ field TODO
+
+The _overflow_ field TODO
+
+The _tileset_ field TODO
+
+The _tilemap_ field TODO
+
+The _mosaic_ field specifies whether the mosaic graphic effect is
+applied to the background. See *background_mosaic*().
+
+The _colors_ field specifies the color mode of the background,
+determining how VRAM data for its tiles is interpreted. In 16-color mode
+pixels are mapped to one 16-color row of the background palette, while
+in 256-color mode pixels are mapped to the entire background palette.
+Possible values are: *BACKGROUND_COLORS_16*, *BACKGROUND_COLORS_256*.
+
+// TODO
+=== TODO
+The *background_offset*() function TODO
+
+The *background_toggle*() function enables or disables the background,
+based on the value of _enable_.
+
+=== Affine and Mosaic
+The *background_affine*() function sets the value of the background's
+affine matrix. The 2x2 matrix describes an affine transformation used
+for *inverse texture mapping*. Its values are signed 16-bit fixed-point
+numbers scaled by a factor of 256.
+
+The *background_mosaic*() function sets the parameters of the mosaic
+graphic effect of backgrounds. TODO
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien.
