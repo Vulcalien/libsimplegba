@@ -2,12 +2,13 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-10-29
+:revdate: 2026-10-30
 :docdate: {revdate}
 
 == NAME
 display_config, display_blank, display_charblock, display_screenblock,
-display_raster, display_get_page, display_set_page - display functions
+display_palette, display_raster, display_get_page, display_set_page -
+display functions
 
 == SYNOPSIS
 [verse]
