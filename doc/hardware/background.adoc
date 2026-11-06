@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-10-29
+:revdate: 2026-11-06
 :docdate: {revdate}
 
 == NAME
@@ -32,9 +32,9 @@ Backgrounds are rectangular graphical layers composed of tiles. Tilesets
 provide a collection of tiles (8x8 images), while tilemaps determine the
 placement of tiles on a background.
 
-Depending on the video mode, each background can be *regular* or
-*affine*, which determines how tilemap data is interpreted and whether
-affine transformations are allowed. See *display_config*(3).
+Depending on the display's video mode, each background can be *regular*
+or *affine*, which determines how tilemap data is interpreted and
+whether affine transformations are allowed. See *display_config*(3).
 
 === Background configuration
 The *background_config*() function configures the background with the
@@ -70,9 +70,29 @@ The _priority_ field TODO
 
 The _overflow_ field TODO
 
-The _tileset_ field TODO
+The _tileset_ field specifies which charblock to retrieve image data for
+the background's tiles from. See *display_charblock*(3).
 
-The _tilemap_ field TODO
+The _tilemap_ field specifies which screenblock to retrieve tile entries
+from. See *display_screenblock*(3). Based on the background's type, the
+format of tile entries may be:
+
+.Regular tile entry (16-bit)
+|===
+|*Bits* |*Field*         |*Value*
+
+|0-9    |Tile number     |0-1023
+|10     |Horizontal flip |0=false 1=true
+|11     |Vertical flip   |0=false 1=true
+|12-15  |Palette number  |0-15
+|===
+
+.Affine tile entry (8-bit)
+|===
+|*Bits* |*Field*      |*Value*
+
+|0-7    | Tile number |0-255
+|===
 
 The _mosaic_ field specifies whether the mosaic graphic effect is
 applied to the background. See *background_mosaic*().
