@@ -22,6 +22,7 @@ extern "C" {
 #include "libsimplegba/hw/audio.h"
 #include "libsimplegba/hw/timer.h"
 #include "libsimplegba/hw/dma.h"
+#include "libsimplegba/hw/serial.h"
 #include "libsimplegba/hw/input.h"
 #include "libsimplegba/hw/interrupt.h"
 #include "libsimplegba/hw/system.h"

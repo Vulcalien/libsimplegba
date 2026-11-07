@@ -22,7 +22,7 @@ The following modules are available:
 
 |||
 
-.11+^.^|Hardware
+.12+^.^|Hardware
 |Display    |display interface
 |Background |tiled backgrounds
 |Sprite     |sprites
@@ -31,6 +31,7 @@ The following modules are available:
 |Audio      |digital audio driver
 |Timer      |hardware timers
 |DMA        |direct memory access
+|Serial     |serial communication
 |Input      |input detection
 |Interrupt  |interrupt handling
 |System     |system control
