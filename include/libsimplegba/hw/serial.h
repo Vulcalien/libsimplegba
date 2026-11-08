@@ -36,3 +36,8 @@ INLINE i32 serial_send(const void *buffer, u32 n) {
 INLINE i32 serial_receive(void *buffer, u32 n) {
     return serial_transfer(NULL, buffer, n);
 }
+
+extern const struct SerialDriver
+    _serial_driver_multiplayer;
+
+#define SERIAL_MULTIPLAYER (&_serial_driver_multiplayer)
