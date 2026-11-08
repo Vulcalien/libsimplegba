@@ -15,7 +15,7 @@ SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
 
-SRC_SUBDIRS := math memory backup audio serial debug
+SRC_SUBDIRS := math memory backup audio debug
 
 # ==================================================================== #
 #                             Compilation                              #
