@@ -18,8 +18,6 @@
 #include "libsimplegba/base.h"
 
 extern const struct SerialDriver {
-    i32 (*send)(const void *buffer, u32 n);
-    i32 (*receive)(void *buffer, u32 n);
     i32 (*transfer)(const void *outbuf, void *inbuf, u32 n);
 } *_serial_driver;
 
@@ -27,14 +25,14 @@ INLINE void serial_init(const void *driver) {
     _serial_driver = (const struct SerialDriver *) driver;
 }
 
+INLINE i32 serial_transfer(const void *outbuf, void *inbuf, u32 n) {
+    return _serial_driver->transfer(outbuf, inbuf, n);
+}
+
 INLINE i32 serial_send(const void *buffer, u32 n) {
-    return _serial_driver->send(buffer, n);
+    return serial_transfer(buffer, NULL, n);
 }
 
 INLINE i32 serial_receive(void *buffer, u32 n) {
-    return _serial_driver->receive(buffer, n);
-}
-
-INLINE i32 serial_transfer(const void *outbuf, void *inbuf, u32 n) {
-    return _serial_driver->transfer(outbuf, inbuf, n);
+    return serial_transfer(NULL, buffer, n);
 }
