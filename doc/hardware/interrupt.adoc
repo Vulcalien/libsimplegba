@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-05-01
+:revdate: 2026-11-08
 :docdate: {revdate}
 
 == NAME
@@ -71,7 +71,8 @@ Raised when the game cartridge is removed. Some cartridges may also
 raise it to signal special events.
 
 *IRQ_SERIAL*::
-TODO
+Raised by the serial communication controller, triggered by events tied
+to the serial protocol in use.
 
 == NOTES
 Each interrupt can only be mapped to one ISR at a time, meaning that
