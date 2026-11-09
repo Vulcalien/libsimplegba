@@ -39,8 +39,6 @@ struct Packet {
 
 static_assert(sizeof(struct Packet) == 2, "sizeof(struct Packet) != 2");
 
-static volatile bool keep_transfering;
-
 // ================================================================== //
 //                           Packet Queues                            //
 // ================================================================== //
@@ -97,20 +95,15 @@ static void serial_isr(void) {
     *SERIAL_SEND = dequeue(&outgoing);
 
     const i32 id = get_player_id();
-    keep_transfering = false;
 
     #pragma GCC unroll 0
     for(i32 i = 0; i < 4; i++) {
-        struct Packet packet = SERIAL_DATA[i];
-        if(packet.invalid)
-            continue;
-
-        // one of the devices sent a valid packet: if master, keep
-        // transfering data, more valid packets may follow
-        keep_transfering = true;
-
         // ignore device's own packets
         if(i == id)
+            continue;
+
+        struct Packet packet = SERIAL_DATA[i];
+        if(packet.invalid)
             continue;
 
         // if packet is addressed to this device, enqueue it
@@ -137,33 +130,10 @@ void linkcable_init(void) {
 }
 
 THUMB
-static NO_INLINE void delay(void) {
-    // TODO adjust the waiting time
-    #pragma GCC unroll 0
-    for(vi32 i = 0; i < 64; i++);
-}
-
-THUMB
 void linkcable_update(void) {
-    // if device is a slave, or if other GBAs aren't ready, do nothing
-    if((SERIAL_CONTROL & (SLAVE_BIT | READY_BIT)) != READY_BIT)
-        return;
-
-    // TODO This way of transmitting isn't sustainable if the GBA isn't
-    // fully dedicated to transmitting data.
-
-    // keep transmitting until all devices have no more data to send
-    while(true) {
+    // if device is master, and all GBAs are ready, start a transfer
+    if((SERIAL_CONTROL & (SLAVE_BIT | READY_BIT)) == READY_BIT)
         SERIAL_CONTROL |= START_BIT;
-        interrupt_wait(IRQ_SERIAL);
-
-        // check if the ISR requests more data transfers
-        if(!keep_transfering)
-            break;
-
-        // wait some time so that slaves can finish processing the data
-        delay();
-    }
 }
 
 THUMB
