@@ -44,6 +44,11 @@ The following modules are available:
 
 |||
 
+.1+^.^|Serial
+|LinkCable  |link cable communication
+
+|||
+
 .2+^.^|Debug
 |Profiler   |code profiler
 |mGBA       |printing to mGBA output (e.g. mgba_printf)

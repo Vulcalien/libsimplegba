@@ -31,6 +31,9 @@ extern "C" {
 #include "libsimplegba/cart/backup.h"
 #include "libsimplegba/cart/rtc.h"
 
+// Serial
+#include "libsimplegba/serial/linkcable.h"
+
 // Debug
 #include "libsimplegba/debug/profiler.h"
 #include "libsimplegba/debug/mgba.h"
