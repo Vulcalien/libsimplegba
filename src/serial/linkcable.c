@@ -28,9 +28,6 @@
 #define START_BIT BIT(7)
 #define IRQ_BIT   BIT(14)
 
-// TODO adjust
-#define QUEUE_SIZE 128
-
 struct Packet {
     u8 dest      : 2;
     u8 broadcast : 1;
@@ -40,26 +37,35 @@ struct Packet {
     u8 payload;
 };
 
-static_assert(
-    sizeof(struct Packet) == 2, "size fo struct Packet is incorrect"
-);
+static_assert(sizeof(struct Packet) == 2, "sizeof(struct Packet) != 2");
 
-// TODO SBSS_SECTION ?
+static volatile bool keep_transfering;
+
+// ================================================================== //
+//                           Packet Queues                            //
+// ================================================================== //
+
+// TODO adjust
+#define QUEUE_SIZE 64
+
+SBSS_SECTION
 struct Queue {
     u32 head;
     u32 tail;
     struct Packet packets[QUEUE_SIZE];
 } outgoing, incoming[3];
 
-static bool keep_transfering;
+static INLINE u32 queue_next_index(u32 index) {
+    return (index + 1) % QUEUE_SIZE;
+}
 
 static INLINE void enqueue(struct Queue *queue, struct Packet packet) {
     queue->packets[queue->head] = packet;
-    queue->head = (queue->head + 1) % QUEUE_SIZE;
+    queue->head = queue_next_index(queue->head);
 
     // check if the queue overflowed: if so, discard the oldest item
     if(queue->head == queue->tail)
-        queue->tail = (queue->tail + 1) % QUEUE_SIZE;
+        queue->tail = queue_next_index(queue->tail);
 }
 
 static INLINE struct Packet dequeue(struct Queue *queue) {
@@ -68,7 +74,7 @@ static INLINE struct Packet dequeue(struct Queue *queue) {
         return (struct Packet) { .invalid = 1 };
 
     struct Packet packet = queue->packets[queue->tail];
-    queue->tail = (queue->tail + 1) % QUEUE_SIZE;
+    queue->tail = queue_next_index(queue->tail);
     return packet;
 }
 
@@ -77,8 +83,10 @@ static INLINE bool queue_empty(struct Queue *queue) {
 }
 
 static INLINE bool queue_full(struct Queue *queue) {
-    return (queue->head + 1) % QUEUE_SIZE == queue->tail;
+    return queue_next_index(queue->head) == queue->tail;
 }
+
+// ================================================================== //
 
 static INLINE i32 get_player_id(void) {
     return (SERIAL_CONTROL >> 4) & 3;
@@ -122,13 +130,17 @@ void linkcable_init(void) {
     *SERIAL_SEND = (struct Packet) { .invalid = 1 };
 
     SERIAL_MODE = 0;
-    SERIAL_CONTROL = (SERIAL_CONTROL & IRQ_BIT) | BIT(13);
+    SERIAL_CONTROL = (SERIAL_CONTROL & IRQ_BIT) | (
+        3 << 0  | // baud rate 115200 bps
+        1 << 13   // must be 1
+    );
 }
 
 THUMB
 static NO_INLINE void delay(void) {
+    // TODO adjust the waiting time
     #pragma GCC unroll 0
-    for(vi32 i = 0; i < 256; i++);
+    for(vi32 i = 0; i < 64; i++);
 }
 
 THUMB
@@ -136,6 +148,9 @@ void linkcable_update(void) {
     // if device is a slave, or if other GBAs aren't ready, do nothing
     if((SERIAL_CONTROL & (SLAVE_BIT | READY_BIT)) != READY_BIT)
         return;
+
+    // TODO This way of transmitting isn't sustainable if the GBA isn't
+    // fully dedicated to transmitting data.
 
     // keep transmitting until all devices have no more data to send
     while(true) {
@@ -153,8 +168,6 @@ void linkcable_update(void) {
 
 THUMB
 i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
-    const i32 id = get_player_id();
-
     for(i32 i = 0; i < n; i++) {
         // queue is full: stop adding packets
         if(queue_full(&outgoing))
@@ -181,6 +194,10 @@ i32 linkcable_receive(i32 *src, void *buffer, u32 n) {
         if(queue_empty(queue))
             continue;
 
+        // calculate the source ID
+        if(src)
+            *src = q + (q >= id);
+
         // found some data: read at most n bytes
         for(i32 i = 0; i < n; i++) {
             // queue is empty: stop taking packets
@@ -189,9 +206,6 @@ i32 linkcable_receive(i32 *src, void *buffer, u32 n) {
 
             struct Packet packet = dequeue(queue);
             ((u8 *) buffer)[i] = packet.payload;
-
-            if(src)
-                *src = q + (q >= id);
         }
         return n;
     }
