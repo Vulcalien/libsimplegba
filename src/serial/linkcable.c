@@ -34,9 +34,8 @@
 struct Packet {
     u8 dest      : 2;
     u8 broadcast : 1;
-    u8 last      : 1; // does this device have more data to send?
     u8 invalid   : 1;
-    u8 padding   : 3;
+    u8 padding   : 4;
 
     u8 payload;
 };
@@ -51,6 +50,8 @@ struct Queue {
     u32 tail;
     struct Packet packets[QUEUE_SIZE];
 } outgoing, incoming[3];
+
+static bool keep_transfering;
 
 static INLINE void enqueue(struct Queue *queue, struct Packet packet) {
     queue->packets[queue->head] = packet;
@@ -88,26 +89,27 @@ static void serial_isr(void) {
     *SERIAL_SEND = dequeue(&outgoing);
 
     const i32 id = get_player_id();
+    keep_transfering = false;
 
     #pragma GCC unroll 0
     for(i32 i = 0; i < 4; i++) {
-        // ignore the device's own packets
-        if(i == id)
-            continue;
-
         struct Packet packet = SERIAL_DATA[i];
         if(packet.invalid)
             continue;
 
-        // check if packet is addressed to this device
-        if(packet.dest != id && !packet.broadcast)
+        // one of the devices sent a valid packet: if master, keep
+        // transfering data, more valid packets may follow
+        keep_transfering = true;
+
+        // ignore device's own packets
+        if(i == id)
             continue;
 
-        const i32 index = i - (i > id);
-        enqueue(&incoming[index], packet);
-
-        if(!packet.last)
-            ; // TODO
+        // if packet is addressed to this device, enqueue it
+        if(packet.dest == id || packet.broadcast) {
+            const i32 index = i - (i > id);
+            enqueue(&incoming[index], packet);
+        }
     }
 }
 
@@ -140,11 +142,12 @@ void linkcable_update(void) {
         SERIAL_CONTROL |= START_BIT;
         interrupt_wait(IRQ_SERIAL);
 
-        // TODO if !has_more, break
-        /*break;*/
+        // check if the ISR requests more data transfers
+        if(!keep_transfering)
+            break;
 
+        // wait some time so that slaves can finish processing the data
         delay();
-        break; // DEBUG
     }
 }
 
@@ -160,7 +163,6 @@ i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
         struct Packet packet = {
             .dest      = dest,
             .broadcast = (dest < 0),
-            .last      = 0, // to be decided
             .invalid   = 0,
 
             .payload = ((u8 *) buffer)[i]
