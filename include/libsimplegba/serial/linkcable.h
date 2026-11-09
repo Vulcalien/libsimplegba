@@ -17,8 +17,7 @@
 
 #include "libsimplegba/base.h"
 
-extern void linkcable_init(void);
-extern void linkcable_update(void);
+extern void linkcable_config(i32 bitrate);
 
 extern i32 linkcable_send(i32 dest, const void *buffer, u32 n);
 

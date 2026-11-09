@@ -115,6 +115,12 @@ static void serial_isr(void) {
 }
 
 THUMB
+void linkcable_config(i32 bitrate) {
+    // TODO
+}
+
+// TODO remove
+THUMB
 void linkcable_init(void) {
     interrupt_toggle(IRQ_SERIAL, true);
     interrupt_isr(IRQ_SERIAL, serial_isr);
@@ -129,6 +135,7 @@ void linkcable_init(void) {
     );
 }
 
+// TODO remove
 THUMB
 void linkcable_update(void) {
     // if device is master, and all GBAs are ready, start a transfer
