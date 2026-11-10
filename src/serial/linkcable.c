@@ -36,8 +36,11 @@
 // - adjust queue size
 // - handle communication errors (bit 6 of SERIAL_CONTROL)
 // - handle race conditions between interrupts and send/receive
-// - use the packet's padding for error detection?
 // - lower the baud rate?
+
+// ================================================================== //
+//                               Packet                               //
+// ================================================================== //
 
 struct Packet {
     u8 invalid   : 1;
@@ -51,13 +54,23 @@ struct Packet {
 
 static_assert(sizeof(struct Packet) == 2, "sizeof(struct Packet) != 2");
 
+THUMB
 static NO_INLINE i32 checksum(struct Packet packet) {
-    // TODO
-    return 0;
+    const u32 polynomial = 3;
+    const u32 data = packet.dest      << 9 |
+                     packet.broadcast << 8 |
+                     packet.payload   << 0;
+
+    u32 crc = 0;
+    for(i32 i = 0; i < 11; i++) {
+        const u32 feedback = ((crc >> 3) ^ (data >> i)) & 1;
+        crc = (crc << 1) ^ (polynomial * feedback);
+    }
+    return crc & 15;
 }
 
 // ================================================================== //
-//                           Packet Queues                            //
+//                               Queues                               //
 // ================================================================== //
 
 #define QUEUE_SIZE 64
