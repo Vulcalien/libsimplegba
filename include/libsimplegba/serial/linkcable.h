@@ -20,6 +20,11 @@
 #include "libsimplegba/hw/system.h"
 #include "libsimplegba/hw/timer.h"
 
+// The bitrate range limits are chosen so that:
+// - the number of cycles between transfers doesn't exceed the maximum
+//   counter value of timers with a prescaler of 64
+// - a baud rate of 57600 bps is enough to support all four GBAs
+// - the CPU isn't overwhelmed by serial IRQs
 #define LINKCABLE_BITRATE_MIN 32
 #define LINKCABLE_BITRATE_MAX 4096
 
