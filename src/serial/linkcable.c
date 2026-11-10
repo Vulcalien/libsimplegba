@@ -77,7 +77,7 @@ static INLINE void enqueue(struct Queue *queue, struct Packet packet) {
     queue->packets[queue->head] = packet;
     queue->head = queue_next_index(queue->head);
 
-    // check if the queue overflowed: if so, discard the oldest item
+    // if queue overflowed, discard the oldest item
     if(queue->head == queue->tail)
         queue->tail = queue_next_index(queue->tail);
 }
@@ -187,20 +187,16 @@ i32 linkcable_receive(i32 *src, void *buffer, u32 n) {
         if(queue_empty(queue))
             continue;
 
-        // calculate the source ID
         if(src)
             *src = q + (q >= id);
 
-        // found some data: read at most n bytes
-        for(i32 i = 0; i < n; i++) {
-            if(queue_empty(queue))
-                return i;
-
+        i32 index = 0;
+        while(index < n && !queue_empty(queue)) {
             struct Packet packet = dequeue(queue);
             if(packet.checksum == checksum(packet))
-                ((u8 *) buffer)[i] = packet.payload;
+                ((u8 *) buffer)[index++] = packet.payload;
         }
-        return n;
+        return index;
     }
     return 0;
 }
