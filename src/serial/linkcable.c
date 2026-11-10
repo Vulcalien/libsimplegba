@@ -30,6 +30,15 @@
 #define START_BIT BIT(7)
 #define IRQ_BIT   BIT(14)
 
+#define DEFAULT_BITRATE 512
+
+// TODO:
+// - adjust queue size
+// - handle communication errors (bit 6 of SERIAL_CONTROL)
+// - handle race conditions between interrupts and send/receive
+// - use the packet's padding for error detection?
+// - lower the baud rate?
+
 struct Packet {
     u8 dest      : 2;
     u8 broadcast : 1;
@@ -45,7 +54,6 @@ static_assert(sizeof(struct Packet) == 2, "sizeof(struct Packet) != 2");
 //                           Packet Queues                            //
 // ================================================================== //
 
-// TODO adjust
 #define QUEUE_SIZE 64
 
 SBSS_SECTION
@@ -124,55 +132,26 @@ static void timer2_isr(void) {
 }
 
 THUMB
-void linkcable_config(i32 bitrate) {
-    // TODO minimum bitrate ?
-    // TODO reorganize this code
-
-    if(bitrate > 4096)
-        bitrate = 4096;
-
-    interrupt_toggle(IRQ_SERIAL, true);
-    interrupt_isr(IRQ_SERIAL, serial_isr);
-
-    const u32 ticks = (SYSTEM_FREQUENCY * 8 / 256) / bitrate;
-    timer_config(TIMER2, TIMER_PRESCALER_256);
-    timer_start(TIMER2, ticks);
-
-    interrupt_toggle(IRQ_TIMER2, true);
-    interrupt_isr(IRQ_TIMER2, timer2_isr);
-
-    // prevent accidentally sending a packet on connection
-    // TODO
-
-    SERIAL_MODE = 0;
-    SERIAL_CONTROL = (SERIAL_CONTROL & IRQ_BIT) | (
-        3 << 0  | // baud rate 115200 bps
-        1 << 13   // must be 1
-    );
-}
-
-// TODO remove
-THUMB
 void linkcable_init(void) {
-    interrupt_toggle(IRQ_SERIAL, true);
-    interrupt_isr(IRQ_SERIAL, serial_isr);
-
     // prevent accidentally sending a packet on connection
     *SERIAL_SEND = (struct Packet) { .invalid = 1 };
 
+    // enable serial interrupt
+    interrupt_toggle(IRQ_SERIAL, true);
+    interrupt_isr(IRQ_SERIAL, serial_isr);
+
+    // enable Timer 2 interrupt
+    interrupt_toggle(IRQ_TIMER2, true);
+    interrupt_isr(IRQ_TIMER2, timer2_isr);
+
+    // configure serial port
     SERIAL_MODE = 0;
     SERIAL_CONTROL = (SERIAL_CONTROL & IRQ_BIT) | (
         3 << 0  | // baud rate 115200 bps
         1 << 13   // must be 1
     );
-}
 
-// TODO remove
-THUMB
-void linkcable_update(void) {
-    // if device is master, and all GBAs are ready, start a transfer
-    if((SERIAL_CONTROL & (SLAVE_BIT | READY_BIT)) == READY_BIT)
-        SERIAL_CONTROL |= START_BIT;
+    linkcable_speed(DEFAULT_BITRATE);
 }
 
 THUMB

@@ -17,7 +17,29 @@
 
 #include "libsimplegba/base.h"
 
-extern void linkcable_config(i32 bitrate);
+#include "libsimplegba/hw/system.h"
+#include "libsimplegba/hw/timer.h"
+
+#define LINKCABLE_BITRATE_MIN 32
+#define LINKCABLE_BITRATE_MAX 4096
+
+extern void linkcable_init(void);
+
+INLINE void linkcable_speed(u32 bitrate) {
+    if(bitrate == 0) {
+        timer_stop(TIMER2);
+        return;
+    }
+
+    if(bitrate < LINKCABLE_BITRATE_MIN)
+        bitrate = LINKCABLE_BITRATE_MIN;
+    if(bitrate > LINKCABLE_BITRATE_MAX)
+        bitrate = LINKCABLE_BITRATE_MAX;
+
+    const u32 cycles = (SYSTEM_FREQUENCY * 8 / 64) / bitrate;
+    timer_config(TIMER2, TIMER_PRESCALER_64);
+    timer_start(TIMER2, cycles);
+}
 
 extern i32 linkcable_send(i32 dest, const void *buffer, u32 n);
 
