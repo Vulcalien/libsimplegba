@@ -36,7 +36,6 @@
 // - adjust queue size
 // - handle communication errors (bit 6 of SERIAL_CONTROL)
 // - handle race conditions between interrupts and send/receive
-// - lower the baud rate?
 
 // ================================================================== //
 //                               Packet                               //
@@ -166,7 +165,7 @@ void linkcable_init(void) {
     // configure serial port
     SERIAL_MODE = 0;
     SERIAL_CONTROL = (SERIAL_CONTROL & IRQ_BIT) | (
-        3 << 0  | // baud rate 115200 bps
+        2 << 0  | // baud rate 57600 bps
         1 << 13   // must be 1
     );
 
