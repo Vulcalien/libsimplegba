@@ -40,15 +40,21 @@
 // - lower the baud rate?
 
 struct Packet {
+    u8 invalid   : 1;
+    u8 checksum  : 4;
+
     u8 dest      : 2;
     u8 broadcast : 1;
-    u8 invalid   : 1;
-    u8 padding   : 4;
 
     u8 payload;
 };
 
 static_assert(sizeof(struct Packet) == 2, "sizeof(struct Packet) != 2");
+
+static NO_INLINE i32 checksum(struct Packet packet) {
+    // TODO
+    return 0;
+}
 
 // ================================================================== //
 //                           Packet Queues                            //
@@ -157,17 +163,16 @@ void linkcable_init(void) {
 THUMB
 i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
     for(i32 i = 0; i < n; i++) {
-        // queue is full: stop adding packets
         if(queue_full(&outgoing))
             return i;
 
         struct Packet packet = {
             .dest      = dest,
             .broadcast = (dest < 0),
-            .invalid   = 0,
 
             .payload = ((u8 *) buffer)[i]
         };
+        packet.checksum = checksum(packet);
         enqueue(&outgoing, packet);
     }
     return n;
@@ -188,12 +193,12 @@ i32 linkcable_receive(i32 *src, void *buffer, u32 n) {
 
         // found some data: read at most n bytes
         for(i32 i = 0; i < n; i++) {
-            // queue is empty: stop taking packets
             if(queue_empty(queue))
                 return i;
 
             struct Packet packet = dequeue(queue);
-            ((u8 *) buffer)[i] = packet.payload;
+            if(packet.checksum == checksum(packet))
+                ((u8 *) buffer)[i] = packet.payload;
         }
         return n;
     }
