@@ -16,6 +16,8 @@
 #include "libsimplegba/serial/linkcable.h"
 
 #include "libsimplegba/hw/interrupt.h"
+#include "libsimplegba/hw/system.h"
+#include "libsimplegba/hw/timer.h"
 
 #define SERIAL_CONTROL *((u16 *) 0x04000128)
 #define SERIAL_MODE    *((u16 *) 0x04000134)
@@ -114,9 +116,39 @@ static void serial_isr(void) {
     }
 }
 
+IWRAM_SECTION
+static void timer2_isr(void) {
+    // if device is master, and all GBAs are ready, start a transfer
+    if((SERIAL_CONTROL & (SLAVE_BIT | READY_BIT)) == READY_BIT)
+        SERIAL_CONTROL |= START_BIT;
+}
+
 THUMB
 void linkcable_config(i32 bitrate) {
+    // TODO minimum bitrate ?
+    // TODO reorganize this code
+
+    if(bitrate > 4096)
+        bitrate = 4096;
+
+    interrupt_toggle(IRQ_SERIAL, true);
+    interrupt_isr(IRQ_SERIAL, serial_isr);
+
+    const u32 ticks = (SYSTEM_FREQUENCY * 8 / 256) / bitrate;
+    timer_config(TIMER2, TIMER_PRESCALER_256);
+    timer_start(TIMER2, ticks);
+
+    interrupt_toggle(IRQ_TIMER2, true);
+    interrupt_isr(IRQ_TIMER2, timer2_isr);
+
+    // prevent accidentally sending a packet on connection
     // TODO
+
+    SERIAL_MODE = 0;
+    SERIAL_CONTROL = (SERIAL_CONTROL & IRQ_BIT) | (
+        3 << 0  | // baud rate 115200 bps
+        1 << 13   // must be 1
+    );
 }
 
 // TODO remove
