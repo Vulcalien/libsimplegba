@@ -97,7 +97,7 @@ static void mixer_pitch(i32 channel, u32 pitch) {
     channels[channel].increment = pitch;
 }
 
-static inline void update_output_volume(u32 channel) {
+static INLINE void update_output_volume(u32 channel) {
     const u32 volume  = channels[channel].volume;
     const i32 panning = channels[channel].panning;
 
