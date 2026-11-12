@@ -2,11 +2,11 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-11-09
+:revdate: 2026-11-12
 :docdate: {revdate}
 
 == NAME
-interrupt_config, interrupt_isr, interrupt_toggle, interrupt_wait -
+interrupt_config, interrupt_handler, interrupt_toggle, interrupt_wait -
 interrupt handling
 
 == SYNOPSIS
@@ -15,7 +15,7 @@ ____
 *#include <libsimplegba.h>*
 
 **void interrupt_config(i32 **__id__**, i32 **__config__**);**
-**void interrupt_isr(i32 **__id__**, void (+++*+++**__isr__**)(void));**
+**void interrupt_handler(i32 **__id__**, void (+++*+++**__isr__**)(void));**
 
 **void interrupt_toggle(i32 **__id__**, bool **__enable__**);**
 **void interrupt_wait(i32 **__id__**);**
@@ -32,9 +32,9 @@ The *interrupt_config*() function configures the interrupt. See the list
 of interrupts below to see how _config_ is interpreted. Note that most
 interrupts do not need configuration.
 
-The *interrupt_isr*() function maps the interrupt to its _isr_. If _isr_
-is NULL, no action is performed when that interrupt is raised, other
-than acknowledging it.
+The *interrupt_handler*() function maps the interrupt to its _isr_. If
+_isr_ is NULL, no action is performed when that interrupt is raised,
+other than acknowledging it.
 
 The *interrupt_toggle*() function enables or disables the interrupt,
 based on the value of _enable_.
@@ -80,7 +80,7 @@ to the serial protocol in use.
 
 == NOTES
 Each interrupt can only be mapped to one ISR at a time, meaning that
-calling *interrupt_isr*() overwrites the previous association. If an
+calling *interrupt_handler*() overwrites the previous association. If an
 interrupt needs multiple ISRs, the recommended approach is to write a
 wrapper function:
 
@@ -97,7 +97,7 @@ Enable the VBlank interrupt and map an ISR to it:
 
 [source,c]
 ----
-interrupt_isr(IRQ_VBLANK, vblank_isr);
+interrupt_handler(IRQ_VBLANK, vblank_isr);
 interrupt_toggle(IRQ_VBLANK, true);
 ----
 

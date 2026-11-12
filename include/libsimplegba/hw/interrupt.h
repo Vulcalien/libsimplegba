@@ -52,7 +52,7 @@ INLINE void interrupt_config(i32 id, i32 config) {
     }
 }
 
-extern void interrupt_isr(i32 id, void (*isr)(void));
+extern void interrupt_handler(i32 id, void (*isr)(void));
 
 INLINE void interrupt_toggle(i32 id, bool enable) {
     if(id < 0 || id >= _INTERRUPT_COUNT)

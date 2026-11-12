@@ -156,11 +156,11 @@ void linkcable_init(void) {
 
     // enable serial interrupt
     interrupt_toggle(IRQ_SERIAL, true);
-    interrupt_isr(IRQ_SERIAL, serial_isr);
+    interrupt_handler(IRQ_SERIAL, serial_isr);
 
     // enable Timer 2 interrupt
     interrupt_toggle(IRQ_TIMER2, true);
-    interrupt_isr(IRQ_TIMER2, timer2_isr);
+    interrupt_handler(IRQ_TIMER2, timer2_isr);
 
     // configure serial port
     SERIAL_MODE = 0;
