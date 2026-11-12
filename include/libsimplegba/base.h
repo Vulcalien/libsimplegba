@@ -20,7 +20,9 @@
 
 #define BIT(n) (1 << (n))
 
-#define static_assert _Static_assert
+#if !defined(__cplusplus) && (__STDC_VERSION__ < 202311L)
+    #define static_assert _Static_assert
+#endif
 
 // Sections
 #define SBSS_SECTION         __attribute__((section(".sbss")))
