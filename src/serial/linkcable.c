@@ -188,24 +188,28 @@ i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
 }
 
 THUMB
+static NO_INLINE i32 receive(struct Queue *queue, void *buffer, u32 n) {
+    i32 count = 0;
+    while(count < n && !queue_empty(queue)) {
+        struct Packet packet = dequeue(queue);
+        if(packet.checksum == checksum(packet))
+            ((u8 *) buffer)[count++] = packet.payload;
+    }
+    return count;
+}
+
+THUMB
 i32 linkcable_receive(i32 *src, void *buffer, u32 n) {
     const i32 id = get_player_id();
 
-    for(i32 q = 0; q < 3; q++) {
-        struct Queue *queue = &incoming[q];
-        if(queue_empty(queue))
-            continue;
-
-        if(src)
-            *src = q + (q >= id);
-
-        i32 index = 0;
-        while(index < n && !queue_empty(queue)) {
-            struct Packet packet = dequeue(queue);
-            if(packet.checksum == checksum(packet))
-                ((u8 *) buffer)[index++] = packet.payload;
+    // try to find data in any queue
+    for(i32 i = 0; i < 3; i++) {
+        i32 count = receive(&incoming[i], buffer, n);
+        if(count > 0) {
+            if(src)
+                *src = i + (i >= id);
+            return count;
         }
-        return index;
     }
     return 0;
 }
