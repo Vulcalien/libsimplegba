@@ -33,9 +33,7 @@
 #define DEFAULT_BITRATE 512
 
 // TODO:
-// - adjust queue size
-// - handle communication errors (bit 6 of SERIAL_CONTROL)
-// - handle race conditions between interrupts and send/receive
+// - handle communication errors and disconnections
 
 // ================================================================== //
 //                               Packet                               //
@@ -174,6 +172,8 @@ void linkcable_init(void) {
 
 THUMB
 i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
+    interrupt_mask(IRQ_SERIAL, false); // enter critical section
+
     i32 count = 0;
     while(count < n && !queue_full(&outgoing)) {
         struct Packet packet = {
@@ -184,17 +184,23 @@ i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
         packet.checksum = checksum(packet);
         enqueue(&outgoing, packet);
     }
+
+    interrupt_mask(IRQ_SERIAL, true); // exit critical section
     return count;
 }
 
 THUMB
 static NO_INLINE i32 receive(struct Queue *queue, void *buffer, u32 n) {
+    interrupt_mask(IRQ_SERIAL, false); // enter critical section
+
     i32 count = 0;
     while(count < n && !queue_empty(queue)) {
         struct Packet packet = dequeue(queue);
         if(packet.checksum == checksum(packet))
             ((u8 *) buffer)[count++] = packet.payload;
     }
+
+    interrupt_mask(IRQ_SERIAL, true); // exit critical section
     return count;
 }
 
