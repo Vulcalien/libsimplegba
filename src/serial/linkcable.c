@@ -174,20 +174,17 @@ void linkcable_init(void) {
 
 THUMB
 i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
-    for(i32 i = 0; i < n; i++) {
-        if(queue_full(&outgoing))
-            return i;
-
+    i32 count = 0;
+    while(count < n && !queue_full(&outgoing)) {
         struct Packet packet = {
             .dest      = dest,
             .broadcast = (dest < 0),
-
-            .payload = ((u8 *) buffer)[i]
+            .payload   = ((u8 *) buffer)[count++]
         };
         packet.checksum = checksum(packet);
         enqueue(&outgoing, packet);
     }
-    return n;
+    return count;
 }
 
 THUMB
