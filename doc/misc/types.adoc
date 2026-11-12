@@ -2,18 +2,16 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-03-02
+:revdate: 2026-11-12
 :docdate: {revdate}
 
 == NAME
-bool, u8, u16, u32, i8, i16, i32 - basic data types
+u8, u16, u32, i8, i16, i32 - basic data types
 
 == SYNOPSIS
 [verse]
 ____
 *#include <libsimplegba.h>*
-
-*typedef ... bool;*
 
 *typedef ... u8;*
 *typedef ... u16;*
@@ -25,9 +23,6 @@ ____
 ____
 
 == DESCRIPTION
-*bool* is a boolean type that can represent the logical values *true*
-and *false*.
-
 *u8*, *u16* and *u32* are unsigned fixed-width integer types. Their
 minimum value is zero, while their maximum values are *U8_MAX*,
 *U16_MAX* and *U32_MAX*.
