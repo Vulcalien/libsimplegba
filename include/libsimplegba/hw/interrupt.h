@@ -1,4 +1,4 @@
-/* Copyright 2023-2024 Vulcalien
+/* Copyright 2023-2024, 2026 Vulcalien
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,41 +54,48 @@ INLINE void interrupt_config(i32 id, i32 config) {
 
 extern void interrupt_handler(i32 id, void (*isr)(void));
 
+INLINE void interrupt_mask(i32 id, bool enable) {
+    if(id < 0 || id >= _INTERRUPT_COUNT)
+        return;
+
+    vu16 *ie = (vu16 *) 0x04000200;
+    if(enable)
+        *ie |= BIT(id);
+    else
+        *ie &= ~BIT(id);
+}
+
 INLINE void interrupt_toggle(i32 id, bool enable) {
     if(id < 0 || id >= _INTERRUPT_COUNT)
         return;
 
     const struct {
-        u16 offset;
+        u32 address;
         u16 bit;
     } senders[_INTERRUPT_COUNT] = {
-        [IRQ_VBLANK]  = { 0x0004, BIT(3)  },
-        [IRQ_HBLANK]  = { 0x0004, BIT(4)  },
-        [IRQ_VCOUNT]  = { 0x0004, BIT(5)  },
-        [IRQ_TIMER0]  = { 0x0102, BIT(6)  },
-        [IRQ_TIMER1]  = { 0x0106, BIT(6)  },
-        [IRQ_TIMER2]  = { 0x010a, BIT(6)  },
-        [IRQ_TIMER3]  = { 0x010e, BIT(6)  },
-        [IRQ_SERIAL]  = { 0x0128, BIT(14) },
-        [IRQ_DMA0]    = { 0x00ba, BIT(14) },
-        [IRQ_DMA1]    = { 0x00c6, BIT(14) },
-        [IRQ_DMA2]    = { 0x00d2, BIT(14) },
-        [IRQ_DMA3]    = { 0x00de, BIT(14) },
-        [IRQ_KEYPAD]  = { 0x0132, BIT(14) },
-        [IRQ_GAMEPAK] = { 0,      0       }, // no register
+        [IRQ_VBLANK]  = { 0x04000004, BIT(3)  },
+        [IRQ_HBLANK]  = { 0x04000004, BIT(4)  },
+        [IRQ_VCOUNT]  = { 0x04000004, BIT(5)  },
+        [IRQ_TIMER0]  = { 0x04000102, BIT(6)  },
+        [IRQ_TIMER1]  = { 0x04000106, BIT(6)  },
+        [IRQ_TIMER2]  = { 0x0400010a, BIT(6)  },
+        [IRQ_TIMER3]  = { 0x0400010e, BIT(6)  },
+        [IRQ_SERIAL]  = { 0x04000128, BIT(14) },
+        [IRQ_DMA0]    = { 0x040000ba, BIT(14) },
+        [IRQ_DMA1]    = { 0x040000c6, BIT(14) },
+        [IRQ_DMA2]    = { 0x040000d2, BIT(14) },
+        [IRQ_DMA3]    = { 0x040000de, BIT(14) },
+        [IRQ_KEYPAD]  = { 0x04000132, BIT(14) },
+        [IRQ_GAMEPAK] = { 0,          0       }, // no register
     };
 
-    vu16 *sender = (vu16 *) (0x04000000 + senders[id].offset);
-    vu16 *ie = (vu16 *) 0x04000200;
-
-    // toggle IRQ bits in both sender register and IE
-    if(enable) {
+    vu16 *sender = (vu16 *) senders[id].address;
+    if(enable)
         *sender |= senders[id].bit;
-        *ie     |= BIT(id);
-    } else {
+    else
         *sender &= ~senders[id].bit;
-        *ie     &= ~BIT(id);
-    }
+
+    interrupt_mask(id, enable);
 }
 
 extern void interrupt_wait(i32 id);

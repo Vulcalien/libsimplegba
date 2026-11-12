@@ -6,8 +6,8 @@
 :docdate: {revdate}
 
 == NAME
-interrupt_config, interrupt_handler, interrupt_toggle, interrupt_wait -
-interrupt handling
+interrupt_config, interrupt_handler, interrupt_toggle, interrupt_mask,
+interrupt_wait - interrupt handling
 
 == SYNOPSIS
 [verse]
@@ -18,6 +18,8 @@ ____
 **void interrupt_handler(i32 **__id__**, void (+++*+++**__isr__**)(void));**
 
 **void interrupt_toggle(i32 **__id__**, bool **__enable__**);**
+**void interrupt_mask(i32 **__id__**, bool **__enable__**);**
+
 **void interrupt_wait(i32 **__id__**);**
 ____
 
@@ -28,6 +30,7 @@ Service Routine), a function to execute right after the interrupt is
 acknowledged. If an interrupt is raised while an ISR is running, the
 interrupt is handled after the ISR returns.
 
+=== Interrupt configuration
 The *interrupt_config*() function configures the interrupt. See the list
 of interrupts below to see how _config_ is interpreted. Note that most
 interrupts do not need configuration.
@@ -36,8 +39,11 @@ The *interrupt_handler*() function maps the interrupt to its _isr_. If
 _isr_ is NULL, no action is performed when that interrupt is raised,
 other than acknowledging it.
 
+=== Interrupt operation
 The *interrupt_toggle*() function enables or disables the interrupt,
 based on the value of _enable_.
+
+The *interrupt_mask*() function TODO
 
 The *interrupt_wait*() function waits for the interrupt to be raised,
 then returns.
