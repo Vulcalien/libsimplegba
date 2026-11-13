@@ -86,7 +86,7 @@ INLINE void interrupt_toggle(i32 id, bool enable) {
         [IRQ_DMA2]    = { 0x040000d2, BIT(14) },
         [IRQ_DMA3]    = { 0x040000de, BIT(14) },
         [IRQ_KEYPAD]  = { 0x04000132, BIT(14) },
-        [IRQ_GAMEPAK] = { 0,          0       }, // no register
+        [IRQ_GAMEPAK] = { 0x04000000, 0       }, // no register
     };
 
     vu16 *sender = (vu16 *) senders[id].address;
