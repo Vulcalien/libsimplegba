@@ -172,7 +172,7 @@ void linkcable_init(void) {
 
 THUMB
 i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
-    interrupt_mask(IRQ_SERIAL, false); // enter critical section
+    interrupt_mask(IRQ_SERIAL, true); // enter critical section
 
     i32 count = 0;
     while(count < n && !queue_full(&outgoing)) {
@@ -185,13 +185,13 @@ i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
         enqueue(&outgoing, packet);
     }
 
-    interrupt_mask(IRQ_SERIAL, true); // exit critical section
+    interrupt_mask(IRQ_SERIAL, false); // exit critical section
     return count;
 }
 
 THUMB
 static NO_INLINE i32 receive(struct Queue *queue, void *buffer, u32 n) {
-    interrupt_mask(IRQ_SERIAL, false); // enter critical section
+    interrupt_mask(IRQ_SERIAL, true); // enter critical section
 
     i32 count = 0;
     while(count < n && !queue_empty(queue)) {
@@ -200,7 +200,7 @@ static NO_INLINE i32 receive(struct Queue *queue, void *buffer, u32 n) {
             ((u8 *) buffer)[count++] = packet.payload;
     }
 
-    interrupt_mask(IRQ_SERIAL, true); // exit critical section
+    interrupt_mask(IRQ_SERIAL, false); // exit critical section
     return count;
 }
 

@@ -18,7 +18,7 @@ ____
 **void interrupt_handler(i32 **__id__**, void (+++*+++**__isr__**)(void));**
 
 **void interrupt_toggle(i32 **__id__**, bool **__enable__**);**
-**void interrupt_mask(i32 **__id__**, bool **__enable__**);**
+**void interrupt_mask(i32 **__id__**, bool **__masked__**);**
 
 **void interrupt_wait(i32 **__id__**);**
 ____

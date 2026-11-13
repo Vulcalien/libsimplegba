@@ -54,15 +54,15 @@ INLINE void interrupt_config(i32 id, i32 config) {
 
 extern void interrupt_handler(i32 id, void (*isr)(void));
 
-INLINE void interrupt_mask(i32 id, bool enable) {
+INLINE void interrupt_mask(i32 id, bool masked) {
     if(id < 0 || id >= _INTERRUPT_COUNT)
         return;
 
     vu16 *ie = (vu16 *) 0x04000200;
-    if(enable)
-        *ie |= BIT(id);
-    else
+    if(masked)
         *ie &= ~BIT(id);
+    else
+        *ie |= BIT(id);
 }
 
 INLINE void interrupt_toggle(i32 id, bool enable) {
@@ -100,7 +100,7 @@ INLINE void interrupt_toggle(i32 id, bool enable) {
         *if_reg = BIT(id);
     }
 
-    interrupt_mask(id, enable);
+    interrupt_mask(id, !enable);
 }
 
 extern void interrupt_wait(i32 id);
