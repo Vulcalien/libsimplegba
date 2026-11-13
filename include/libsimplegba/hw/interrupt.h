@@ -90,10 +90,15 @@ INLINE void interrupt_toggle(i32 id, bool enable) {
     };
 
     vu16 *sender = (vu16 *) senders[id].address;
-    if(enable)
+    if(enable) {
         *sender |= senders[id].bit;
-    else
+    } else {
         *sender &= ~senders[id].bit;
+
+        // clear pending requests in IF
+        vu16 *if_reg = (vu16 *) 0x04000202;
+        *if_reg = BIT(id);
+    }
 
     interrupt_mask(id, enable);
 }
