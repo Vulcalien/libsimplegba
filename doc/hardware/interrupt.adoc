@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-11-12
+:revdate: 2026-11-13
 :docdate: {revdate}
 
 == NAME
@@ -41,9 +41,13 @@ other than acknowledging it.
 
 === Interrupt operation
 The *interrupt_toggle*() function enables or disables the interrupt,
-based on the value of _enable_.
+based on the value of _enable_. When enabled, the interrupt is unmasked.
+When disabled, any pending request is discarded, and no further requests
+can be generated.
 
-The *interrupt_mask*() function TODO
+The *interrupt_mask*() function masks or unmasks the interrupt, based on
+the value of _masked_. Masked interrupt requests may still be generated,
+but will be ignored until the interrupt is unmasked.
 
 The *interrupt_wait*() function waits for the interrupt to be raised,
 then returns.
