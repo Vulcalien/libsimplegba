@@ -8,7 +8,7 @@
 SRC_DIR := .
 OUT_DIR := out
 
-SRC_SUBDIRS := misc hardware cartridge debug
+SRC_SUBDIRS := misc hardware cartridge serial debug
 
 # ==================================================================== #
 #                               Commands                               #

@@ -1,0 +1,42 @@
+= linkcable(3)
+:doctype: manpage
+:manmanual: Manual for libsimplegba
+:mansource: libsimplegba
+:revdate: 2026-11-13
+:docdate: {revdate}
+
+== NAME
+linkcable_init, linkcable_speed, linkcable_send, linkcable_broadcast,
+linkcable_receive - link cable communication
+
+== SYNOPSIS
+[verse]
+____
+*#include <libsimplegba.h>*
+
+**void linkcable_init(void);**
+**void linkcable_speed(u32 **__bitrate__**);**
+
+**i32 linkcable_send(i32 **__dest__**, const void +++*+++**__buffer__**, u32 **__n__**);**
+**i32 linkcable_broadcast(const void +++*+++**__buffer__**, u32 **__n__**);**
+**i32 linkcable_receive(i32 +++*+++**__src__**, void +++*+++**__buffer__**, u32 **__n__**);**
+____
+
+== DESCRIPTION
+The *linkcable_init*() function TODO
+
+The *linkcable_speed*() function TODO
+
+The *linkcable_send*() function TODO
+
+The *linkcable_broadcast*() function TODO
+
+The *linkcable_receive*() function TODO
+
+== RETURN VALUE
+The *linkcable_send*() and *linkcable_broadcast*() functions return TODO
+
+The *linkcable_receive*() function returns TODO
+
+== AUTHORS
+The *libsimplegba* library was written by Vulcalien.
