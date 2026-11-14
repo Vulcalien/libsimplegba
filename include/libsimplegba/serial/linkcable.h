@@ -47,9 +47,8 @@ INLINE void linkcable_speed(u32 bitrate) {
 }
 
 extern i32 linkcable_send(i32 dest, const void *buffer, u32 n);
+extern i32 linkcable_receive(i32 *src, void *buffer, u32 n);
 
 INLINE i32 linkcable_broadcast(const void *buffer, u32 n) {
     return linkcable_send(-1, buffer, n);
 }
-
-extern i32 linkcable_receive(i32 *src, void *buffer, u32 n);

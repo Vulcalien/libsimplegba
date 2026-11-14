@@ -2,12 +2,12 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-11-13
+:revdate: 2026-11-14
 :docdate: {revdate}
 
 == NAME
-linkcable_init, linkcable_speed, linkcable_send, linkcable_broadcast,
-linkcable_receive - link cable communication
+linkcable_init, linkcable_speed, linkcable_send, linkcable_receive,
+linkcable_broadcast - link cable communication
 
 == SYNOPSIS
 [verse]
@@ -18,8 +18,9 @@ ____
 **void linkcable_speed(u32 **__bitrate__**);**
 
 **i32 linkcable_send(i32 **__dest__**, const void +++*+++**__buffer__**, u32 **__n__**);**
-**i32 linkcable_broadcast(const void +++*+++**__buffer__**, u32 **__n__**);**
 **i32 linkcable_receive(i32 +++*+++**__src__**, void +++*+++**__buffer__**, u32 **__n__**);**
+
+**i32 linkcable_broadcast(const void +++*+++**__buffer__**, u32 **__n__**);**
 ____
 
 == DESCRIPTION
@@ -27,16 +28,26 @@ The *linkcable_init*() function TODO
 
 The *linkcable_speed*() function TODO
 
-The *linkcable_send*() function TODO
+The *linkcable_send*() function appends up to _n_ bytes from _buffer_ to
+the queue of outgoing messages, addressing them to the device with ID
+_dest_. If _dest_ is negative, the data is broadcast to all devices.
 
-The *linkcable_broadcast*() function TODO
+The *linkcable_receive*() function transfers up to _n_ bytes from the
+queue of incoming messages to _buffer_. If the queue is not empty, the
+ID of the device which sent the data is stored into _src_, unless the
+pointer is NULL.
 
-The *linkcable_receive*() function TODO
+The *linkcable_broadcast*() function is an alias of *linkcable_send*()
+with a negative value for _dest_.
 
 == RETURN VALUE
-The *linkcable_send*() and *linkcable_broadcast*() functions return TODO
+The *linkcable_send*() and *linkcable_broadcast*() functions return the
+number of bytes appended to the queue of outgoing messages. If the queue
+is full, zero is returned.
 
-The *linkcable_receive*() function returns TODO
+The *linkcable_receive*() function returns the number of bytes retrieved
+from the queue of incoming messages. If the queue is empty, zero is
+returned.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien.
