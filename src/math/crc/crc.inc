@@ -39,20 +39,20 @@ BEGIN_GLOBAL_FUNC .text.crc THUMB math_crc\WIDTH
     eors    r4, r2                      @ (r4) index = data ^ crc
 
     .if \WIDTH <= 8
-        ldrb    r4, [r3, r4]            @ (r4) entry = LUT[index]
+        ldrb    r2, [r3, r4]            @ (r2) crc = LUT[index]
     .elseif \WIDTH <= 16
         lsls    r4, #24
         lsrs    r4, #23
         ldrh    r4, [r3, r4]            @ (r4) entry = LUT[index & 0xff]
+        lsrs    r2, #8
+        eors    r2, r4                  @ (r2) crc = (crc >> 8) ^ entry
     .elseif \WIDTH <= 32
         lsls    r4, #24
         lsrs    r4, #22
         ldr     r4, [r3, r4]            @ (r4) entry = LUT[index & 0xff]
+        lsrs    r2, #8
+        eors    r2, r4                  @ (r2) crc = (crc >> 8) ^ entry
     .endif
-
-    @ update CRC value
-    lsrs    r2, #8
-    eors    r2, r4                      @ (r2) crc = (crc >> 8) ^ entry
 
     subs    r1, #1                      @ (r1) n--
     bgt     .L_loop                     @ if n > 0, continue
