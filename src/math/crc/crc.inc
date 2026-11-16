@@ -13,55 +13,60 @@
 @ You should have received a copy of the GNU General Public License
 @ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.macro GENERATE_CRC_FUNC LENGTH:req LUT:req
+.macro GENERATE_CRC_FUNC WIDTH:req LUT:req
+
+.equ INITIAL_VALUE, ((1 << \WIDTH) - 1)
 
 @ input:
 @   r0 = buffer : const void *
 @   r1 = n      : i32
 @ output:
 @   r0 = result : i32
-BEGIN_GLOBAL_FUNC .text.crc THUMB math_crc\LENGTH
+BEGIN_GLOBAL_FUNC .text.crc THUMB math_crc\WIDTH
     push    {r4}
 
-    ldr     r2, =\LUT                   @ (r2) LUT
-    movs    r3, #0                      @ (r3) crc = 0
-    @ TODO start with 0xffffffff ?
+    @ set initial value
+    .if INITIAL_VALUE <= 0xff
+        movs    r2, #INITIAL_VALUE      @ (r2) crc = INITIAL_VALUE
+    .else
+        ldr     r2, =INITIAL_VALUE      @ (r2) crc = INITIAL_VALUE
+    .endif
+
+    ldr     r3, =\LUT                   @ (r3) LUT
 .L_loop:
     ldrb    r4, [r0]                    @ data = *buffer
     adds    r0, #1                      @ (r0) buffer++
-    eors    r4, r3                      @ (r4) index = data ^ crc
+    eors    r4, r2                      @ (r4) index = data ^ crc
 
-    .if \LENGTH <= 8
-        lsls    r4, #24
-        lsrs    r4, #24
-        ldrb    r4, [r2, r4]            @ (r4) entry = LUT[index & 0xff]
-    .elseif \LENGTH <= 16
+    .if \WIDTH <= 8
+        ldrb    r4, [r3, r4]            @ (r4) entry = LUT[index]
+    .elseif \WIDTH <= 16
         lsls    r4, #24
         lsrs    r4, #23
-        ldrh    r4, [r2, r4]            @ (r4) entry = LUT[index & 0xff]
-    .elseif \LENGTH <= 32
+        ldrh    r4, [r3, r4]            @ (r4) entry = LUT[index & 0xff]
+    .elseif \WIDTH <= 32
         lsls    r4, #24
         lsrs    r4, #22
-        ldr     r4, [r2, r4]            @ (r4) entry = LUT[index & 0xff]
+        ldr     r4, [r3, r4]            @ (r4) entry = LUT[index & 0xff]
     .endif
 
     @ update CRC value
-    lsrs    r3, #8
-    eors    r3, r4                      @ (r3) crc = (crc >> 8) ^ entry
+    lsrs    r2, #8
+    eors    r2, r4                      @ (r2) crc = (crc >> 8) ^ entry
 
     subs    r1, #1                      @ (r1) n--
     bgt     .L_loop                     @ if n > 0, continue
 .L_exit_loop:
 
     @ calculate final result
-    mvns    r0, r3                      @ (r0) result = crc ^ 0xffffffff
-    .if \LENGTH < 32
-        lsls    r0, #(32 - \LENGTH)
-        lsrs    r0, #(32 - \LENGTH)     @ (r0) result &= BIT(LENGTH) - 1
+    mvns    r0, r2                      @ (r0) result = crc ^ 0xffffffff
+    .if \WIDTH < 32
+        lsls    r0, #(32 - \WIDTH)
+        lsrs    r0, #(32 - \WIDTH)      @ (r0) result &= BIT(WIDTH) - 1
     .endif
 
     pop     {r4}
     bx      lr
-END_FUNC math_crc\LENGTH
+END_FUNC math_crc\WIDTH
 
 .endm
