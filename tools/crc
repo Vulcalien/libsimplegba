@@ -18,7 +18,7 @@
 import math, sys, argparse
 
 # ==================================================================== #
-#                           Helper functions                           #
+#                           Helper Functions                           #
 # ==================================================================== #
 
 def reverse_bits(num, width):
@@ -98,10 +98,7 @@ elif width <= 16:
 else:
     datatype = 'u32'
 
-endianess = 'lsbit' if args.lsbit else 'msbit'
-table_name = f'crc{width}_{endianess}_lut'
-
-print(f'static const {datatype} {table_name}[256] = {{', end='')
+print(f'static const {datatype} crc_table[256] = {{', end='')
 for i in range(256):
     if i % entries_per_line == 0:
         print('\n    ', end='')
