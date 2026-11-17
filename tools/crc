@@ -18,6 +18,17 @@
 import math, sys, argparse
 
 # ==================================================================== #
+#                           Helper functions                           #
+# ==================================================================== #
+
+def reverse_bits(num, width):
+    result = 0
+    for i in range(width):
+        bit = (num >> i) & 1
+        result |= bit << (width - 1 - i)
+    return result
+
+# ==================================================================== #
 #                            Setup argparse                            #
 # ==================================================================== #
 
@@ -46,12 +57,11 @@ if args.width < 1 or args.width > 32:
 if args.polynomial > (1 << args.width) - 1:
     sys.exit('Error: polynomial exceeds bit width of CRC')
 
-# if LSBit, reverse polynomial
+width      = args.width
+polynomial = args.polynomial
+
 if args.lsbit:
-    args.polynomial = sum(
-        ((args.polynomial >> i) & 1) << (args.width - 1 - i)
-        for i in range(args.width)
-    )
+    polynomial = reverse_bits(polynomial, width)
 
 # ==================================================================== #
 #                            Generate Table                            #
@@ -61,15 +71,15 @@ def lsbit_crc(num):
     crc = 0
     for i in range(8):
         feedback = (crc ^ (num >> i)) & 1
-        crc = (crc >> 1) ^ (args.polynomial * feedback)
+        crc = (crc >> 1) ^ (polynomial * feedback)
     return crc
 
 def msbit_crc(num):
     crc = 0
     for i in reversed(range(8)):
-        feedback = ((crc >> (args.width - 1)) ^ (num >> i)) & 1
-        crc = (crc << 1) ^ (args.polynomial * feedback)
-    return crc & ((1 << args.width) - 1)
+        feedback = ((crc >> (width - 1)) ^ (num >> i)) & 1
+        crc = (crc << 1) ^ (polynomial * feedback)
+    return crc & ((1 << width) - 1)
 
 crc_func = (lsbit_crc if args.lsbit else msbit_crc)
 table = [ crc_func(i) for i in range(256) ]
@@ -78,18 +88,18 @@ table = [ crc_func(i) for i in range(256) ]
 #                             Print Table                              #
 # ==================================================================== #
 
-entries_per_line = 4 if args.width > 16 else 8
-hex_digits = 2 * math.ceil(args.width / 8)
+entries_per_line = 4 if width > 16 else 8
+hex_digits = 2 * math.ceil(width / 8)
 
-if args.width <= 8:
+if width <= 8:
     datatype = 'u8'
-elif args.width <= 16:
+elif width <= 16:
     datatype = 'u16'
 else:
     datatype = 'u32'
 
 endianess = 'lsbit' if args.lsbit else 'msbit'
-table_name = f'crc{args.width}_{endianess}_lut'
+table_name = f'crc{width}_{endianess}_lut'
 
 print(f'static const {datatype} {table_name}[256] = {{', end='')
 for i in range(256):
