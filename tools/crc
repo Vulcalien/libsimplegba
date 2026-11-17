@@ -61,26 +61,22 @@ if args.lsbit:
 #                            Generate Table                            #
 # ==================================================================== #
 
-def lsbit_crc(num, polynomial, width):
+def lsbit_crc(num):
     crc = 0
     for i in range(8):
         feedback = (crc ^ (num >> i)) & 1
-        crc = (crc >> 1) ^ (polynomial * feedback)
+        crc = (crc >> 1) ^ (args.polynomial * feedback)
     return crc
 
-def msbit_crc(num, polynomial, width):
+def msbit_crc(num):
     crc = 0
     for i in reversed(range(8)):
-        feedback = ((crc >> (width - 1)) ^ (num >> i)) & 1
-        crc = (crc << 1) ^ (polynomial * feedback)
-    return crc & ((1 << width) - 1)
+        feedback = ((crc >> (args.width - 1)) ^ (num >> i)) & 1
+        crc = (crc << 1) ^ (args.polynomial * feedback)
+    return crc & ((1 << args.width) - 1)
 
 crc_func = (lsbit_crc if args.lsbit else msbit_crc)
-
-table = []
-for i in range(256):
-    entry = crc_func(i, args.polynomial, args.width)
-    table.append(entry)
+table = [ crc_func(i) for i in range(256) ]
 
 # ==================================================================== #
 #                             Print Table                              #
