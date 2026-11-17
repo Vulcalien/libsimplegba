@@ -15,8 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-import math
-import argparse
+import math, sys, argparse
 
 # ==================================================================== #
 #                            Setup argparse                            #
@@ -42,11 +41,25 @@ parser.add_argument('-x', '--xor', type=int, default=0, metavar='N',
 args = parser.parse_args()
 
 # ==================================================================== #
-#                            Generate Table                            #
+#                         Validate Parameters                          #
 # ==================================================================== #
 
-# TODO error if polynomial is bigger than width
-# TODO reverse polynomial if lsbit
+if args.width < 1 or args.width > 32:
+    sys.exit('Error: bit width must be in range [1, 32]')
+
+if args.polynomial > (1 << args.width) - 1:
+    sys.exit('Error: polynomial exceeds bit width of CRC')
+
+# if LSBit, reverse polynomial
+if args.lsbit:
+    args.polynomial = sum(
+        ((args.polynomial >> i) & 1) << (args.width - 1 - i)
+        for i in range(args.width)
+    )
+
+# ==================================================================== #
+#                            Generate Table                            #
+# ==================================================================== #
 
 def lsbit_crc(num, polynomial, width):
     crc = 0
