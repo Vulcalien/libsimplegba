@@ -16,42 +16,70 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import math
+import argparse
 
 # ==================================================================== #
-#                              Parameters                              #
+#                            Setup argparse                            #
 # ==================================================================== #
 
-# NOTE: the order of bits is LSBit-first, so use *reversed* polynomials.
+parser = argparse.ArgumentParser(description='Generate a CRC function')
+parser.add_argument('width', type=int,
+                    help='size of the CRC in bits')
+parser.add_argument('polynomial', type=(lambda x : int(x, 16)),
+                    help='generator polynomial ' +
+                         '(hex format, normal bit ordering)')
 
-# width = 4
-# polynomial = 0xc
+exclusive_group = parser.add_mutually_exclusive_group(required=True)
+exclusive_group.add_argument('-l', '--lsbit', action='store_true',
+                             help='use least significant bit first')
+exclusive_group.add_argument('-m', '--msbit', action='store_true',
+                             help='use most significant bit first')
 
-width = 32
-polynomial = 0xedb88320
+parser.add_argument('-i', '--init', type=int, default=0, metavar='N',
+                    help='TODO') # TODO
+parser.add_argument('-x', '--xor', type=int, default=0, metavar='N',
+                    help='TODO') # TODO
+args = parser.parse_args()
 
 # ==================================================================== #
 #                            Generate Table                            #
 # ==================================================================== #
 
+# TODO error if polynomial is bigger than width
+# TODO reverse polynomial if lsbit
+
+def lsbit_crc(num, polynomial, width):
+    crc = 0
+    for i in range(8):
+        feedback = (crc ^ (num >> i)) & 1
+        crc = (crc >> 1) ^ (polynomial * feedback)
+    return crc
+
+def msbit_crc(num, polynomial, width):
+    crc = 0
+    for i in reversed(range(8)):
+        feedback = ((crc >> (width - 1)) ^ (num >> i)) & 1
+        crc = (crc << 1) ^ (polynomial * feedback)
+    return crc & ((1 << width) - 1)
+
+crc_func = (lsbit_crc if args.lsbit else msbit_crc)
+
 table = []
 for i in range(256):
-    crc = 0
-    for b in range(8):
-        feedback = (crc ^ (i >> b)) & 1
-        crc = (crc >> 1) ^ (polynomial * feedback)
-    table.append(crc)
+    entry = crc_func(i, args.polynomial, args.width)
+    table.append(entry)
 
 # ==================================================================== #
 #                             Print Table                              #
 # ==================================================================== #
 
-if width <= 8:
+if args.width <= 8:
     prefix = '.byte'
     entries_per_line = 8
-elif width <= 16:
+elif args.width <= 16:
     prefix = '.short'
     entries_per_line = 8
-elif width <= 32:
+elif args.width <= 32:
     prefix = '.int'
     entries_per_line = 4
 
@@ -60,5 +88,5 @@ for i in range(len(table)):
         print(f'\n  {prefix} ', end='')
     else:
         print(', ', end='')
-    print(f'0x%0{2 * math.ceil(width / 8)}x' % table[i], end='')
+    print(f'0x%0{2 * math.ceil(args.width / 8)}x' % table[i], end='')
 print('\n', end='')
