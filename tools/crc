@@ -34,10 +34,6 @@ exclusive_group.add_argument('-l', '--lsbit', action='store_true',
 exclusive_group.add_argument('-m', '--msbit', action='store_true',
                              help='use most significant bit first')
 
-parser.add_argument('-i', '--init', type=int, default=0, metavar='N',
-                    help='TODO') # TODO
-parser.add_argument('-x', '--xor', type=int, default=0, metavar='N',
-                    help='TODO') # TODO
 args = parser.parse_args()
 
 # ==================================================================== #
