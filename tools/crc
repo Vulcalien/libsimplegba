@@ -68,13 +68,19 @@ maxval = (1 << args.width) - 1
 if width < 1 or width > 32:
     sys.exit('Error: bit width must be in range [1, 32]')
 
-if polynomial > maxval:
+if polynomial < 1:
+    sys.exit('Error: polynomial must be positive')
+elif polynomial > maxval:
     sys.exit('Error: polynomial exceeds bit width of CRC')
 
-if init > maxval:
+if init < 0:
+    sys.exit('Error: initial value cannot be negative')
+elif init > maxval:
     sys.exit('Error: initial value exceeds bit width of CRC')
 
-if xorout > maxval:
+if xorout < 0:
+    sys.exit('Error: xorout value cannot be negative')
+elif xorout > maxval:
     sys.exit('Error: xorout value exceeds bit width of CRC')
 
 # ==================================================================== #
