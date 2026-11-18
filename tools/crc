@@ -134,4 +134,49 @@ for i in range(256):
     if i % entries_per_line == 0:
         print('\n    ', end='')
     print(f'0x%0{hex_digits}x' % table[i], end=', ' if i < 255 else '')
-print('\n};')
+print('\n};\n')
+
+# ==================================================================== #
+#                            Print Function                            #
+# ==================================================================== #
+
+if init == 0:
+    init_string = '0'
+elif args.lsbit:
+    init_string = '0x%x' % reverse_bits(init, width)
+else:
+    init_string = '0x%x' % init
+
+if args.lsbit or width == 8:
+    index_crc_string = 'crc'
+elif width > 8:
+    index_crc_string = f'(crc >> {width - 8})'
+else:
+    index_crc_string = f'(crc << {8 - width})'
+
+if args.lsbit:
+    shift_crc_string = 'crc >> 8'
+else:
+    shift_crc_string = 'crc << 8'
+
+if args.lsbit or width == 32:
+    if xorout == 0:
+        retval_string = 'crc'
+    else:
+        retval_string = 'crc ^ 0x%x' % xorout
+else:
+    if xorout == 0:
+        retval_string = 'crc & 0x%x' % maxval
+    else:
+        retval_string = '(crc ^ 0x%x) & 0x%x' % (xorout, maxval)
+
+print(f'static u32 crc(const void *buffer, u32 n) {{')
+print(f'    const u8 *data = buffer;')
+print(f'')
+print(f'    u32 crc = {init_string};')
+print(f'    for(u32 i = 0; i < n; i++) {{')
+print(f'        u32 index = data[i] ^ ({index_crc_string} & 0xff);')
+print(f'        crc = ({shift_crc_string}) ^ crc_table[index];')
+print(f'    }}')
+print(f'    return {retval_string};')
+print(f'}}')
