@@ -101,12 +101,12 @@ table = [ crc(i) for i in range(256) ]
 #                         Print CRC Parameters                         #
 # ==================================================================== #
 
-print('// width=%d'    % width)
-print('// poly=0x%x'   % polynomial)
-print('// init=0x%x'   % init)
-print('// xorout=0x%x' % xorout)
-print('// refin=%s'    % 'true' if args.lsbit else 'false')
-print('// refout=%s'   % 'true' if args.lsbit else 'false')
+print('// width:  %d'   % width)
+print('// poly:   0x%x' % polynomial)
+print('// init:   0x%x' % init)
+print('// xorout: 0x%x' % xorout)
+print('// refin:  %s'   % ('true' if args.lsbit else 'false'))
+print('// refout: %s'   % ('true' if args.lsbit else 'false'))
 print()
 
 # ==================================================================== #
