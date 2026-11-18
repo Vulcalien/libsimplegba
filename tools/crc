@@ -77,36 +77,32 @@ if init > maxval:
 if xorout > maxval:
     sys.exit('Error: xorout value exceeds bit width of CRC')
 
-if args.lsbit:
-    polynomial = reverse_bits(polynomial, width)
-
 # ==================================================================== #
 #                            Generate Table                            #
 # ==================================================================== #
 
-def lsbit_crc(num):
-    crc = 0
-    for i in range(8):
-        feedback = (crc ^ (num >> i)) & 1
-        crc = (crc >> 1) ^ (polynomial * feedback)
-    return crc
+def crc(num):
+    if args.lsbit:
+        num = reverse_bits(num, 8)
 
-def msbit_crc(num):
     crc = 0
     for i in reversed(range(8)):
         feedback = ((crc >> (width - 1)) ^ (num >> i)) & 1
-        crc = (crc << 1) ^ (polynomial * feedback)
-    return crc & maxval
+        crc = ((crc << 1) ^ (polynomial * feedback)) & maxval
 
-crc_func = (lsbit_crc if args.lsbit else msbit_crc)
-table = [ crc_func(i) for i in range(256) ]
+    if args.lsbit:
+        crc = reverse_bits(crc, width)
+
+    return crc
+
+table = [ crc(i) for i in range(256) ]
 
 # ==================================================================== #
 #                         Print CRC Parameters                         #
 # ==================================================================== #
 
 print('// width=%d'    % width)
-print('// poly=0x%x'   % args.polynomial)
+print('// poly=0x%x'   % polynomial)
 print('// init=0x%x'   % init)
 print('// xorout=0x%x' % xorout)
 print('// refin=%s'    % 'true' if args.lsbit else 'false')
