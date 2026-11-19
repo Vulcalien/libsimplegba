@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2025-12-04
+:revdate: 2026-11-19
 :docdate: {revdate}
 
 == NAME
@@ -39,7 +39,7 @@ PCM*. Each driver offers various features: see DRIVERS below.
 
 The *audio_init*() function initializes the specified _driver_. This
 function should only be called once. _driver_ should be either
-*AUDIO_BASIC* or *AUDIO_MIXER*.
+*AUDIO_DIRECT* or *AUDIO_MIXER*.
 
 The *audio_update*() function updates the internal state of the driver.
 This function needs to be called at least 50 times a second.
@@ -82,14 +82,14 @@ going to play. If _channel_ is negative and no channel is available, or
 if the specified channel does not exist, a negative value is returned.
 
 == DRIVERS
-The *AUDIO_BASIC* driver offers limited features while using very little
-CPU and RAM, sending data directly to the GBA's direct sound channels.
-The *AUDIO_MIXER* supports more features at the cost of higher CPU and
-RAM usage, mixing its channels via software to periodically fill buffers
-in EWRAM.
+The *AUDIO_DIRECT* driver offers limited features while using very
+little CPU and RAM, sending data directly to the GBA's direct sound
+channels. The *AUDIO_MIXER* supports more features at the cost of higher
+CPU and RAM usage, mixing its channels via software to periodically fill
+buffers in EWRAM.
 
 |===
-|                  |*AUDIO_BASIC*        |*AUDIO_MIXER*
+|                  |*AUDIO_DIRECT*       |*AUDIO_MIXER*
 |*Channel count*   |2                    |8
 |*Pitch control*   |no support           |full support
 |*Volume control*  |0-32=50%, 33-64=100% |full support

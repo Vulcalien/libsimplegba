@@ -139,8 +139,8 @@ INLINE void audio_sample_rate(u32 sample_rate) {
 }
 
 extern const struct AudioDriver
-    _audio_driver_basic,
+    _audio_driver_direct,
     _audio_driver_mixer;
 
-#define AUDIO_BASIC (&_audio_driver_basic)
-#define AUDIO_MIXER (&_audio_driver_mixer)
+#define AUDIO_DIRECT (&_audio_driver_direct)
+#define AUDIO_MIXER  (&_audio_driver_mixer)

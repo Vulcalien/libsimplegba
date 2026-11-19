@@ -19,14 +19,6 @@
 #include "libsimplegba/hw/timer.h"
 #include "libsimplegba/hw/dma.h"
 
-// Basic audio driver offering 2 independent channels, each with:
-// - looping support
-// - limited volume control (50%, 100%)
-// - basic panning control (left, right, both)
-//
-// Each channel is mapped directly to a Direct Sound output, so the CPU
-// usage remains very low.
-
 #define DIRECT_SOUND_CONTROL *((vu16 *) 0x04000082)
 #define MASTER_SOUND_CONTROL *((vu16 *) 0x04000084)
 
@@ -151,7 +143,7 @@ static INLINE void playback_stop(i32 channel) {
 }
 
 THUMB
-static void basic_pause(i32 c) {
+static void direct_pause(i32 c) {
     struct Channel *channel = &channels[c];
     if(!channel->data || channel->paused)
         return;
@@ -164,7 +156,7 @@ static void basic_pause(i32 c) {
 }
 
 THUMB
-static void basic_resume(i32 c) {
+static void direct_resume(i32 c) {
     struct Channel *channel = &channels[c];
     if(!channel->data || !channel->paused)
         return;
@@ -174,16 +166,16 @@ static void basic_resume(i32 c) {
 }
 
 THUMB
-static void basic_stop(i32 channel) {
+static void direct_stop(i32 channel) {
     channels[channel].data = NULL;
     playback_stop(channel);
 }
 
 THUMB
-static i32 basic_play(i32 channel, const void *sound, u32 length) {
+static i32 direct_play(i32 channel, const void *sound, u32 length) {
     // if sound length is zero, stop the channel
     if(length == 0) {
-        basic_stop(channel);
+        direct_stop(channel);
         return channel;
     }
 
@@ -197,17 +189,17 @@ static i32 basic_play(i32 channel, const void *sound, u32 length) {
 }
 
 THUMB
-static void basic_loop(i32 channel, u32 loop_length) {
+static void direct_loop(i32 channel, u32 loop_length) {
     channels[channel].loop_length = loop_length;
 }
 
 THUMB
-static void basic_pitch(i32 channel, u32 pitch) {
+static void direct_pitch(i32 channel, u32 pitch) {
     // operation not supported
 }
 
 THUMB
-static void basic_volume(i32 channel, u32 volume) {
+static void direct_volume(i32 channel, u32 volume) {
     const u16 bit = outputs[channel].bits.volume;
     if(volume > AUDIO_VOLUME_MAX / 2) // 100%
         DIRECT_SOUND_CONTROL |= bit;
@@ -216,7 +208,7 @@ static void basic_volume(i32 channel, u32 volume) {
 }
 
 THUMB
-static void basic_panning(i32 channel, i32 panning) {
+static void direct_panning(i32 channel, i32 panning) {
     // audio only plays on one side if panning is at either extreme
     bool left  = (panning < AUDIO_PANNING_MAX);
     bool right = (panning > AUDIO_PANNING_MIN);
@@ -238,7 +230,7 @@ static void timer1_isr(void) {
                 channel->data = channel->end - channel->loop_length;
                 restart_dma(c);
             } else {
-                basic_stop(c);
+                direct_stop(c);
             }
         }
     }
@@ -248,7 +240,7 @@ static void timer1_isr(void) {
 }
 
 THUMB
-static void basic_init(void) {
+static void direct_init(void) {
     MASTER_SOUND_CONTROL = BIT(7);
     DIRECT_SOUND_CONTROL = 0;
 
@@ -262,10 +254,10 @@ static void basic_init(void) {
 
     // setup channels with default configuration
     for(u32 c = 0; c < CHANNEL_COUNT; c++) {
-        basic_loop   (c, 0);
-        basic_pitch  (c, AUDIO_PITCH_NORMAL);
-        basic_volume (c, AUDIO_VOLUME_MAX);
-        basic_panning(c, 0);
+        direct_loop   (c, 0);
+        direct_pitch  (c, AUDIO_PITCH_NORMAL);
+        direct_volume (c, AUDIO_VOLUME_MAX);
+        direct_panning(c, 0);
     }
 
     // Set default sample rate. This also starts Timer 0
@@ -273,32 +265,32 @@ static void basic_init(void) {
 }
 
 THUMB
-static void basic_update(void) {
+static void direct_update(void) {
     // nothing to do
 }
 
-static i32 basic_available_channel(void) {
+static i32 direct_available_channel(void) {
     for(u32 c = 0; c < CHANNEL_COUNT; c++)
         if(!channels[c].data)
             return c;
     return -1;
 }
 
-const struct AudioDriver _audio_driver_basic = {
-    .init   = basic_init,
-    .update = basic_update,
+const struct AudioDriver _audio_driver_direct = {
+    .init   = direct_init,
+    .update = direct_update,
 
-    .play = basic_play,
-    .stop = basic_stop,
+    .play = direct_play,
+    .stop = direct_stop,
 
-    .pause  = basic_pause,
-    .resume = basic_resume,
+    .pause  = direct_pause,
+    .resume = direct_resume,
 
-    .loop    = basic_loop,
-    .pitch   = basic_pitch,
-    .volume  = basic_volume,
-    .panning = basic_panning,
+    .loop    = direct_loop,
+    .pitch   = direct_pitch,
+    .volume  = direct_volume,
+    .panning = direct_panning,
 
     .channel_count     = CHANNEL_COUNT,
-    .available_channel = basic_available_channel
+    .available_channel = direct_available_channel
 };
