@@ -148,7 +148,7 @@ static void timer2_isr(void) {
 }
 
 THUMB
-void linkcable_init(void) {
+static void byteprotocol_init(void) {
     // prevent accidentally sending a packet on connection
     *SERIAL_SEND = (struct Packet) { .invalid = 1 };
 
@@ -171,7 +171,7 @@ void linkcable_init(void) {
 }
 
 THUMB
-i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
+static i32 byteprotocol_send(i32 dest, const void *buffer, u32 n) {
     interrupt_mask(IRQ_SERIAL, true); // enter critical section
 
     i32 count = 0;
@@ -205,7 +205,7 @@ static NO_INLINE i32 receive(struct Queue *queue, void *buffer, u32 n) {
 }
 
 THUMB
-i32 linkcable_receive(i32 *src, void *buffer, u32 n) {
+static i32 byteprotocol_receive(i32 *src, void *buffer, u32 n) {
     const i32 id = get_player_id();
 
     // try to find data in any queue
@@ -219,3 +219,10 @@ i32 linkcable_receive(i32 *src, void *buffer, u32 n) {
     }
     return 0;
 }
+
+const struct LinkCableProtocol _linkcable_protocol_byte = {
+    .init = byteprotocol_init,
+
+    .send    = byteprotocol_send,
+    .receive = byteprotocol_receive
+};

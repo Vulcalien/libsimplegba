@@ -18,7 +18,7 @@ BIN_DIR := bin
 SRC_SUBDIRS := misc misc/math misc/memory \
                hw hw/audio                \
                cart cart/backup           \
-               serial                     \
+               serial serial/linkcable    \
                debug
 
 # ==================================================================== #

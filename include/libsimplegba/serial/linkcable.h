@@ -27,8 +27,19 @@
 // - the CPU isn't overwhelmed by serial IRQs
 #define LINKCABLE_BITRATE_MIN 32
 #define LINKCABLE_BITRATE_MAX 4096
+// TODO move bitrate limits to protocols
 
-extern void linkcable_init(void);
+extern const struct LinkCableProtocol {
+    void (*init)(void);
+
+    i32 (*send)(i32 dest, const void *buffer, u32 n);
+    i32 (*receive)(i32 *src, void *buffer, u32 n);
+} *_linkcable_protocol;
+
+INLINE void linkcable_init(const void *protocol) {
+    _linkcable_protocol = (const struct LinkCableProtocol *) protocol;
+    _linkcable_protocol->init();
+}
 
 INLINE void linkcable_speed(u32 bitrate) {
     if(bitrate == 0) {
@@ -46,9 +57,19 @@ INLINE void linkcable_speed(u32 bitrate) {
     timer_start(TIMER2, cycles);
 }
 
-extern i32 linkcable_send(i32 dest, const void *buffer, u32 n);
-extern i32 linkcable_receive(i32 *src, void *buffer, u32 n);
+INLINE i32 linkcable_send(i32 dest, const void *buffer, u32 n) {
+    return _linkcable_protocol->send(dest, buffer, n);
+}
+
+INLINE i32 linkcable_receive(i32 *src, void *buffer, u32 n) {
+    return _linkcable_protocol->receive(src, buffer, n);
+}
 
 INLINE i32 linkcable_broadcast(const void *buffer, u32 n) {
-    return linkcable_send(-1, buffer, n);
+    return _linkcable_protocol->send(-1, buffer, n);
 }
+
+extern const struct LinkCableProtocol
+    _linkcable_protocol_byte;
+
+#define LINKCABLE_BYTE (&_linkcable_protocol_byte)
