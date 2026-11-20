@@ -16,6 +16,8 @@
 #include "libsimplegba/serial/linkcable.h"
 
 #include "libsimplegba/hw/interrupt.h"
+#include "libsimplegba/hw/system.h"
+#include "libsimplegba/hw/timer.h"
 
 #define SERIAL_CONTROL *((vu16 *) 0x04000128)
 #define SERIAL_MODE    *((vu16 *) 0x04000134)
@@ -27,8 +29,6 @@
 #define READY_BIT BIT(3)
 #define START_BIT BIT(7)
 #define IRQ_BIT   BIT(14)
-
-#define DEFAULT_BITRATE 512
 
 // TODO:
 // - handle communication errors and disconnections
@@ -165,7 +165,9 @@ static void byte_protocol_init(void) {
         1 << 13   // must be 1
     );
 
-    linkcable_speed(DEFAULT_BITRATE);
+    // start Timer 2 with frequency 512 Hz
+    timer_config(TIMER2, TIMER_PRESCALER_1);
+    timer_start(TIMER2, SYSTEM_FREQUENCY / 512);
 }
 
 THUMB
