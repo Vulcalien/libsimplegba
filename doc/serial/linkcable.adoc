@@ -2,20 +2,19 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-11-15
+:revdate: 2026-11-20
 :docdate: {revdate}
 
 == NAME
-linkcable_init, linkcable_speed, linkcable_send, linkcable_receive,
-linkcable_broadcast - link cable communication
+linkcable_init, linkcable_send, linkcable_receive, linkcable_broadcast -
+link cable communication
 
 == SYNOPSIS
 [verse]
 ____
 *#include <libsimplegba.h>*
 
-**void linkcable_init(void);**
-**void linkcable_speed(u32 **__bitrate__**);**
+**void linkcable_init(const void +++*+++**__protocol__**);**
 
 **i32 linkcable_send(i32 **__dest__**, const void +++*+++**__buffer__**, u32 **__n__**);**
 **i32 linkcable_receive(i32 +++*+++**__src__**, void +++*+++**__buffer__**, u32 **__n__**);**
@@ -28,17 +27,10 @@ The GBA link cable allows serial communication between up to 4 devices.
 Each device is assigned an ID from 0 to 3. The device with ID 0 acts as
 master and periodically initiates transfers.
 
-This driver uses a packet-based protocol, with each packet holding an
-8-bit payload, as well as metadata for addressing and error detection.
-Internal buffers can hold up to 63 outgoing packets, and 63 incoming
-packets per source device. Incoming packets are lost if a transmission
-error is detected, or if the respective queue is saturated, in which
-case the oldest packet is dropped.
-
 === Configuration
-The *linkcable_init*() function TODO
-
-The *linkcable_speed*() function TODO
+The *linkcable_init*() function initializes the driver that handles the
+specified _protocol_. This function should only be called once.
+TODO
 
 === Data transmission
 The *linkcable_send*() function appends up to _n_ bytes from _buffer_ to
