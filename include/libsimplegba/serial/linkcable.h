@@ -17,9 +17,6 @@
 
 #include "libsimplegba/base.h"
 
-#include "libsimplegba/hw/system.h"
-#include "libsimplegba/hw/timer.h"
-
 extern const struct LinkCableProtocol {
     void (*init)(void);
 
