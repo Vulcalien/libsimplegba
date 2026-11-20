@@ -19,8 +19,8 @@
 #include "libsimplegba/hw/system.h"
 #include "libsimplegba/hw/timer.h"
 
-#define SERIAL_CONTROL *((u16 *) 0x04000128)
-#define SERIAL_MODE    *((u16 *) 0x04000134)
+#define SERIAL_CONTROL *((vu16 *) 0x04000128)
+#define SERIAL_MODE    *((vu16 *) 0x04000134)
 
 #define SERIAL_DATA ((struct Packet *) 0x04000120)
 #define SERIAL_SEND ((struct Packet *) 0x0400012a)
