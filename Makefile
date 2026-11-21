@@ -69,11 +69,15 @@ OUT := $(BIN_DIR)/$(OUT_FILENAME).$(LIB_EXT)
 #                               Targets                                #
 # ==================================================================== #
 
-.PHONY: all build clean
+.PHONY: all build test clean
 
 all: build
 
 build: $(OUT)
+
+test:
+	@$(MAKE) --no-print-directory -C test build
+	@$(MAKE) --no-print-directory -C test run
 
 clean:
 	@$(RM) $(BIN_DIR) $(OBJ_DIR)
