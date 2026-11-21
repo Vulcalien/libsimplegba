@@ -85,7 +85,7 @@ run:
 build: $(OUT)
 
 clean:
-	@$(RM) $(BIN_DIR) $(OBJ_DIR)
+	@$(RM) $(BIN_DIR) $(OBJ_DIR) $(SRC_DIR)/test.c
 
 # generate GBA file
 $(OUT): $(OUT_ELF)
