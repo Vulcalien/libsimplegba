@@ -64,6 +64,8 @@ SRC := $(foreach DIR,$(SRC_DIRS),\
          $(foreach EXT,$(SRC_EXT),\
            $(wildcard $(DIR)/*.$(EXT))))
 
+SRC += $(SRC_DIR)/test.c
+
 OBJ := $(SRC:%=$(OBJ_DIR)/%.$(OBJ_EXT))
 
 OUT_ELF := $(BIN_DIR)/$(OUT_FILENAME).$(ELF_EXT)
@@ -93,6 +95,10 @@ $(OUT): $(OUT_ELF)
 $(OUT_ELF): ../bin/libsimplegba.a $(OBJ) | $(BIN_DIR)
 	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
+# generate test.c
+$(SRC_DIR)/test.c: FORCE
+	./refresh
+
 # compile .c files
 $(OBJ_DIR)/%.c.$(OBJ_EXT): %.c | $(OBJ_DIRS)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
@@ -108,5 +114,8 @@ $(BIN_DIR) $(OBJ_DIRS):
 # build libsimplegba
 ../bin/libsimplegba.a:
 	$(MAKE) -C .. build
+
+.PHONY: FORCE
+FORCE:
 
 -include $(OBJ:.$(OBJ_EXT)=.d)
