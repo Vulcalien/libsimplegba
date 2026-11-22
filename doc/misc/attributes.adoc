@@ -2,17 +2,18 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-09-18
+:revdate: 2026-11-22
 :docdate: {revdate}
 
 == NAME
-ALIGNED, INLINE, NO_INLINE, ARM, THUMB - compilation attributes
+PACKED, ALIGNED, INLINE, NO_INLINE, ARM, THUMB - compilation attributes
 
 == SYNOPSIS
 [verse]
 ____
 *#include <libsimplegba.h>*
 
+*#define PACKED*
 **#define ALIGNED(**__x__**)**
 
 *#define INLINE*
@@ -23,16 +24,19 @@ ____
 ____
 
 == DESCRIPTION
+The *PACKED* attribute instructs the compiler not to add any padding to
+the structure. As a consequence of this, the structure's fields may not
+be properly aligned, so be careful when treating pointers to them.
+
 The *ALIGNED* attribute sets the minimum alignment of the variable or
 type to _x_ bytes, with _x_ power of 2.
 
-The *INLINE* function attribute instructs the compiler to always inline
-the function, while the *NO_INLINE* attribute prohibits the compiler
-from inlining or cloning the function.
+The *INLINE* attribute instructs the compiler to always inline the
+function, while the *NO_INLINE* attribute prohibits the compiler from
+inlining or cloning the function.
 
-The *ARM* and *THUMB* function attributes instruct the compiler to
-compile the function into ARM (32-bit) or Thumb (16-bit) machine
-code.
+The *ARM* and *THUMB* attributes instruct the compiler to compile the
+function into ARM (32-bit) or Thumb (16-bit) machine code.
 
 == NOTES
 Functions defined as *INLINE* are never directly compiled into machine

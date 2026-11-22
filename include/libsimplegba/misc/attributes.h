@@ -15,6 +15,7 @@
  */
 #pragma once
 
+#define PACKED __attribute__((packed))
 #define ALIGNED(x) __attribute__((aligned(x)))
 
 #define INLINE inline __attribute__((always_inline))
