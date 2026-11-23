@@ -2,7 +2,7 @@
 :doctype: manpage
 :manmanual: Manual for libsimplegba
 :mansource: libsimplegba
-:revdate: 2026-11-20
+:revdate: 2026-11-23
 :docdate: {revdate}
 
 == NAME
@@ -29,8 +29,8 @@ master and periodically initiates transfers.
 
 === Configuration
 The *linkcable_init*() function initializes the driver that handles the
-specified _protocol_. This function should only be called once.
-TODO
+specified _protocol_. This function should only be called once. See
+PROTOCOLS below.
 
 === Data transmission
 The *linkcable_send*() function appends up to _n_ bytes from _buffer_ to
@@ -53,6 +53,12 @@ is full, zero is returned.
 The *linkcable_receive*() function returns the number of bytes retrieved
 from the queue of incoming messages. If the queue is empty, zero is
 returned.
+
+== PROTOCOLS
+The *LINKCABLE_BYTE* protocol uses small frames that fit into a single
+serial transfer, with each frame holding an 8-bit payload, as well as
+metadata for addressing and error detection. The protocol offers a
+maximum throughput of 512{nbsp}B/s per device.
 
 == AUTHORS
 The *libsimplegba* library was written by Vulcalien.
